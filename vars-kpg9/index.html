@@ -49,6 +49,11 @@ a{color:inherit}
 .brand{display:flex;align-items:center;flex:none}
 .brand svg{height:30px;width:auto;display:block}
 .tb-copy{display:flex;flex-direction:column;min-width:0;line-height:1.25;border-left:1px solid var(--line);padding-left:20px}
+.tb-client[hidden]{display:none}
+.tb-client{display:flex;align-items:center;gap:10px;border-left:1px solid var(--line);padding-left:20px;flex:none}
+.tb-client span{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tb-client img{height:28px;width:auto;max-width:170px;object-fit:contain;display:block}
+.profile-logo{display:block;height:52px;width:auto;max-width:100%;object-fit:contain;object-position:left center;margin-top:14px}
 .tb-copy strong{font-size:16px;color:var(--ink);font-weight:700}
 .tb-copy span{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .btn{display:inline-flex;align-items:center;gap:10px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;white-space:nowrap;transition:background .15s,transform .15s,box-shadow .15s}
@@ -626,11 +631,14 @@ body.linear .guide-card{display:none}
 @media (max-width:820px){
   .topbar{height:56px;gap:12px;padding:0 8px 0 14px;top:calc(8px + var(--sat));left:8px;right:8px}
   .tb-copy{display:none}
+  .tb-client{padding-left:12px;gap:6px}
+  .tb-client img{height:22px;max-width:110px}
   .brand svg{height:24px}
   .topbar .btn-red{padding:10px 12px;font-size:13.5px}
 }
 .cta-short{display:none}
-@media (max-width:560px){.topbar .cta-long{display:none}.topbar .cta-short{display:inline}}
+@media (max-width:560px){.topbar .cta-long{display:none}.topbar .cta-short{display:inline}.tb-client span{display:none}}
+@media (max-width:380px){.tb-client{display:none}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
@@ -647,6 +655,7 @@ body.linear .guide-card{display:none}
   <a class="brand" href="#" data-go="a" aria-label="XpertDigital, zpět na začátek">
     <svg viewBox="0 0 305 104" role="img" aria-label="XpertDigital"><path d="M140.867 0H54.7167C40.2044 0 26.2865 5.47856 16.0248 15.2304C5.76303 24.9823 -.002 38.2087 -.002 52C-.002 65.7913 5.76303 79.0177 16.0248 88.7695C26.2865 98.5214 40.2044 104 54.7167 104H140.867C155.38 104 169.297 98.5214 179.559 88.7695C189.821 79.0177 195.586 65.7913 195.586 52C195.586 38.2087 189.821 24.9823 179.559 15.2304C169.297 5.47856 155.38 0 140.867 0ZM140.867 98.5492H54.7167C41.7866 98.4609 29.4177 93.5178 20.3073 84.7977C11.197 76.0776 6.08438 64.288 6.08438 52C6.08438 39.712 11.197 27.9224 20.3073 19.2023C29.4177 10.4822 41.7866 5.53906 54.7167 5.45081H140.867C147.329 5.4067 153.737 6.57817 159.72 8.89771C165.704 11.2173 171.146 14.639 175.732 18.9659C180.317 23.2928 183.957 28.4392 186.441 34.1087C188.925 39.7783 190.203 45.8588 190.203 52C190.203 58.1412 188.925 64.2217 186.441 69.8913C183.957 75.5608 180.317 80.7072 175.732 85.0341C171.146 89.361 165.704 92.7827 159.72 95.1023C153.737 97.4218 147.329 98.5933 140.867 98.5492Z" fill="#FA2B2B"/><path d="M57.0268 53.5356V50.378L34.7912 21.0829H48.4484L66.9925 45.9045L85.5416 21.0853H99.1988L76.8671 50.3804V53.538L99.1988 82.9171H85.5416L66.9925 58.0091L48.4434 82.9147H34.7861L57.0268 53.5356Z" fill="#FA2B2B"/><path d="M165.406 51.9556C165.406 78.6094 147.873 82.9148 131.168 82.9148H108.465V21.0853H131.168C147.87 21.0853 165.406 25.3835 165.406 51.9556ZM153.593 51.9556C153.593 32.2247 142.703 30.9088 131.168 30.9088H120.371V73.0913H131.168C142.703 73.0913 153.593 71.7755 153.593 51.9604" fill="#FA2B2B"/><path d="M250.28 0C239.458 0 228.879 3.04968 219.881 8.76338C210.882 14.4771 203.869 22.5982 199.728 32.0997C195.586 41.6013 194.503 52.0565 196.614 62.1433C198.725 72.23 203.936 81.4953 211.589 88.7675C219.241 96.0397 228.991 100.992 239.605 102.998C250.219 105.005 261.221 103.975 271.219 100.039C281.218 96.1038 289.763 89.4389 295.776 80.8878C301.788 72.3366 304.997 62.2832 304.997 51.9988C304.997 38.2081 299.232 24.9823 288.97 15.2308C278.709 5.47927 264.792.000637 250.28 0ZM279.626 82.9147H267.813V57.5697H232.84V82.9147H220.934V21.0853H232.84V47.739H267.816V21.0853H279.628L279.626 82.9147Z" fill="#484848"/></svg>
   </a>
+  <div class="tb-client" id="tbClient" hidden><span>pro</span><img id="tbClientLogo" alt=""></div>
   <div class="tb-copy"><strong id="ctaTitle">Chcete takovou mapu i pro svou firmu?</strong><span id="ctaText"></span></div>
   <button class="btn btn-red" id="ctaBtn" type="button" data-cta><span class="cta-long" id="ctaBtnTxt">Získat AI Roadmapu zdarma</span><span class="cta-short" id="ctaBtnShort">AI Roadmapa zdarma</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
 </header>
@@ -711,7 +720,7 @@ body.linear .guide-card{display:none}
    Ukázkové výstupy na kartách používají fiktivní zakázky a osoby.
    ===================================================================== */
 window.XD_CLIENT = {
-  meta: { client: 'VARS BRNO a.s.', titleShort: 'VARS', slug: 'vars-kpg9', model: false, badge: 'Připraveno pro VARS BRNO a.s.' },
+  meta: { client: 'VARS BRNO a.s.', titleShort: 'VARS', slug: 'vars-kpg9', logo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNzEuOTkiIGhlaWdodD0iMjQuMDA0IiB2aWV3Qm94PSIwIDAgMTcxLjk5IDI0LjAwNCI+CiAgICA8ZyBkYXRhLW5hbWU9Ikdyb3VwIDIwNTYiPgogICAgICAgIDxwYXRoIGQ9Ik0yLjM3NiAxNy4yYTM0LjY4IDM0LjY4IDAgMCAwIDExLjM4NCAyLjQyNWMxLjkwOS4wNzkgOC45MTguMzE3IDguOTE4LTIuOXMtNS41MTgtMy4wNDYtOC4zMTItMy4wNDZjLTUuMjg5IDAtMTUuMjIyLS4xODktMTQuMDg4LTguMDc2Qy45NzQuNzg0IDkuMzY2LS4wMTkgMTMuMzcyIDBhNjQuODY4IDY0Ljg2OCAwIDAgMSAxNC40NTYgMS45OTVsLTIuNTQ1IDMuNjExQTQ4Ljc0OSA0OC43NDkgMCAwIDAgMTQuMjM3IDQuMWMtNC42NjMgMC03LjExOS45MjMtNy4xMTkgMi42MjkgMCAyLjQ4IDUuODA2IDIuMzIyIDcuMjU4IDIuMzIyIDQuOSAwIDE1LjQ5LjA4OSAxNS40OSA3LjE2M1MyMC42MSAyNC4wNyAxMy42OCAyNEE1MC42NjggNTAuNjY4IDAgMCAxIDAgMjEuNTg5bC45NDUtMS43NjYgMS40MzItMi42MDkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEzMy45OCkiIHN0eWxlPSJmaWxsOiM2OTZhNmYiLz4KICAgICAgICA8cGF0aCBkYXRhLW5hbWU9IlZlY3RvciIgZD0ibTM1LjkzMSAyMy40NjQtNy45NDQuMDJMMTcuNjE4IDMuNDMzIDcuMTA5IDIzLjQ4NEgwTDEyLjM4OCAwSDIzLjYiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDY0LjA1OCAuMTk4KSIgc3R5bGU9ImZpbGw6IzY5NmE2ZiIvPgogICAgICAgIDxwYXRoIGRhdGEtbmFtZT0iVmVjdG9yIiBkPSJNMCAwaDE3LjEyYzYuNTEyIDAgMTIuNDI4IDEuNTc4IDEyLjQyOCA3Ljc1OSAwIDUuMDktNS42ODcgNi40MjktOC42MiA2LjU4OGw4LjAxMyA5LjEwOGgtNy41MDZMOS44NjMgMTAuMmg3Ljk5NHM0Ljg4Mi4yNDggNC44ODItMi44MzhjMC0yLjU4OS0yLjg0My0yLjg3Ny00Ljg4Mi0yLjg3N0g2LjkzbC4wMiAxOUgwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDEuMjYyIC4xOTgpIiBzdHlsZT0iZmlsbDojNjk2YTZmIi8+CiAgICAgICAgPHBhdGggZGF0YS1uYW1lPSJWZWN0b3IiIGQ9Ik0yMS41IDIzLjQ1NGgtNy44MjlMMCAwaDguMTgybDkuODgzIDE3LjAzNUwyOC4zNDUgMGg3LjAyOSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzQuMDQyIC4xODgpIiBzdHlsZT0iZmlsbDojNjk2YTZmIi8+CiAgICAgICAgPHBhdGggZGF0YS1uYW1lPSJWZWN0b3IiIGQ9Ik0wIDMuNTgyVi4wNWM2LjM0My0uMDQgNy4xMTkuNjY0IDEyLjYzNyAzLjggMy45IDEuOTQ1IDYuMy0zLjg1IDYuMy0zLjg1bDguMDgzLjA1TDI3IDMuNjMxaC05LjQ3MmMtLjI1OC43LTIuMDM4IDQuNzgyLTUuMzU5IDMuMjQ0QzYuODIgMy42NDEgNi4zIDMuNTcyIDAgMy41ODJ6IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIC4xMDkpIiBzdHlsZT0iZmlsbDojYzFjZTAwIi8+CiAgICAgICAgPHBhdGggZGF0YS1uYW1lPSJWZWN0b3IiIGQ9Ik0xMS42NTIgNi4wMTJDNi45NjkgMy4yIDUuNTc4IDMuNiAwIDMuNTkyIDAgMy41OTIuMDEuMDUgMCAuMDUgNi4yIDAgNi44IDAgMTIuMDkgMy4xNDUgMTUuMTgyIDQuNjkzIDE3LjE0IDAgMTcuMTQgMGg5Ljg5MnYzLjU5MmgtMTEuNGMtLjAyIDAtMS40OTEgMy43LTMuOTY3IDIuNDIxIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDUuNzU0KSIgc3R5bGU9ImZpbGw6I2MxY2UwMCIvPgogICAgICAgIDxwYXRoIGRhdGEtbmFtZT0iVmVjdG9yIiBkPSJNMTAuNzg3IDQuMzQ2QzguMiAzLjY0MSAyLjkyMyAzLjY4MSAwIDMuNjkxVi4wMUM0LjEuMDIgOC4zMzIuMDIgMTEuMDc2IDEuNGMxLjUzMS42NTUgMi4zNjYtMS4yNiAyLjM3Ni0xLjM3OUwyNy4wMjMgMHYzLjYyMWwtMTUuMS4wNGExLjAzIDEuMDMgMCAwIDEtMS4xMjMuNjc1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDE1LjYyNikiIHN0eWxlPSJmaWxsOiNjMWNlMDAiLz4KICAgICAgICA8cGF0aCBkYXRhLW5hbWU9IlZlY3RvciIgZD0iTTI3LjAyMyAzLjU5MkgwVjBjMi4zODYgMCA4LjUzIDAgMTAuNjM4LjU3NS42NTYuMTY5LjkxNS0uNTU2LjkxNS0uNTU2aDE1LjQ3IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDIwLjA1MSkiIHN0eWxlPSJmaWxsOiNjMWNlMDAiLz4KICAgICAgICA8cGF0aCBkYXRhLW5hbWU9IlZlY3RvciIgZD0iTTExLjE2NSA1LjE3OUM3LjU2NiAzLjYyMSA0LjQ0NCAzLjcxMSAwIDMuNzIxVjBjNS4zMzkuMDg5IDcuMDY5LS4zNjcgMTEuNTYzIDIuMzYxQzEzLjg0IDMuNjExIDE1LjIxMi4zNzcgMTUuMjcxLjEyOWgxMS43NTJWMy43NEwxMy43NyAzLjcxMWMtLjA0LjE2OS0uOTE1IDIuMjMyLTIuNiAxLjQ3OCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAxMC44MTQpIiBzdHlsZT0iZmlsbDojYzFjZTAwIi8+CiAgICAgICAgPHBhdGggZGF0YS1uYW1lPSJWZWN0b3IiIGQ9Ik0uNCAxLjQ4OEEyLjg2IDIuODYgMCAwIDEgMS40ODEuNCAzLjAxMiAzLjAxMiAwIDAgMSAyLjk2MyAwYTIuOTc2IDIuOTc2IDAgMCAxIDEuNDcxLjQgMi45IDIuOSAwIDAgMSAxLjA4NCAxLjA3OCAyLjkyOCAyLjkyOCAwIDAgMSAwIDIuOTQ3IDIuODM0IDIuODM0IDAgMCAxLTEuMDg0IDEuMDgxIDIuOTI2IDIuOTI2IDAgMCAxLTIuOTQzIDBBMy4wODQgMy4wODQgMCAwIDEgLjQgNC40MjUgMi44MzQgMi44MzQgMCAwIDEgMCAyLjk1N2EyLjk2OSAyLjk2OSAwIDAgMSAuNC0xLjQ3OU0xLjY4Ljc1NEEyLjU0NiAyLjU0NiAwIDAgMCAuNCAyLjk3NmEyLjUwNyAyLjUwNyAwIDAgMCAuMzM4IDEuMjcgMi41NzEgMi41NzEgMCAwIDAgMi4yMjcgMS4yNyAyLjU3NyAyLjU3NyAwIDAgMCAyLjIwNS0xLjI4IDIuNDA3IDIuNDA3IDAgMCAwIC4zNDgtMS4yOCAyLjUyNiAyLjUyNiAwIDAgMC0uMzQ4LTEuMjhBMi41MjEgMi41MjEgMCAwIDAgMi45NjMuNCAyLjU1NiAyLjU1NiAwIDAgMCAxLjY4LjczNCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY2LjA3NCAuMjM4KSIgc3R5bGU9ImZpbGw6IzY5NmE2ZiIvPgogICAgICAgIDxwYXRoIGRhdGEtbmFtZT0iVmVjdG9yIiBkPSJNMi41MjUgMS4zODlhLjg0Mi44NDIgMCAwIDEtLjMxOC4zbC0uMDIuMDFoLjAyYS43OC43OCAwIDAgMSAuMy4yNTggMS4yMDcgMS4yMDcgMCAwIDEgLjA4LjUwNnYuMzc3YS44MjQuODI0IDAgMCAwIC4xMjkuNDU2bC4wNS4wNjloLS41NzlhMi4xNTcgMi4xNTcgMCAwIDEtLjA4LS40ODZsLS4wNC0uNDE3QS44MDYuODA2IDAgMCAwIDIgMi4xMzNhLjMzMS4zMzEgMCAwIDAtLjE2OS0uMTM5IDEuNDkzIDEuNDkzIDAgMCAwLS40MzctLjA0SC41Mjd2MS40MDlIMFYwaDEuNDIyYTEuNzYzIDEuNzYzIDAgMCAxIC43MTYuMS43ODIuNzgyIDAgMCAxIC4zNjIuMzE3IDEuMDEyIDEuMDEyIDAgMCAxIC4xMzkuNTI2LjkxNy45MTcgMCAwIDEtLjEwOS40MzdtLS42MDYuMDNhLjQ1OS40NTkgMCAwIDAgLjItLjQyN0EuNDY2LjQ2NiAwIDAgMCAxLjk2OS42YS45NjQuOTY0IDAgMCAwLS41NTctLjEyNEguNTI3VjEuNWguODU1YTEuMjU4IDEuMjU4IDAgMCAwIC41MjctLjA3OSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY3LjgwNSAxLjQ3OCkiIHN0eWxlPSJmaWxsOiM2OTZhNmYiLz4KICAgIDwvZz4KPC9zdmc+Cg==', model: false, badge: 'Připraveno pro VARS BRNO a.s.' },
 
   vendor: {
     name: 'XpertDigital',
@@ -1524,6 +1533,7 @@ function boot(data) {
   $('#ctaText').textContent = C.vendor.cta.text;
   $('#ctaBtnTxt').textContent = C.vendor.cta.button;
   $('#ctaBtnShort').textContent = C.vendor.cta.buttonShort || C.vendor.cta.button;
+  if (C.meta.logo) { $('#tbClientLogo').src = C.meta.logo; $('#tbClientLogo').alt = C.meta.client; $('#tbClient').hidden = false; }
   const badge = C.meta.badge || (C.meta.model ? 'Modelová data · fiktivní firma' : '');
   $('#modelbadge').textContent = badge; $('#modelbadge').hidden = !badge;
 
@@ -1636,6 +1646,7 @@ function renderA() {
     '</div><aside class="hero-side">' +
       '<div class="profile"><div class="profile-art">' + (P.art === 'steel' ? steelArt() : P.art === 'traffic' ? trafficArt() : '') + '</div><div class="profile-body">' +
         '<span class="tag">' + esc(P.tag) + '</span>' +
+        (C.meta.logo ? '<img class="profile-logo" src="' + esc(C.meta.logo) + '" alt="' + esc(C.meta.client) + '">' : '') +
         '<div class="profile-name">' + esc(P.name) + '</div>' +
         '<div class="profile-obor">' + esc(P.obor) + '</div>' +
         '<div class="facts">' + P.facts.map(f => '<div class="fact"><b>' + esc(f.v) + '</b><span>' + esc(f.k) + '</span></div>').join('') + '</div>' +
