@@ -1042,7 +1042,7 @@ window.XD_CLIENT = {
     title: 'Kolik zaplatíte pevně a kolik podle výsledku?',
     lead: 'Výchozí je pevná cena programu. Část z ní můžete převést na výkonovou složku, kterou zaplatíte, jen když se čísla Stock-Trade opravdu zlepší. Čím menší pevná část, tím víc rizika neseme my, a proto výkonová složka roste.',
     price: null,
-    minFixed: 0.3, maxPremium: 0.4, floor: 0.5, cap: 1.5, defaultFixed: 1,
+    minFixed: 0.3, maxPremium: 0.4, floor: 0.5, cap: 1.8, defaultFixed: 1,
     presets: [{ label: 'Jistota', fixed: 1 }, { label: 'Vyvážená', fixed: 0.7 }, { label: 'Partnerská', fixed: 0.4 }],
     kpis: ['hrubá marže', 'počet poptávek a úspěšnost nabídek', 'hodiny ušetřené v administrativě']
   },
@@ -2119,7 +2119,8 @@ function updatePricing() {
     [priceFmt(q.total(1)), 'celkem při splnění cíle'],
     [q.prem > 0 ? '+' + fmt(q.prem * 100, 0) + ' %' : '0 %', 'přirážka k výkonové složce za riziko, které neseme']
   ].map(t => '<div><b>' + t[0] + '</b><span>' + t[1] + '</span></div>').join('');
-  const rows = [[0, 'pod ' + fmt(P.floor * 100) + ' % (práh)'], [P.floor, fmt(P.floor * 100) + ' %'], [0.8, '80 %'], [1, '100 % (cíl)'], [1.2, '120 %'], [P.cap, fmt(P.cap * 100) + ' % a víc']];
+  const rows = [[0, 'pod ' + fmt(P.floor * 100) + ' % (práh)'], [P.floor, fmt(P.floor * 100) + ' %'], [0.8, '80 %'], [1, '100 % (cíl)'], [1.2, '120 %'], [1.5, '150 %']]
+    .filter(([a], i) => i === 0 || (a >= P.floor && a < P.cap)).concat([[P.cap, fmt(P.cap * 100) + ' % a víc (strop)']]);
   $('#prTbl').innerHTML = '<thead><tr><th>Splnění cíle</th><th class="num">Zaplatíte celkem</th><th class="num">Proti pevné ceně</th></tr></thead><tbody>' +
     rows.map(([a, l]) => { const t = q.total(a), d = t - q.base, same = Math.abs(d) < 1e-6 * q.base; return '<tr><td>' + l + '</td><td class="num">' + priceFmt(t) + '</td><td class="num"><span class="pill ' + (same ? 'info' : d < 0 ? 'ok' : 'warn') + '">' + (same ? 'stejně' : priceFmt(d, true)) + '</span></td></tr>'; }).join('') + '</tbody>';
   const own = ui.kpis.filter(k => k.name.trim());
