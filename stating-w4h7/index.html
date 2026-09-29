@@ -1043,6 +1043,8 @@ window.XD_CLIENT = {
     title: 'Kolik zaplatíte pevně a kolik podle výsledku?',
     lead: 'Výchozí je pevná cena programu. Část z ní můžete převést na výkonovou složku, kterou zaplatíte, jen když se čísla STATINGu opravdu zlepší. Čím menší pevná část, tím víc rizika neseme my, a proto výkonová složka roste.',
     price: null,
+    rate: 11000,   // Kč za MD; cena = MD týmu × sazba, s modulem +2 týdny se přepočítá
+    team: [{ label: 'AI specialista (plný úvazek)', perWeek: 5 }, { label: 'projektový manažer (30 %)', perWeek: 1.5 }, { label: 'senior strategický konzultant', md: 10 }],
     minFixed: 0.3, maxPremium: 0.4, floor: 0.5, cap: 1.8, defaultFixed: 1,
     presets: [{ label: 'Jistota', fixed: 1 }, { label: 'Vyvážená', fixed: 0.7 }, { label: 'Partnerská', fixed: 0.4 }],
     kpis: ['příspěvek zakázek (rozpočet proti skutečnosti)', 'počet podaných nabídek', 'hodiny ušetřené v administrativě']
@@ -1736,7 +1738,7 @@ function fillDyn(t) {
 function setModule(n, on) {
   modState[n] = on;
   C.calc.areas.forEach((a, i) => { if (a.module === n) calcState.on[i] = on; });
-  applySchedule(); updateCalc(); markDirty();
+  applySchedule(); updateCalc(); updatePricing(); markDirty();
 }
 function applySchedule() {
   computeSchedule();
@@ -2204,15 +2206,18 @@ function pricingHTML() {
     '</div><div class="pr-out"><div class="tbl-wrap"><table class="tbl" id="prTbl"></table></div><ul class="pr-rules" id="prRules"></ul></div></div>' +
     saveUI('Uložit volbu a poslat XpertDigital') + '</div>';
 }
+// Cena programu: pevně daná (price), nebo z týmu: MD × sazba; položky perWeek se násobí délkou programu (zapnutý modul ji prodlouží)
+function teamMD() { const P = C.pricing; return (P.team || []).map(t => [t.label, t.md != null ? t.md : t.perWeek * totalWeeks]); }
+function progPrice() { const P = C.pricing; return P.rate && P.team ? teamMD().reduce((a, t) => a + t[1], 0) * P.rate : P.price || 0; }
 function priceCalc(f) {
-  const P = C.pricing, base = P.price || 100, span = 1 - P.minFixed;
+  const P = C.pricing, base = progPrice() || 100, span = 1 - P.minFixed;
   const prem = span > 0 ? P.maxPremium * (1 - f) / span : 0, V = (1 - f) * base * (1 + prem);
   return { base, prem, V, fixedPay: f * base, total: a => f * base + (a < P.floor ? 0 : V * Math.min(a, P.cap)) };
 }
 function priceFmt(v, signed) {
   const s = signed ? (v > 0 ? '+' : v < 0 ? '−' : '') : '', a = signed ? Math.abs(v) : v;
-  if (!C.pricing.price) return s + fmt(a, 0) + ' % ceny';
-  return s + (a >= 1e6 ? fmt(a / 1e6, 2) + ' mil. Kč' : fmt(Math.round(a / 1000) * 1000) + ' Kč');
+  if (!progPrice()) return s + fmt(a, 0) + ' % ceny';
+  return s + fmt(Math.round(a / 100) * 100) + ' Kč';
 }
 function updatePricing() {
   const P = C.pricing, el = $('#pricing'); if (!P || !el) return;
@@ -2232,11 +2237,12 @@ function updatePricing() {
     rows.map(([a, l]) => { const t = q.total(a), d = t - q.base, same = Math.abs(d) < 1e-6 * q.base; return '<tr><td>' + l + '</td><td class="num">' + priceFmt(t) + '</td><td class="num"><span class="pill ' + (same ? 'info' : d < 0 ? 'ok' : 'warn') + '">' + (same ? 'stejně' : priceFmt(d, true)) + '</span></td></tr>'; }).join('') + '</tbody>';
   const own = ui.kpis.filter(k => k.name.trim());
   $('#prRules').innerHTML = [
+    P.rate && P.team ? 'Cena programu na ' + totalWeeks + ' ' + plural(totalWeeks, 'týden', 'týdny', 'týdnů') + ': ' + teamMD().map(t => t[0] + ' ' + fmtAuto(t[1]) + ' MD').join(', ') + ' = ' + fmtAuto(teamMD().reduce((a, t) => a + t[1], 0)) + ' MD × ' + fmt(P.rate) + ' Kč = ' + fmt(progPrice()) + ' Kč.' : '',
     'Výkonovou složku počítáme podle splnění cílů, které společně nastavíme na začátku: ' + P.kpis.join(', ') + '.',
     own.length ? 'Navázat ji můžeme i na vaše ukazatele: ' + own.map(k => k.name.trim() + (k.now || k.goal ? ' (' + (k.now || '?') + ' → ' + (k.goal || '?') + (k.unit ? ' ' + k.unit : '') + ')' : '')).join(', ') + '.' : '',
     'Pod ' + fmt(P.floor * 100) + ' % splnění se výkonová složka neplatí. Nad cílem platíte poměrně, nejvýš ' + fmt(P.cap * 100) + ' %.',
     'Výsledky měříme každý měsíc a uvidíte je přímo v této mapě.',
-    P.price ? 'Ceny jsou bez DPH.' : 'Cenu programu upřesníme po úvodní diagnostice. Rozdělení rizika si ale můžete zvolit už teď.'
+    progPrice() ? 'Ceny jsou bez DPH.' : 'Cenu programu upřesníme po úvodní diagnostice. Rozdělení rizika si ale můžete zvolit už teď.'
   ].filter(Boolean).map(t => '<li>' + esc(t) + '</li>').join('');
 }
 
