@@ -1667,7 +1667,7 @@ function boot(data) {
   $('#ctaBtnTxt').textContent = C.vendor.cta.button;
   $('#ctaBtnShort').textContent = C.vendor.cta.buttonShort || C.vendor.cta.button;
   if (C.meta.logo) { $('#tbClientLogo').src = C.meta.logo; $('#tbClientLogo').alt = C.meta.client; $('#tbClient').hidden = false; }
-  const badge = C.meta.badge || (C.meta.model ? 'Modelová data · fiktivní firma' : '');
+  const badge = (preview && personal()) ? 'Náhled XpertDigital · nic se neposílá' : C.meta.badge || (C.meta.model ? 'Modelová data · fiktivní firma' : '');
   $('#modelbadge').textContent = badge; $('#modelbadge').hidden = !badge;
 
   C.weeks.forEach(w => w.cards.forEach(c => { cardIndex.set(c.id, { card: c, week: w }); cardOrder.push(c.id); }));
@@ -2019,11 +2019,13 @@ const PRIO = [['yes', 'Chceme', 'ok'], ['maybe', 'Možná', 'warn'], ['no', 'Nec
 const STATUS = { agreed: ['Dohodnuto', 'info'], deploying: ['V nasazení', 'warn'], live: ['Běží', 'ok'] };
 const MAX_KPIS = 6;
 const isDev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+// ?nahled = zkoušení pro XpertDigital: nic se neposílá ani nenačítá z úložiště, stav se drží zvlášť
+const preview = params.has('nahled');
 const personal = () => !!(C && (C.calc.inputs || C.pricing));
 const endpoint = () => (isDev && params.get('vstupy')) || (window.XD_INPUTS || {}).endpoint || '';
 const inputKey = () => (isDev && params.get('klic')) || (window.XD_INPUTS || {}).key || '';
-const canSend = () => !!(personal() && C.meta.slug && endpoint() && inputKey());
-const lsKey = () => 'vstupy:' + (C.meta.slug || clientId);
+const canSend = () => !!(!preview && personal() && C.meta.slug && endpoint() && inputKey());
+const lsKey = () => (preview ? 'vstupy-nahled:' : 'vstupy:') + (C.meta.slug || clientId);
 const nfIn = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 3 });
 const fmtIn = v => v == null || !isFinite(v) ? '' : nfIn.format(v);
 const fmtAuto = (v, d = 1) => Number.isInteger(+v) ? fmt(v) : fmt(v, d);
@@ -2069,7 +2071,7 @@ function refreshSrc() {
 }
 const noteText = () => canSend()
   ? (C.vendor.inputsNote || 'Tlačítkem Uložit a poslat pošlete zadaná čísla, výběr a poznámky XpertDigital k této nabídce. Uvidí je jen náš tým. Nepište sem prosím osobní údaje.')
-  : 'Vaše změny zůstávají jen v tomto prohlížeči.';
+  : preview ? 'Náhled pro XpertDigital: změny zůstávají jen v tomto prohlížeči a nikam se neposílají.' : 'Vaše změny zůstávají jen v tomto prohlížeči.';
 const saveUI = label => '<div class="inp-actions save-ui" hidden><button class="btn btn-red" type="button" data-save>' + esc(label) + icon('arrowR') + '</button><span class="save-status" data-save-status aria-live="polite"></span></div>';
 function inputsPanelHTML() {
   const K = C.calc; if (!K.inputs) return '';
