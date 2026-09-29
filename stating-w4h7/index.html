@@ -57,8 +57,8 @@ a{color:inherit}
 .tb-copy strong{font-size:16px;color:var(--ink);font-weight:700}
 .tb-copy span{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .btn{display:inline-flex;align-items:center;gap:10px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;white-space:nowrap;transition:background .15s,transform .15s,box-shadow .15s}
-.btn-red{background:var(--red-btn);color:#fff;padding:12px 18px;box-shadow:0 6px 16px rgba(229,32,32,.28)}
-.btn-red:hover{background:#cc1818}
+.btn-red{background:var(--red-btn);color:#fff;padding:12px 18px;box-shadow:0 6px 16px color-mix(in srgb,var(--red-btn) 28%,transparent)}
+.btn-red:hover{filter:brightness(.88)}
 .btn-ghost{border:1px solid var(--line);padding:11px 16px;background:#fff;color:var(--ink)}
 .btn-ghost:hover{border-color:var(--ink)}
 .topbar .btn-red{margin-left:auto}
@@ -145,12 +145,12 @@ body.linear .hero-lead{font-size:18px}
 @media (max-width:520px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .profile-note{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.45}
 .story{background:var(--dark);color:#fff;border-radius:24px;padding:26px 26px 22px}
-.story-val{font-stretch:72%;font-weight:800;font-size:64px;line-height:1;color:var(--red)}
+.story-val{font-stretch:72%;font-weight:800;font-size:64px;line-height:1;color:var(--accent-dark,var(--red))}
 .story p{font-size:18px;line-height:1.45;margin:10px 0 16px;color:#fff}
 .story-tag{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--on-dark-muted);border-top:1px solid var(--dark-line);padding-top:12px}
 .feed{background:var(--dark-3);color:#fff;border-radius:24px;padding:20px 22px 12px}
 .feed-head{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark-muted)}
-.live-dot{width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 0 0 rgba(250,43,43,.6);animation:pulse 2s infinite}
+.live-dot{width:9px;height:9px;border-radius:50%;background:var(--accent-dark,var(--red));box-shadow:0 0 0 0 rgba(250,43,43,.6);animation:pulse 2s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(250,43,43,.55)}70%{box-shadow:0 0 0 10px rgba(250,43,43,0)}100%{box-shadow:0 0 0 0 rgba(250,43,43,0)}}
 .feed-list{list-style:none;margin:12px 0 0;padding:0;min-height:300px}
 .feed-list li{display:grid;grid-template-columns:48px 1fr;gap:10px;padding:10px 0;border-top:1px solid #3a3a3a;font-size:14px;line-height:1.4;color:#EDEDED}
@@ -172,14 +172,14 @@ body:not(.linear) .calc{grid-template-columns:660px 1fr}
 .res-val.pos{color:#fff}
 body.linear .res-val{font-size:clamp(40px,11vw,84px)}
 .calc>*,.b-head>div,.hero-grid>*{min-width:0}
-.res-val.pos::first-letter{color:var(--red)}
+.res-val.pos::first-letter{color:var(--accent-dark,var(--red))}
 .res-sub{font-size:16px;color:var(--on-dark-muted);margin-top:8px;font-variant-numeric:tabular-nums}
 .res-sub b{color:#fff}
 .target{margin-top:22px;background:var(--dark-2);border-radius:18px;padding:18px 18px 16px}
 .target-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
 .target-v{font-stretch:78%;font-weight:800;font-size:22px;color:#fff;font-variant-numeric:tabular-nums}
 .track{position:relative;height:14px;border-radius:7px;background:#555;margin:16px 0 10px}
-.track .fill{position:absolute;left:0;top:0;bottom:0;border-radius:7px;background:var(--red);transition:width .35s}
+.track .fill{position:absolute;left:0;top:0;bottom:0;border-radius:7px;background:var(--accent-dark,var(--red));transition:width .35s}
 .track .over{position:absolute;top:0;bottom:0;border-radius:0 7px 7px 0;background:repeating-linear-gradient(45deg,#FF8A8A 0 6px,#FA2B2B 6px 12px);transition:left .35s,width .35s}
 .track .mark{position:absolute;top:-5px;width:3px;height:24px;border-radius:2px;background:#fff}
 .track-lbls{display:flex;justify-content:space-between;font-size:12px;color:var(--on-dark-muted);font-variant-numeric:tabular-nums}
@@ -270,6 +270,7 @@ body.linear .dcol li{font-size:15.5px;padding:9px 0}
 .prod-num{font-stretch:72%;font-weight:800;font-size:34px;line-height:1;color:var(--red);text-transform:uppercase}
 .prod-name{font-size:22px;font-weight:800;line-height:1.15;margin-top:10px;color:var(--ink)}
 .prod.hl .prod-name{color:#fff}
+.prod.hl .prod-num{color:var(--accent-dark,var(--red))}
 .prod-sub{font-size:14px;color:var(--muted);margin-top:6px}
 .prod.hl .prod-sub{color:var(--on-dark-muted)}
 .prod ul{list-style:none;margin:14px 0 0;padding:0}
@@ -313,7 +314,7 @@ body:not(.linear) .lane{width:660px;flex:none}
 body.linear .lane{padding:20px 14px;border-radius:24px}
 .lane-head{padding:10px 8px 26px}
 .lane-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
-.lane-num{font-stretch:72%;font-weight:800;font-size:132px;line-height:.78;color:transparent;-webkit-text-stroke:2px var(--red)}
+.lane-num{font-stretch:72%;font-weight:800;font-size:132px;line-height:.78;color:transparent;-webkit-text-stroke:2px var(--accent-dark,var(--red))}
 .lane-impact{text-align:right}
 .lane-impact b{display:block;font-stretch:74%;font-weight:800;font-size:44px;line-height:1;color:#fff}
 .lane-impact span{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--on-dark-muted)}
@@ -460,7 +461,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeri
 .callout{border-left:4px solid var(--red);background:var(--red-50);border-radius:0 14px 14px 0;padding:14px 18px}
 .callout b{display:block;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--red-ink);margin-bottom:6px}
 .callout p{margin:0;font-size:15px;line-height:1.55;color:var(--ink)}
-.callout.dark{background:var(--dark);border-color:var(--red);color:#fff}
+.callout.dark{background:var(--dark);border-color:var(--accent-dark,var(--red));color:#fff}
 .callout.dark b{color:var(--red-on-dark)}
 .callout.dark p{color:#fff}
 .callout.grey{background:var(--panel-2);border-color:var(--text)}
@@ -608,7 +609,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeri
 body.linear .guide-card{display:none}
 .hint{transition:background .3s,color .3s,border-color .3s}
 .hint.hi{background:var(--dark);color:#fff;border-color:var(--dark);box-shadow:0 10px 28px rgba(0,0,0,.25)}
-.hint.hi::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:10px;vertical-align:1px;animation:pulse 2s infinite}
+.hint.hi::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent-dark,var(--red));margin-right:10px;vertical-align:1px;animation:pulse 2s infinite}
 /* Kontakt: adresa jako text ke zkopírování (odkaz mailto nemusí všude fungovat) */
 .contact .m-panel{width:min(580px,100%)}
 .ct-in{padding:34px 34px 30px;overflow:auto}
@@ -758,6 +759,28 @@ body:not(.linear) .pr-grid{grid-template-columns:620px minmax(0,1fr);gap:34px}
 }
 @media print{.savebar,.inputs-toggle .chev{display:none!important}}
 
+/* ---------- Dodavatel, šifrovaná nabídka, přínosy ---------- */
+.brand img{height:34px;width:auto;max-width:160px;object-fit:contain;display:block}
+body.locked .topbar,body.locked .fab,body.locked #viewport,body.locked .zoomctl,body.locked .hint,body.locked .modelbadge,body.locked .savebar{display:none!important}
+.lock{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:20px;background:#ECECEC}
+.lock[hidden]{display:none}
+.lock-card{width:min(420px,100%);background:#fff;border:1px solid #E2E2E2;border-radius:24px;padding:30px 28px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12);display:grid;gap:12px}
+.lock-ic{width:48px;height:48px;border-radius:14px;background:#333;color:#fff;display:grid;place-items:center}
+.lock-card h1{margin:4px 0 0;font-size:24px;color:#232323;line-height:1.2}
+.lock-card p{margin:0;font-size:15px;line-height:1.5;color:#484848}
+.lock-card input{font:inherit;font-size:17px;padding:12px 14px;border:1px solid #CFCFCF;border-radius:12px;width:100%;color:#232323}
+.lock-card input:focus{outline:none;border-color:#333;box-shadow:0 0 0 3px #E2E2E2}
+.lock-card button{justify-content:center;background:#333;color:#fff;padding:12px 18px;border-radius:12px;font-weight:700}
+.lock-card button:hover{background:#1f1f1f}
+.lock-msg{min-height:1.4em;font-size:14px!important;color:#B42318!important;font-weight:700}
+.track.band .over{background:rgba(255,255,255,.2);border-radius:0;transition:left .35s,width .35s}
+.track.band .fill{z-index:1}
+.track.band .mark{z-index:2}
+.d-blocks{margin-top:26px}
+.art-s{fill:none;stroke:var(--red);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.art-f{fill:var(--red)}
+.art-g{fill:none;stroke:#484848;stroke-width:1.5;stroke-dasharray:4 5}
+.art-t{font-size:11px;font-weight:700;fill:#6B6B6B;font-family:Archivo,Arial}
 /* ---------- Úzké obrazovky ---------- */
 @media (max-width:820px){
   .topbar{height:56px;gap:12px;padding:0 8px 0 14px;top:calc(8px + var(--sat));left:8px;right:8px}
@@ -781,6 +804,17 @@ body:not(.linear) .pr-grid{grid-template-columns:620px minmax(0,1fr);gap:34px}
 </head>
 <body>
 <a class="sr" href="#world">Přeskočit na obsah</a>
+<div class="lock" id="lock" hidden>
+  <form class="lock-card" id="lockForm">
+    <div class="lock-ic"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+    <h1>Chráněná nabídka</h1>
+    <p>Obsah je zašifrovaný. Zadejte heslo, které jste dostali spolu s odkazem.</p>
+    <label class="sr" for="lockPw">Heslo</label>
+    <input id="lockPw" type="password" autocomplete="current-password" placeholder="Heslo" required>
+    <button class="btn" type="submit">Otevřít nabídku</button>
+    <p class="lock-msg" id="lockMsg" role="status" aria-live="polite"></p>
+  </form>
+</div>
 
 <header class="topbar">
   <a class="brand" href="#" data-go="a" aria-label="XpertDigital, zpět na začátek">
@@ -1583,7 +1617,10 @@ if (!document.documentElement.lang) document.documentElement.lang = 'cs';
 /* ============ Načtení dat klienta ============ */
 const params = new URLSearchParams(location.search);
 const clientId = (params.get('klient') || 'ocelis').toLowerCase().replace(/[^a-z0-9-]/g, '');
-if (window.XD_CLIENT) {
+if (window.XD_ENC) {
+  // zašifrovaná nabídka: data i adresa úložiště se odemknou heslem
+  setTimeout(unlock, 0);
+} else if (window.XD_CLIENT) {
   // data vložená přímo do stránky (publikovaná verze)
   setTimeout(() => boot(window.XD_CLIENT), 0);
 } else {
@@ -1592,6 +1629,36 @@ if (window.XD_CLIENT) {
   loader.onload = () => window.XD_CLIENT ? boot(window.XD_CLIENT) : fail();
   loader.onerror = fail;
   document.head.appendChild(loader);
+}
+
+/* ============ Šifrovaná nabídka: AES-GCM, klíč z hesla přes PBKDF2 ============ */
+function b64bytes(s) { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+async function decryptOffer(pw) {
+  const E = window.XD_ENC, enc = new TextEncoder();
+  const raw = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b64bytes(E.salt), iterations: E.iter, hash: 'SHA-256' }, raw, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64bytes(E.iv) }, key, b64bytes(E.ct));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+function unlock() {
+  const box = document.getElementById('lock'), form = document.getElementById('lockForm'), inp = document.getElementById('lockPw'), msg = document.getElementById('lockMsg');
+  const memo = 'xdmap:heslo:' + location.pathname;
+  document.body.classList.add('locked'); box.hidden = false;
+  if (!window.crypto || !crypto.subtle) { msg.textContent = 'Tento prohlížeč neumí nabídku odemknout. Otevřete ji prosím v aktuálním Chrome, Edge, Safari nebo Firefoxu.'; return; }
+  const open = async (pw, remembered) => {
+    let p;
+    msg.textContent = remembered ? '' : 'Otevírám…';
+    try { p = await decryptOffer(pw); }
+    catch (e) { msg.textContent = remembered ? '' : 'Heslo nesedí. Zkuste ho prosím zadat znovu.'; if (!remembered) inp.select(); return; }
+    try { sessionStorage.setItem(memo, pw); } catch (e) {}
+    if (p.inputs) window.XD_INPUTS = p.inputs;
+    new Function('window', p.data)(window);
+    box.hidden = true; document.body.classList.remove('locked');
+    boot(window.XD_CLIENT);
+  };
+  form.addEventListener('submit', e => { e.preventDefault(); if (inp.value) open(inp.value, false); });
+  let saved = null; try { saved = sessionStorage.getItem(memo); } catch (e) {}
+  if (saved) open(saved, true); else inp.focus();
 }
 
 function fail() {
@@ -1643,7 +1710,8 @@ const ICONS = {
   pencil: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   chevron: '<path d="M6 9l6 6 6-6"/>',
-  x: '<path d="M6 6l12 12M18 6 6 18"/>'
+  x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'
 };
 const icon = (n, cls = '') => '<svg class="ic ' + cls + '" viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[n] || ICONS.info) + '</svg>';
 
@@ -1663,14 +1731,15 @@ const isLinear = () => document.body.classList.contains('linear');
 /* ============ Start ============ */
 function boot(data) {
   C = data;
-  document.title = 'AI mapa ' + (C.meta.titleShort || C.meta.client);
+  document.title = C.meta.pageTitle || ('AI mapa ' + (C.meta.titleShort || C.meta.client));
+  applyVendor();
   // CTA
   $('#ctaTitle').textContent = C.vendor.cta.title;
   $('#ctaText').textContent = C.vendor.cta.text;
   $('#ctaBtnTxt').textContent = C.vendor.cta.button;
   $('#ctaBtnShort').textContent = C.vendor.cta.buttonShort || C.vendor.cta.button;
   if (C.meta.logo) { $('#tbClientLogo').src = C.meta.logo; $('#tbClientLogo').alt = C.meta.client; $('#tbClient').hidden = false; }
-  const badge = (preview && personal()) ? 'Náhled XpertDigital · nic se neposílá' : C.meta.badge || (C.meta.model ? 'Modelová data · fiktivní firma' : '');
+  const badge = (preview && personal()) ? 'Náhled ' + vendorName() + ' · nic se neposílá' : C.meta.badge || (C.meta.model ? 'Modelová data · fiktivní firma' : '');
   $('#modelbadge').textContent = badge; $('#modelbadge').hidden = !badge;
 
   C.weeks.forEach(w => w.cards.forEach(c => { cardIndex.set(c.id, { card: c, week: w }); cardOrder.push(c.id); }));
@@ -1696,13 +1765,26 @@ function boot(data) {
   // po načtení webfontu se změní rozměry → znovu zaměřit (jen když uživatel ještě nehýbal)
   document.fonts?.ready.then(() => { if (!isLinear() && !interacted) { computeMin(); go(startKey(), false); } });
   // přímý odkaz na kartu: index.html#k-3.1
-  const m = location.hash.match(/^#k-([\d.]+)$/);
+  const m = location.hash.match(/^#k-([\w.]+)$/);
   if (m && cardIndex.has(m[1])) openCard(m[1]);
-  window.addEventListener('hashchange', () => { const h = location.hash.match(/^#k-([\d.]+)$/); if (h && cardIndex.has(h[1]) && curCard !== h[1]) openCard(h[1]); });
+  window.addEventListener('hashchange', () => { const h = location.hash.match(/^#k-([\w.]+)$/); if (h && cardIndex.has(h[1]) && curCard !== h[1]) openCard(h[1]); });
   // malé API pro prezentujícího / ladění: XDMap.go('b'), XDMap.go('w3'), XDMap.open('3.1')
   window.XDMap = { go, open: openCard, close: closeCard, zoom: (f) => zoomAt(f, vp.clientWidth / 2, vp.clientHeight / 2), view: () => ({ ...st }),
     focus: (sel, s = 1, dx = 0, dy = 0) => { const el = $(sel); if (!el || isLinear()) return; const r = worldRect(el); Object.assign(st, { s, x: 24 - (r.x + dx) * s, y: topInset() - (r.y + dy) * s }); apply(); } };
 }
+// dodavatel nabídky: logo, barvy a ikona stránky (výchozí je XpertDigital v šabloně)
+function applyVendor() {
+  const V = C.vendor, root = document.documentElement;
+  if (V.theme) Object.keys(V.theme).forEach(k => root.style.setProperty('--' + k, V.theme[k]));
+  if (V.logo) { const b = $('.brand'); b.innerHTML = '<img src="' + esc(V.logo) + '" alt="' + esc(V.name) + '">'; b.setAttribute('aria-label', V.name + ', zpět na začátek'); }
+  if (V.theme && V.theme.red) {
+    const ic = document.querySelector('link[rel="icon"]') || document.head.appendChild(Object.assign(document.createElement('link'), { rel: 'icon' }));
+    ic.href = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="' + V.theme.red + '"/><text x="32" y="43" font-size="32" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial">' + esc((V.name || '?').charAt(0)) + '</text></svg>');
+  }
+}
+const vendorName = () => (C && C.vendor && C.vendor.name) || 'XpertDigital';
+const cssVar = (n, d) => (getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim() || d);
+
 // výchozí pohled: #a–#d nebo #w1–#w7 v adrese, jinak úvod
 function startKey() { const h = location.hash.slice(1); return /^(a|b|c|d|w[1-9])$/.test(h) ? h : 'a'; }
 
@@ -1711,7 +1793,10 @@ function startKey() { const h = location.hash.slice(1); return /^(a|b|c|d|w[1-9]
 const modState = {};
 let sched = {}, totalWeeks = 0;
 const plural = (n, one, few, many) => n === 1 ? one : (n >= 2 && n <= 4) ? few : many;
-const rangeLabel = (a, b) => a === b ? 'Týden ' + a : 'Týdny ' + a + '–' + b;
+// jednotka harmonogramu: týdny (výchozí), nebo měsíce (C.schedule.unit = 'month')
+const byMonth = () => !!(C && C.schedule && C.schedule.unit === 'month');
+const unitN = n => byMonth() ? plural(n, 'měsíc', 'měsíce', 'měsíců') : plural(n, 'týden', 'týdny', 'týdnů');
+const rangeLabel = (a, b) => byMonth() ? (a === b ? 'Měsíc ' + a : 'Měsíce ' + a + '–' + b) : (a === b ? 'Týden ' + a : 'Týdny ' + a + '–' + b);
 const monthsOf = w => Math.round(w / 4.33 * 2) / 2;
 function computeSchedule() {
   let start = 1; sched = {};
@@ -1724,17 +1809,18 @@ function computeSchedule() {
 }
 function wkLabel(n, f = 'long') {
   const s = sched[n]; if (!s) return '';
-  if (!s.on) return f === 'big' ? '+' + s.len : 'Volitelně · +' + s.len + ' ' + plural(s.len, 'týden', 'týdny', 'týdnů');
+  if (!s.on) return f === 'big' ? '+' + s.len : 'Volitelně · +' + s.len + ' ' + unitN(s.len);
   const r = s.from === s.to ? String(s.from) : s.from + '–' + s.to;
   return f === 'big' ? r : rangeLabel(s.from, s.to);
 }
 function durLabel(w) {
+  if (byMonth()) return w + ' ' + unitN(w);
   const m = monthsOf(w);
   if (m < 2) return w + ' ' + plural(w, 'týden', 'týdny', 'týdnů');
   return Number.isInteger(m) ? m + ' ' + plural(m, 'měsíc', 'měsíce', 'měsíců') : fmt(m, 1) + ' měsíce';
 }
 function fillDyn(t) {
-  return String(t ?? '').replace(/\{dur\}/g, durLabel(totalWeeks)).replace(/\{weeks\}/g, totalWeeks + ' ' + plural(totalWeeks, 'týden', 'týdny', 'týdnů')).replace(/\{T\}/g, String(totalWeeks));
+  return String(t ?? '').replace(/\{dur\}/g, durLabel(totalWeeks)).replace(/\{weeks\}/g, totalWeeks + ' ' + unitN(totalWeeks)).replace(/\{T\}/g, String(totalWeeks));
 }
 function setModule(n, on) {
   modState[n] = on;
@@ -1749,7 +1835,7 @@ function applySchedule() {
     const ns = el.dataset.colwk.split(',').filter(Boolean).map(Number); if (!ns.length) return;
     const on = ns.map(n => sched[n]).filter(x => x && x.on);
     const len = ns.reduce((a, n) => a + (sched[n]?.len || 0), 0);
-    el.textContent = on.length ? rangeLabel(Math.min(...on.map(x => x.from)), Math.max(...on.map(x => x.to))) : 'Volitelně · +' + len + ' ' + plural(len, 'týden', 'týdny', 'týdnů');
+    el.textContent = on.length ? rangeLabel(Math.min(...on.map(x => x.from)), Math.max(...on.map(x => x.to))) : 'Volitelně · +' + len + ' ' + unitN(len);
   });
   $$('.lane').forEach(l => l.classList.toggle('off', !sched[+l.dataset.n]?.on));
   $$('[data-mod]').forEach(sw => { const on = !!modState[+sw.dataset.mod]; sw.setAttribute('aria-checked', String(on)); const t = sw.querySelector('.sw-t'); if (t) t.textContent = on ? 'V PROGRAMU' : 'PŘIDAT'; });
@@ -1760,11 +1846,11 @@ function renderTimeline() {
   const D = C.needs, on = C.weeks.filter(w => sched[w.n]?.on), m = monthsOf(totalWeeks);
   tl.style.gridTemplateColumns = on.map(w => (w.len || 1) + 'fr').join(' ');
   tl.innerHTML = on.map(w => '<div class="tl-seg' + (w.optional ? ' opt' : '') + '"><b>' + esc(wkLabel(w.n)) + '</b><span>' + esc(w.short) + '</span></div>').join('');
-  $('#tlAfter').innerHTML = '<span><b>' + rangeLabel(1, totalWeeks) + '</b> · ' + esc(D.during || 'nasazení a ladění s konzultanty') + '</span><span><b>Měsíce ' + (Math.floor(m) + 1) + '–12</b> · ' + esc(D.after) + '</span>';
+  $('#tlAfter').innerHTML = '<span><b>' + rangeLabel(1, totalWeeks) + '</b> · ' + esc(D.during || 'nasazení a ladění s konzultanty') + '</span><span><b>' + (byMonth() ? 'Od ' + (totalWeeks + 1) + '. měsíce' : 'Měsíce ' + (Math.floor(m) + 1) + '–12') + '</b> · ' + esc(D.after) + '</span>';
   $('#tlMods').innerHTML = C.weeks.filter(w => w.optional).map(w => {
     const onM = !!modState[w.n];
     return '<div class="mod-row' + (onM ? ' on' : '') + '"><button class="switch" type="button" role="switch" aria-checked="' + onM + '" data-mod="' + w.n + '" aria-label="' + esc('Zahrnout do programu: ' + w.short) + '"><span class="sw-t">' + (onM ? 'V PROGRAMU' : 'PŘIDAT') + '</span><span class="knob"></span></button>' +
-      '<div><b>' + esc((w.optionalLabel || 'Volitelný modul: ' + w.short) + ' · +' + w.len + ' ' + plural(w.len, 'týden', 'týdny', 'týdnů')) + '</b><span class="t">' + esc(w.optionalText || '') + '</span></div></div>';
+      '<div><b>' + esc((w.optionalLabel || 'Volitelný modul: ' + w.short) + ' · +' + w.len + ' ' + unitN(w.len)) + '</b><span class="t">' + esc(w.optionalText || '') + '</span></div></div>';
   }).join('');
 }
 
@@ -1784,7 +1870,7 @@ function renderA() {
           '<span class="pain-agent">' + esc(p.agent) + icon('arrowR') + '</span>' +
         '</button>').join('') + '</div>' +
     '</div><aside class="hero-side">' +
-      '<div class="profile"><div class="profile-art">' + (P.art === 'steel' ? steelArt() : P.art === 'traffic' ? trafficArt() : '') + '</div><div class="profile-body">' +
+      '<div class="profile"><div class="profile-art">' + (P.art === 'steel' ? steelArt() : P.art === 'traffic' ? trafficArt() : P.art === 'energy' ? energyArt() : P.art === 'network' ? networkArt() : '') + '</div><div class="profile-body">' +
         '<span class="tag">' + esc(P.tag) + '</span>' +
         (C.meta.logo ? '<img class="profile-logo" src="' + esc(C.meta.logo) + '" alt="' + esc(C.meta.client) + '">' : '') +
         '<div class="profile-name">' + esc(P.name) + '</div>' +
@@ -1813,6 +1899,36 @@ function steelArt() {
     '<text x="286" y="14" font-size="11" font-weight="700" fill="#6B6B6B" text-anchor="middle" font-family="Archivo,Arial">TRUBKA</text>' +
     '<text x="394" y="14" font-size="11" font-weight="700" fill="#6B6B6B" text-anchor="middle" font-family="Archivo,Arial">ÚHELNÍK</text>' +
     '<text x="504" y="52" font-size="11" font-weight="700" fill="#6B6B6B" text-anchor="middle" font-family="Archivo,Arial">PLECH</text>' +
+    '</svg>';
+}
+
+function networkArt() {
+  // struktura poradců, klient, centrála s dokumenty, AI asistent
+  const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
+  const node = (x, y, r) => '<circle class="art-s" cx="' + x + '" cy="' + y + '" r="' + r + '"/>';
+  return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
+    '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
+    '<path class="art-s" d="M70 30v14M70 44L34 66M70 44l36 22M34 66v14M34 80l-14 18M34 80l14 18M106 66v14M106 80l-14 18M106 80l14 18"/>' +
+    node(70, 24, 7) + node(34, 66, 6) + node(106, 66, 6) + node(20, 102, 5) + node(48, 102, 5) + node(92, 102, 5) + node(120, 102, 5) +
+    '<circle class="art-s" cx="214" cy="58" r="13"/><path class="art-s" d="M190 104c3-18 13-28 24-28s21 10 24 28"/>' +
+    '<rect class="art-s" x="292" y="40" width="54" height="68" rx="4"/><path class="art-s" d="M302 56h34M302 68h34M302 80h22"/><rect class="art-s" x="304" y="30" width="54" height="68" rx="4" style="opacity:.45"/>' +
+    '<path class="art-s" d="M420 44h96a8 8 0 0 1 8 8v34a8 8 0 0 1-8 8h-58l-16 14v-14h-22a8 8 0 0 1-8-8V52a8 8 0 0 1 8-8z"/><path class="art-s" d="M436 62h72M436 76h48"/>' +
+    t(70, 12, 'STRUKTURA') + t(214, 30, 'KLIENT') + t(325, 22, 'CENTRÁLA') + t(468, 32, 'VIRTUÁLNÍ TÝM') +
+    '</svg>';
+}
+function energyArt() {
+  // plyn, stožár elektřiny, dům s fotovoltaikou, tepelné čerpadlo, stojan CNG
+  const s = 'fill="none" stroke="#FA2B2B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+  const g = 'fill="none" stroke="#484848" stroke-width="1.5" stroke-dasharray="4 5"';
+  const t = (x, y, txt) => '<text x="' + x + '" y="' + y + '" font-size="11" font-weight="700" fill="#6B6B6B" text-anchor="middle" font-family="Archivo,Arial">' + txt + '</text>';
+  return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
+    '<line x1="0" y1="112" x2="560" y2="112" ' + g + '/>' +
+    '<path ' + s + ' d="M46 104c-18 0-26-14-20-28 4-10 12-14 12-28 12 8 22 22 22 36 4-4 5-9 5-14 7 8 8 17 5 24-4 7-12 10-24 10z"/>' +
+    '<path ' + s + ' d="M130 112l14-86 14 86M136 74h16M132 94h24M122 38h44M126 52h36M144 26v-8"/>' +
+    '<path ' + s + ' d="M214 112V70l40-30 40 30v42zM240 112V88h28v24"/><path ' + s + ' d="M222 58l28-21M232 64l28-21M258 45l26 19"/>' +
+    '<rect ' + s + ' x="336" y="66" width="70" height="46" rx="6"/><circle ' + s + ' cx="360" cy="89" r="14"/><path ' + s + ' d="M360 75v28M346 89h28M388 78h10M388 90h10M388 102h10"/>' +
+    '<rect ' + s + ' x="462" y="40" width="40" height="72" rx="6"/><rect ' + s + ' x="470" y="50" width="24" height="16" rx="2"/><path ' + s + ' d="M502 60h14v30c0 6 8 6 8 0V70"/>' +
+    t(46, 26, 'PLYN') + t(144, 12, 'ELEKTŘINA') + t(254, 26, 'FVE') + t(371, 56, 'TEPELNÉ ČERPADLO') + t(482, 30, 'CNG') +
     '</svg>';
 }
 
@@ -1860,7 +1976,7 @@ function renderB() {
     inputsPanelHTML() +
     '<div class="calc">' +
       '<div class="result" aria-live="polite">' +
-        '<div class="lbl">Nárůst zisku ročně</div>' +
+        '<div class="lbl">' + esc(K.resultLabel || 'Nárůst zisku ročně') + '</div>' +
         '<div class="res-val" id="resVal">+0</div>' +
         '<div class="res-sub" id="resSub"></div>' +
         '<div class="target"><div class="target-top"><span class="lbl" id="tgtLbl">' + esc(K.targetLabel || 'Váš cíl z roadmapy') + '</span><span class="target-v" id="tgtV"></span></div>' +
@@ -1904,7 +2020,7 @@ function money(v, d = 2) {
   return fmt(r / 1e6, d) + ' mil. ' + (eur ? '€' : 'Kč');
 }
 function initCalc() {
-  const K = C.calc; K.areas.forEach((a, i) => { calcState.on[i] = a.module ? !!modState[a.module] : false; calcState.x[i] = a.default; });
+  const K = C.calc; K.areas.forEach((a, i) => { calcState.on[i] = a.module ? !!modState[a.module] : !!a.on; calcState.x[i] = a.default; });
   renderHow();
   $('#sec-b').addEventListener('click', e => {
     const sw = e.target.closest('[data-sw]');
@@ -1924,6 +2040,7 @@ function updateCalc() {
   const xs = K.areas.map((a, i) => calcState.on[i] ? calcState.x[i] : 0);
   const base = model([]), now = model(xs), tgt = K.target;
   const delta = now - base;
+  if (K.mode === 'benefit') { updateBenefit(K, xs, base, now); return; }
   $('#resVal').textContent = (delta >= 0 ? '+' : '−') + money(Math.abs(delta));
   $('#resVal').classList.toggle('pos', delta > 0);
   $('#resSub').innerHTML = 'z <b>' + money(base) + '</b> na <b>' + money(now) + '</b> ročně · ' + fmt(now / base, 2) + '× (' + (delta >= 0 ? '+' : '') + fmt(delta / base * 100, 0) + ' %)';
@@ -1946,7 +2063,40 @@ function updateCalc() {
   $('#tgtMsg').innerHTML = now >= tgt
     ? '<b>Cíl splněn.</b> S tímto nastavením jste ' + money(now - tgt) + ' nad cílem.'
     : 'Na cíl potřebujete <b>' + fmt(tgt / base, 2) + '×</b>. Zapněte oblasti, kterým věříte. Na cíl stačí zhruba <b>' + u + ' % v každé</b>.';
-  // oblasti
+  updateAreas(K, xs);
+  // vodopád
+  const steps = []; let prev = base; const acc = K.areas.map(() => 0);
+  K.areas.forEach((a, i) => { acc[i] = xs[i]; const p = model(acc); steps.push({ l: a.short, v: p - prev }); prev = p; });
+  $('#wf').innerHTML = waterfall(base, steps, now, tgt);
+}
+// Režim přínosů (calc.mode = 'benefit'): výsledek je součet přínosů domén, cílem je rozpětí calc.range(v) = [od, do] v Kč
+function updateBenefit(K, xs, base, now) {
+  const delta = now - base, rng = typeof K.range === 'function' ? K.range(ui.values, K) : null;
+  const lo = rng ? rng[0] : 0, hi = rng ? rng[1] : 0, on = K.areas.filter((a, i) => calcState.on[i]).length;
+  $('#resVal').textContent = (delta >= 0 ? '+' : '−') + money(Math.abs(delta));
+  $('#resVal').classList.toggle('pos', delta > 0);
+  $('#resSub').innerHTML = esc(K.resultNote || 'přínos ročně') + ' · zapnuté domény: <b>' + on + ' / ' + K.areas.length + '</b>';
+  $('#tgtLbl').textContent = K.rangeLabel || 'Rozpětí podle podkladu';
+  $('#tgtV').textContent = rng ? money(lo, 1) + ' – ' + money(hi, 1) : '';
+  const maxV = Math.max(hi, delta, 1) * 1.12, pct = v => clamp(v / maxV * 100, 0, 100) + '%';
+  const tr = $('#track'); tr.classList.add('band');
+  tr.querySelector('.fill').style.width = pct(Math.max(0, delta));
+  const band = tr.querySelector('.over'); band.style.left = pct(lo); band.style.width = rng ? clamp((hi - lo) / maxV * 100, 0, 100) + '%' : '0%';
+  tr.querySelector('[data-m="base"]').style.left = pct(lo);
+  tr.querySelector('[data-m="tgt"]').style.left = pct(hi);
+  $('#trkL').textContent = '0';
+  $('#trkR').textContent = money(maxV, 0);
+  let best = -1, bestV = 0; const acc = K.areas.map(() => 0), steps = []; let prev = base;
+  K.areas.forEach((a, i) => { acc[i] = xs[i]; const p = model(acc); steps.push({ l: a.short, v: p - prev }); if (p - prev > bestV) { bestV = p - prev; best = i; } prev = p; });
+  const top = best >= 0 ? ' Nejvíc přináší <b>' + esc(K.areas[best].title) + '</b>.' : '';
+  $('#tgtMsg').innerHTML = !rng ? top
+    : delta < lo ? 'Pod rozpětím o <b>' + money(lo - delta, 1) + '</b>. Zapněte další domény nebo upravte předpoklady.' + top
+    : delta > hi ? '<b>Nad horní hranicí</b> o ' + money(delta - hi, 1) + '. Vaše předpoklady jsou odvážnější než podklad.' + top
+    : '<b>V rozpětí podkladu.</b>' + top;
+  updateAreas(K, xs);
+  $('#wf').innerHTML = waterfallBenefit(steps, delta, rng);
+}
+function updateAreas(K, xs) {
   K.areas.forEach((a, i) => {
     const on = calcState.on[i], x = calcState.x[i];
     const el = $('[data-area="' + i + '"]');
@@ -1961,10 +2111,6 @@ function updateCalc() {
     el.querySelector('[data-ms]').textContent = sub || '';
     el.querySelector('[data-meas]').innerHTML = measHTML(a);
   });
-  // vodopád
-  const steps = []; let prev = base; const acc = K.areas.map(() => 0);
-  K.areas.forEach((a, i) => { acc[i] = xs[i]; const p = model(acc); steps.push({ l: a.short, v: p - prev }); prev = p; });
-  $('#wf').innerHTML = waterfall(base, steps, now, tgt);
 }
 function metric(a, x, xs) {
   const b = C.calc.base;
@@ -1987,6 +2133,30 @@ function metric(a, x, xs) {
   }
   return ['', '', ''];
 }
+// přínosy po doménách od nuly, celkem a pásmo podkladu [od, do]
+function waterfallBenefit(steps, total, rng) {
+  const W = 620, H = 250, pl = 6, pr = 6, pt = 26, pb = 40;
+  const n = steps.length + 1, slot = (W - pl - pr) / n, bw = slot * .6;
+  const maxV = Math.max(total, rng ? rng[1] : 0, 1) * 1.15;
+  const y = v => pt + (H - pt - pb) * (1 - v / maxV);
+  const cur = calcState.cur === 'eur' ? C.calc.eurRate : 1, short = v => fmt(v / cur / 1e6, 1);
+  const red = cssVar('red', '#FA2B2B');
+  let out = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Přínos po doménách a celkem">';
+  if (rng) out += '<rect x="0" y="' + y(rng[1]) + '" width="' + W + '" height="' + Math.max(1, y(rng[0]) - y(rng[1])) + '" fill="#F2F2F2"/>' +
+    '<text x="' + (W - 4) + '" y="' + (y(rng[1]) - 6) + '" text-anchor="end" font-size="11.5" font-weight="800" fill="#232323" font-family="Archivo,Arial">PODKLAD ' + short(rng[0]) + ' – ' + short(rng[1]) + '</text>';
+  out += '<line x1="0" x2="' + W + '" y1="' + y(0) + '" y2="' + y(0) + '" stroke="#DADADA"/>';
+  let acc = 0;
+  const bar = (i, v0, v1, fill, lbl, val, strong) => {
+    const x = pl + slot * i + (slot - bw) / 2, top = y(Math.max(v0, v1)), h = Math.max(1.5, Math.abs(y(v0) - y(v1)));
+    out += '<rect x="' + x + '" y="' + top + '" width="' + bw + '" height="' + h + '" rx="4" fill="' + fill + '"/>';
+    out += '<text x="' + (x + bw / 2) + '" y="' + (top - 7) + '" text-anchor="middle" font-size="12.5" font-weight="' + (strong ? 800 : 700) + '" fill="#232323" font-family="Archivo,Arial">' + val + '</text>';
+    out += '<text x="' + (x + bw / 2) + '" y="' + (H - pb + 18) + '" text-anchor="middle" font-size="11.5" font-weight="600" fill="#6B6B6B" font-family="Archivo,Arial">' + esc(lbl) + '</text>';
+  };
+  steps.forEach((s, i) => { bar(i, acc, acc + s.v, s.v > 0.05e6 ? red : '#E2E2E2', s.l, s.v > 0.05e6 ? '+' + short(s.v) : '0', false); acc += s.v; });
+  bar(n - 1, 0, total, rng && total < rng[0] ? cssVar('red-ink', '#D31414') : '#15805A', 'Celkem', short(total), true);
+  out += '<text x="4" y="14" font-size="11" font-weight="800" fill="#6B6B6B" letter-spacing="1" font-family="Archivo,Arial">PŘÍNOS ROČNĚ · MIL. ' + (calcState.cur === 'eur' ? '€' : 'KČ') + '</text>';
+  return out + '</svg>';
+}
 function waterfall(base, steps, total, tgt) {
   const W = 620, H = 250, pl = 6, pr = 6, pt = 26, pb = 40;
   const n = steps.length + 2, slot = (W - pl - pr) / n, bw = slot * .6;
@@ -2005,8 +2175,8 @@ function waterfall(base, steps, total, tgt) {
   };
   bar(0, 0, base, '#484848', 'Dnes', short(base), true);
   let acc = base;
-  steps.forEach((s, i) => { bar(i + 1, acc, acc + s.v, s.v > 0.5 ? '#FA2B2B' : '#E2E2E2', s.l, s.v > 0.5 ? '+' + short(s.v) : '0', false); acc += s.v; });
-  bar(n - 1, 0, total, total >= tgt ? '#15805A' : '#D31414', 'Nově', short(total), true);
+  steps.forEach((s, i) => { bar(i + 1, acc, acc + s.v, s.v > 0.5 ? cssVar('red', '#FA2B2B') : '#E2E2E2', s.l, s.v > 0.5 ? '+' + short(s.v) : '0', false); acc += s.v; });
+  bar(n - 1, 0, total, total >= tgt ? '#15805A' : cssVar('red-ink', '#D31414'), 'Nově', short(total), true);
   out += '<line x1="0" x2="' + W + '" y1="' + y(tgt) + '" y2="' + y(tgt) + '" stroke="#232323" stroke-width="1.5" stroke-dasharray="6 5"/>';
   out += '<text x="' + (W - 4) + '" y="' + (y(tgt) - 6) + '" text-anchor="end" font-size="11.5" font-weight="800" fill="#232323" font-family="Archivo,Arial">CÍL ' + short(tgt) + '</text>';
   out += '<text x="4" y="14" font-size="11" font-weight="800" fill="#6B6B6B" letter-spacing="1" font-family="Archivo,Arial">ZISK ROČNĚ · MIL. ' + (calcState.cur === 'eur' ? '€' : 'KČ') + '</text>';
@@ -2073,8 +2243,8 @@ function refreshSrc() {
   if (c) { c.textContent = n ? n + ' ' + plural(n, 'vaše číslo', 'vaše čísla', 'vašich čísel') : ''; c.hidden = !n; }
 }
 const noteText = () => canSend()
-  ? (C.vendor.inputsNote || 'Tlačítkem Uložit a poslat pošlete zadaná čísla, výběr a poznámky XpertDigital k této nabídce. Uvidí je jen náš tým. Nepište sem prosím osobní údaje.')
-  : preview ? 'Náhled pro XpertDigital: změny zůstávají jen v tomto prohlížeči a nikam se neposílají.' : 'Vaše změny zůstávají jen v tomto prohlížeči.';
+  ? (C.vendor.inputsNote || 'Tlačítkem Uložit a poslat pošlete zadaná čísla, výběr a poznámky ' + vendorName() + ' k této nabídce. Uvidí je jen náš tým. Nepište sem prosím osobní údaje.')
+  : preview ? 'Náhled pro ' + vendorName() + ': změny zůstávají jen v tomto prohlížeči a nikam se neposílají.' : 'Vaše změny zůstávají jen v tomto prohlížeči.';
 const saveUI = label => '<div class="inp-actions save-ui" hidden><button class="btn btn-red" type="button" data-save>' + esc(label) + icon('arrowR') + '</button><span class="save-status" data-save-status aria-live="polite"></span></div>';
 function inputsPanelHTML() {
   const K = C.calc; if (!K.inputs) return '';
@@ -2089,7 +2259,7 @@ function inputsPanelHTML() {
         '<div id="ownKpis"></div><button class="btn btn-ghost" type="button" data-kpi-add>' + icon('plus') + 'Přidat ukazatel</button></div></div>' +
       '<div class="inp-side"><div class="explain-h">Co z vašich čísel plyne</div><div class="explain" id="explain"></div>' +
         '<div class="inp-actions"><button class="btn btn-ghost" type="button" data-reset-inputs>Vrátit naše odhady</button></div>' +
-        saveUI('Uložit a poslat XpertDigital') + '<p class="inp-note">' + esc(noteText()) + '</p></div>' +
+        saveUI('Uložit a poslat ' + vendorName()) + '<p class="inp-note">' + esc(noteText()) + '</p></div>' +
     '</div></div>';
 }
 function renderKpis(focusLast) {
@@ -2145,15 +2315,17 @@ function measHTML(a) {
 }
 
 /* --- Výběr boosterů --- */
+// názvosloví karet: C.terms.item = [1, 2 – 4, 5 a víc], výchozí booster / boostery / boosterů
+const termN = n => plural(n, ...((C.terms && C.terms.item) || ['booster', 'boostery', 'boosterů']));
 function prioChip(id) { const d = PRIO.find(x => x[0] === (ui.prio[id] || {}).p); return d ? '<span class="pill ' + d[2] + '">' + d[1] + '</span>' : ''; }
 function cardFlags(c) { return (personal() || c.status) ? '<span class="card-flags">' + statusChip(c) + '<span data-cprio="' + esc(c.id) + '">' + prioChip(c.id) + '</span></span>' : ''; }
 function refreshPrioChips() { $$('[data-cprio]').forEach(el => { el.innerHTML = prioChip(el.dataset.cprio); }); }
 function prioHTML(id) {
   if (!personal()) return '';
   const cur = ui.prio[id] || {};
-  return '<div class="prio"><div class="prio-top"><span class="prio-l">Chcete to u vás?</span><div class="prio-btns" role="group" aria-label="Váš zájem o tento booster">' +
+  return '<div class="prio"><div class="prio-top"><span class="prio-l">Chcete to u vás?</span><div class="prio-btns" role="group" aria-label="Váš zájem o tuto kartu">' +
     PRIO.map(p => '<button type="button" data-prio="' + p[0] + '" data-prio-id="' + esc(id) + '" aria-pressed="' + (cur.p === p[0]) + '">' + p[1] + '</button>').join('') + '</div></div>' +
-    '<textarea data-prio-note="' + esc(id) + '" rows="2" maxlength="600" aria-label="Vaše poznámka k tomuto boosteru" placeholder="Poznámka pro nás (nepovinné): co upravit, kdo by to u vás používal">' + esc(cur.note || '') + '</textarea></div>';
+    '<textarea data-prio-note="' + esc(id) + '" rows="2" maxlength="600" aria-label="Vaše poznámka k této kartě" placeholder="Poznámka pro nás (nepovinné): co upravit, kdo by to u vás používal">' + esc(cur.note || '') + '</textarea></div>';
 }
 function setPrio(id, p) {
   if (!cardIndex.has(id)) return;
@@ -2176,18 +2348,18 @@ function pickHTML() {
     '<p class="pick-lead">' + esc(C.needs.pickLead || 'V detailu každé karty označte Chceme, Možná nebo Nechceme a připište poznámku. Z vašeho výběru sestavíme pořadí nasazení.') + '</p>' +
     '<div id="pickBody"></div>' +
     '<label class="pick-wish" for="wish"><span>Chybí vám tu něco? Napište, co dalšího byste svěřili AI týmu.</span><textarea id="wish" data-wish rows="3" maxlength="1200"></textarea></label>' +
-    saveUI('Uložit výběr a poslat XpertDigital') + '<p class="inp-note">' + esc(noteText()) + '</p></div>';
+    saveUI('Uložit výběr a poslat ' + vendorName()) + '<p class="inp-note">' + esc(noteText()) + '</p></div>';
 }
 function renderPick() {
   const body = $('#pickBody'); if (!body) return;
   const by = p => cardOrder.filter(id => (ui.prio[id] || {}).p === p);
   const yes = by('yes'), maybe = by('maybe'), no = by('no'), n = yes.length + maybe.length;
-  $('#pickCount').textContent = n ? n + ' ' + plural(n, 'booster', 'boostery', 'boosterů') : '';
+  $('#pickCount').textContent = n ? n + ' ' + termN(n) : '';
   const item = id => { const hit = cardIndex.get(id), note = (ui.prio[id] || {}).note; return '<button type="button" class="pick-item" data-open="' + esc(id) + '"><span class="card-id">' + esc(id) + '</span><span class="pick-t">' + esc(hit.card.title) + (note ? '<small>' + esc(note) + '</small>' : '') + '</span><span class="pick-wk" data-wk="' + hit.week.n + '">' + esc(wkLabel(hit.week.n)) + '</span></button>'; };
   const grp = (label, ids) => ids.length ? '<div class="pick-grp"><h4>' + label + ' · ' + ids.length + '</h4><div class="pick-items">' + ids.map(item).join('') + '</div></div>' : '';
   body.innerHTML = (n || no.length)
     ? grp('Chceme', yes) + grp('Možná', maybe) + (no.length ? '<p class="pick-no">Nechcete: ' + no.map(id => esc(id + ' ' + cardIndex.get(id).card.title)).join(' · ') + '</p>' : '')
-    : '<div class="pick-empty"><p>Zatím jste nic neoznačili. Otevřete kteroukoli kartu v programu a klikněte na <b>Chceme</b>, <b>Možná</b> nebo <b>Nechceme</b>.</p><button class="btn btn-ghost" type="button" data-go="w' + C.weeks[0].n + '">Projít boostery' + icon('arrowR') + '</button></div>';
+    : '<div class="pick-empty"><p>Zatím jste nic neoznačili. Otevřete kteroukoli kartu v programu a klikněte na <b>Chceme</b>, <b>Možná</b> nebo <b>Nechceme</b>.</p><button class="btn btn-ghost" type="button" data-go="w' + C.weeks[0].n + '">' + esc((C.terms && C.terms.browse) || 'Projít boostery') + icon('arrowR') + '</button></div>';
 }
 
 /* --- Cena: pevná a výkonová složka podle volby klienta --- */
@@ -2205,7 +2377,7 @@ function pricingHTML() {
       '<div class="pr-scale"><span>0 %: pevná cena</span><span>' + maxPerf + ' %: nejvíc rizika neseme my</span></div>' +
       '<div class="pr-tiles" id="prTiles"></div>' +
     '</div><div class="pr-out"><div class="tbl-wrap"><table class="tbl" id="prTbl"></table></div><ul class="pr-rules" id="prRules"></ul></div></div>' +
-    saveUI('Uložit volbu a poslat XpertDigital') + '</div>';
+    saveUI('Uložit volbu a poslat ' + vendorName()) + '</div>';
 }
 // Cena programu: pevně daná (price), nebo z týmu: MD × sazba; položky perWeek se násobí délkou programu (zapnutý modul ji prodlouží)
 function teamMD() { const P = C.pricing; return (P.team || []).map(t => [t.label, t.md != null ? t.md : t.perWeek * totalWeeks]); }
@@ -2238,7 +2410,7 @@ function updatePricing() {
     rows.map(([a, l]) => { const t = q.total(a), d = t - q.base, same = Math.abs(d) < 1e-6 * q.base; return '<tr><td>' + l + '</td><td class="num">' + priceFmt(t) + '</td><td class="num"><span class="pill ' + (same ? 'info' : d < 0 ? 'ok' : 'warn') + '">' + (same ? 'stejně' : priceFmt(d, true)) + '</span></td></tr>'; }).join('') + '</tbody>';
   const own = ui.kpis.filter(k => k.name.trim());
   $('#prRules').innerHTML = [
-    P.rate && P.team ? 'Cena programu na ' + totalWeeks + ' ' + plural(totalWeeks, 'týden', 'týdny', 'týdnů') + ': ' + teamMD().map(t => t[0] + ' ' + fmtAuto(t[1]) + ' MD').join(', ') + ' = ' + fmtAuto(teamMD().reduce((a, t) => a + t[1], 0)) + ' MD × ' + fmt(P.rate) + ' Kč = ' + fmt(progPrice()) + ' Kč.' : '',
+    P.rate && P.team ? 'Cena programu na ' + totalWeeks + ' ' + unitN(totalWeeks) + ': ' + teamMD().map(t => t[0] + ' ' + fmtAuto(t[1]) + ' MD').join(', ') + ' = ' + fmtAuto(teamMD().reduce((a, t) => a + t[1], 0)) + ' MD × ' + fmt(P.rate) + ' Kč = ' + fmt(progPrice()) + ' Kč.' : '',
     'Výkonovou složku počítáme podle splnění cílů, které společně nastavíme na začátku: ' + P.kpis.join(', ') + '.',
     own.length ? 'Navázat ji můžeme i na vaše ukazatele: ' + own.map(k => k.name.trim() + (k.now || k.goal ? ' (' + (k.now || '?') + ' → ' + (k.goal || '?') + (k.unit ? ' ' + k.unit : '') + ')' : '')).join(', ') + '.' : '',
     'Pod ' + fmt(P.floor * 100) + ' % splnění se výkonová složka neplatí. Nad cílem platíte poměrně, nejvýš ' + fmt(P.cap * 100) + ' %.',
@@ -2283,7 +2455,7 @@ function markDirty() {
 function setSaveStatus(kind) {
   ui.status = kind; ui.statusAt = Date.now();
   const time = new Date().toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
-  const txt = { saving: 'Ukládám…', ok: 'Uloženo v ' + time + '. XpertDigital to uvidí.', fail: 'Odeslání se nepovedlo. Změny máte uložené v prohlížeči, zkuste to prosím znovu.' }[kind] || '';
+  const txt = { saving: 'Ukládám…', ok: 'Uloženo v ' + time + '. ' + vendorName() + ' to uvidí.', fail: 'Odeslání se nepovedlo. Změny máte uložené v prohlížeči, zkuste to prosím znovu.' }[kind] || '';
   $$('[data-save-status]').forEach(el => { el.textContent = txt; el.className = 'save-status ' + kind; });
   if (kind === 'ok') setTimeout(updateSaveUI, 3000);
   updateSaveUI();
@@ -2296,7 +2468,7 @@ function updateSaveUI() {
   const okFlash = ui.status === 'ok' && Date.now() - ui.statusAt < 2900;
   const vis = show && (ui.dirty || ui.saving || okFlash || ui.status === 'fail');
   sb.hidden = !vis;
-  $('#sbText').textContent = ui.saving ? 'Ukládám…' : ui.status === 'fail' ? 'Odeslání se nepovedlo. Zkuste to znovu.' : ui.dirty ? 'Máte neodeslané změny' : 'Uloženo. XpertDigital to uvidí.';
+  $('#sbText').textContent = ui.saving ? 'Ukládám…' : ui.status === 'fail' ? 'Odeslání se nepovedlo. Zkuste to znovu.' : ui.dirty ? 'Máte neodeslané změny' : 'Uloženo. ' + vendorName() + ' to uvidí.';
   $('#sbBtn').hidden = ui.saving || !(ui.dirty || ui.status === 'fail');
   $('#hint').classList.toggle('under', vis); $('#modelbadge').classList.toggle('under', vis);
 }
@@ -2402,7 +2574,7 @@ function renderD() {
       '<div class="prod' + (p.highlight ? ' hl' : '') + '"><div class="prod-num" data-dyn="' + esc(p.term || '') + '">' + esc(fillDyn(p.term || '')) + '</div>' +
       '<div class="prod-name">' + esc(p.name) + '</div><div class="prod-sub" data-dyn="' + esc(p.sub) + '">' + esc(fillDyn(p.sub)) + '</div>' +
       '<ul>' + p.items.map(t => '<li>' + icon('check') + '<span>' + esc(t) + '</span></li>').join('') + '</ul></div>').join('') + '</div>' +
-    pickHTML() + pricingHTML() +
+    (D.blocks ? '<div class="d-blocks">' + blocks(D.blocks) + '</div>' : '') + pickHTML() + pricingHTML() +
     '<div class="cta-box"><div><strong>' + esc(D.cta.title) + '</strong><span>' + esc(D.cta.text) + '</span></div><button class="btn btn-red" type="button" data-cta>' + esc(C.vendor.cta.button) + icon('arrowR') + '</button></div>' +
     '</section>';
 }
@@ -2419,7 +2591,7 @@ function renderWeeksHead() {
     '<div class="chip-sec" style="margin-bottom:18px"><b data-dyn="1–{T}">1–' + totalWeeks + '</b>' + esc(W.chip) + '</div>' +
     '<h2 class="display h2">' + esc(W.title.replace('{n}', cardOrder.length)) + '</h2><p class="lead">' + esc(W.lead) + '</p></div>' +
     '<div class="legend">' + agentsUsed.map(k => '<span><i>' + icon(C.agents[k].icon) + '</i>' + esc(C.agents[k].name) + '</span>').join('') + '</div>' +
-    '<div class="wk-list">' + C.weeks.map(w => '<button type="button" class="wk" data-go="w' + w.n + '"><span class="wk-n" data-wk="' + w.n + '" data-wkf="big">' + esc(wkLabel(w.n, 'big')) + '</span><span class="wk-t"><b>' + esc(w.title) + '</b><span>' + esc(C.agents[w.agent].name) + ' · ' + w.cards.length + ' ' + (w.cards.length === 1 ? 'booster' : w.cards.length < 5 ? 'boostery' : 'boosterů') + '</span></span><span class="wk-i"><b>' + esc(w.impact) + '</b>' + esc(w.impactLabel) + '</span></button>').join('') + '</div></div>';
+    '<div class="wk-list">' + C.weeks.map(w => '<button type="button" class="wk" data-go="w' + w.n + '"><span class="wk-n" data-wk="' + w.n + '" data-wkf="big">' + esc(wkLabel(w.n, 'big')) + '</span><span class="wk-t"><b>' + esc(w.title) + '</b><span>' + esc(C.agents[w.agent].name) + ' · ' + w.cards.length + ' ' + termN(w.cards.length) + '</span></span><span class="wk-i"><b>' + esc(w.impact) + '</b>' + esc(w.impactLabel) + '</span></button>').join('') + '</div></div>';
 }
 function renderLane(w) {
   const ag = C.agents[w.agent];
