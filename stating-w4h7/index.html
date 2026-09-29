@@ -627,6 +627,137 @@ body.linear .guide-card{display:none}
 @media (max-width:480px){.ct-row{grid-template-columns:minmax(0,1fr) auto}.ct-k{grid-column:1/-1}.ct-in{padding:24px 18px}.ct-title{font-size:25px}}
 .err{max-width:640px;margin:120px auto;background:#fff;border-radius:22px;padding:32px;border:1px solid var(--line);font-size:16px;line-height:1.5}
 
+/* ---------- Vstupy klienta, výběr boosterů, cena ---------- */
+.btn:disabled{opacity:.6;cursor:wait}
+.btn .ic{width:18px;height:18px}
+.inputs{margin-top:30px;border:1px solid var(--red-100);border-radius:22px;background:var(--red-50)}
+.inputs-toggle{display:flex;align-items:center;gap:16px;width:100%;text-align:left;padding:16px 20px;border-radius:22px}
+.inputs-toggle>i{width:44px;height:44px;border-radius:12px;background:var(--red);color:#fff;display:grid;place-items:center;flex:none}
+.inputs-toggle>span{flex:1;min-width:0}
+.inputs-toggle b{display:block;font-size:19px;color:var(--ink);line-height:1.25}
+.inputs-toggle>span>span{display:block;font-size:14.5px;color:var(--text);margin-top:3px;line-height:1.4}
+.inputs-toggle .chev{color:var(--ink);transition:transform .2s}
+.inputs-toggle[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.inp-count{font-style:normal;font-size:12px;font-weight:800;background:var(--green);color:#fff;border-radius:999px;padding:5px 11px;white-space:nowrap}
+.inp-count[hidden]{display:none}
+.inputs-body{padding:4px 20px 22px;display:grid;gap:22px}
+body:not(.linear) .inputs-body{grid-template-columns:minmax(0,1fr) 540px;gap:30px;align-items:start}
+.inputs-body[hidden]{display:none}
+.inp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:10px}
+body:not(.linear) .inp-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.inp{display:flex;flex-direction:column;gap:6px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 12px 10px;min-width:0}
+.inp-l{font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);line-height:1.3}
+.inp-row{display:flex;align-items:center;gap:8px}
+.inp input,.okpi input{font:inherit;color:var(--ink);width:100%;min-width:0;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}
+.inp input{font-size:21px;font-weight:800;padding:7px 10px;font-variant-numeric:tabular-nums}
+.inp input:focus,.okpi input:focus,.prio textarea:focus,.pick-wish textarea:focus{outline:none;border-color:var(--red);background:#fff;box-shadow:0 0 0 3px var(--red-100)}
+.inp input.bad{border-color:var(--red-ink);background:var(--red-50)}
+.inp-u{font-size:13px;color:var(--muted);white-space:nowrap;flex:none}
+.inp-src{align-self:flex-start;font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;background:#EFEFEF;color:#4A4A4A}
+.inp-src.est{background:var(--amber-50);color:var(--amber)}
+.inp-src.own{background:var(--green-50);color:var(--green)}
+.explain-h{font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--red-ink);margin:0 0 10px}
+.explain-h[hidden],.explain[hidden]{display:none}
+.explain{display:grid;gap:6px;font-size:14.5px;line-height:1.5;color:var(--text)}
+.explain div{background:#fff;border:1px solid var(--line-2);border-radius:10px;padding:9px 12px}
+.explain strong{color:var(--ink)}
+.okpis{margin-top:20px}
+.inp-hint{font-size:14px;line-height:1.5;color:var(--text);margin:0 0 10px}
+.okpi{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto;gap:6px;margin-bottom:6px}
+.okpi input{font-size:15px;padding:9px 10px}
+.okpi-del{width:40px;border-radius:10px;border:1px solid var(--line);background:#fff;display:grid;place-items:center;color:var(--muted)}
+.okpi-del:hover{border-color:var(--ink);color:var(--ink)}
+@media (max-width:620px){.okpi{grid-template-columns:repeat(3,minmax(0,1fr)) auto}.okpi input[data-f="name"]{grid-column:1/-1}}
+.inp-actions{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:14px}
+.inp-actions[hidden],[data-kpi-add][hidden]{display:none}
+.save-status{font-size:13.5px;color:var(--muted);line-height:1.4}
+.save-status.ok{color:var(--green);font-weight:700}
+.save-status.fail{color:var(--red-ink);font-weight:700}
+.inp-note{font-size:12.5px;color:var(--muted);margin:12px 0 0;line-height:1.45}
+.area-meas{font-size:12.5px;color:var(--faint);margin-top:4px;font-variant-numeric:tabular-nums}
+.area-meas b{color:var(--green)}
+.area-meas:empty{display:none}
+.card-flags{margin-left:auto;display:inline-flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.card-flags:empty,.card-flags>span:empty{display:none}
+.card-meta .pill{text-transform:none;letter-spacing:0;font-size:11.5px}
+.m-head .card-meta{flex-wrap:wrap;padding-right:48px}
+.prio{margin-top:16px;max-width:820px;display:grid;gap:10px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.prio-top{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap}
+.prio-l{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.prio-btns{display:inline-flex;gap:6px;flex-wrap:wrap}
+.prio-btns button{border:1px solid var(--line);border-radius:10px;padding:7px 14px;font-size:14px;font-weight:700;color:var(--ink);background:#fff}
+.prio-btns button:hover{border-color:var(--ink)}
+.prio-btns button[data-prio="yes"][aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.prio-btns button[data-prio="maybe"][aria-pressed="true"]{background:#F2B230;border-color:#F2B230;color:#2b1f00}
+.prio-btns button[data-prio="no"][aria-pressed="true"]{background:var(--text);border-color:var(--text);color:#fff}
+.prio textarea,.pick-wish textarea{font:inherit;font-size:14.5px;line-height:1.45;border:1px solid var(--line);border-radius:10px;padding:8px 10px;resize:vertical;width:100%;color:var(--ink);background:var(--panel-2)}
+.pick{margin-top:26px;border:1px solid var(--line);border-radius:22px;padding:24px 26px;background:#fff}
+body.linear .pick{padding:18px}
+.pick-head{display:flex;align-items:baseline;gap:8px 14px;flex-wrap:wrap}
+.pick-head h3{font-size:26px;margin:0;color:var(--ink);font-weight:800;line-height:1.15}
+.pick-count{font-size:14px;font-weight:800;color:var(--green)}
+.pick-lead{font-size:15.5px;line-height:1.5;margin:8px 0 0;max-width:900px}
+.pick-grp{margin-top:16px}
+.pick-grp h4{margin:0 0 8px;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.pick-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:8px}
+.pick-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--panel-2)}
+.pick-item:hover{border-color:var(--red);background:#fff}
+.pick-t{font-weight:700;color:var(--ink);font-size:15px;line-height:1.3}
+.pick-t small{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pick-wk{font-size:12px;color:var(--muted);white-space:nowrap}
+.pick-no{font-size:13.5px;color:var(--muted);margin:12px 0 0;line-height:1.5}
+.pick-empty{margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;background:var(--panel-2);border:1px dashed #CFCFCF;border-radius:14px;padding:14px 16px}
+.pick-empty p{margin:0;font-size:15px;line-height:1.5;flex:1;min-width:240px}
+.pick-wish{display:grid;gap:6px;margin-top:18px;font-size:14.5px;color:var(--text)}
+.pricing{margin-top:26px;border-radius:22px;background:var(--dark);color:#fff;padding:30px 32px}
+body.linear .pricing{padding:22px 18px}
+.pricing .kicker{color:var(--red-on-dark);margin-bottom:10px}
+.pricing h3{font-size:32px;margin:0;color:#fff;font-weight:800;line-height:1.12}
+body.linear .pricing h3{font-size:25px}
+.pr-lead{font-size:16px;line-height:1.5;color:var(--on-dark-muted);margin:10px 0 0;max-width:920px}
+.pr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:24px;margin-top:24px;align-items:start}
+body:not(.linear) .pr-grid{grid-template-columns:620px minmax(0,1fr);gap:34px}
+.pr-grid>*{min-width:0}
+.pr-presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pr-presets button{border:1px solid var(--dark-line);border-radius:14px;padding:12px 14px;text-align:left;background:var(--dark-2);color:#fff}
+.pr-presets button:hover{border-color:#8a8a8a}
+.pr-presets button b{display:block;font-size:16px}
+.pr-presets button span{font-size:13px;color:var(--on-dark-muted)}
+.pr-presets button[aria-pressed="true"]{border-color:var(--red);box-shadow:0 0 0 3px rgba(250,43,43,.3)}
+.pr-slider{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:22px;font-size:14px;color:var(--on-dark-muted)}
+.pr-slider b{font-stretch:76%;font-size:34px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+.pr-scale{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--on-dark-muted)}
+.pr-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:18px}
+.pr-tiles div{background:var(--dark-2);border-radius:14px;padding:12px 14px}
+.pr-tiles b{display:block;font-stretch:76%;font-size:27px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;line-height:1.1}
+.pr-tiles span{display:block;font-size:12.5px;color:var(--on-dark-muted);line-height:1.35;margin-top:3px}
+.pr-rules{margin:14px 0 0;padding:0 0 0 18px;font-size:13.5px;line-height:1.55;color:var(--on-dark-muted)}
+.pr-rules li+li{margin-top:4px}
+.pricing .inp-actions{margin-top:20px}
+.pricing .save-status{color:var(--on-dark-muted)}
+.pricing .save-status.ok{color:#7BD8AE}
+.pricing .save-status.fail{color:var(--red-on-dark)}
+.savebar{position:fixed;z-index:50;left:50%;bottom:calc(14px + var(--sab));transform:translateX(-50%);display:flex;align-items:center;gap:14px;max-width:calc(100% - 150px);background:var(--dark);color:#fff;border-radius:999px;padding:7px 7px 7px 20px;box-shadow:0 12px 32px rgba(0,0,0,.28);font-size:14px;font-weight:700;animation:mIn .2s ease-out}
+.savebar[hidden]{display:none}
+.savebar .btn{padding:10px 16px;font-size:14px;box-shadow:none}
+.savebar .btn[hidden]{display:none}
+.hint.under,.modelbadge.under{visibility:hidden}
+@media (max-width:560px){
+  .savebar{left:12px;right:72px;transform:none;max-width:none;border-radius:18px;padding:8px 8px 8px 14px;gap:10px;font-size:13px}
+  .inputs-toggle{display:grid;grid-template-columns:40px minmax(0,1fr) 22px;align-items:start;gap:8px 12px;padding:14px}
+  .inputs-toggle>i{width:40px;height:40px;grid-row:1/3}
+  .inputs-toggle>span{grid-column:2;grid-row:1}
+  .inputs-toggle .inp-count{grid-column:2;grid-row:2;justify-self:start}
+  .inputs-toggle .chev{grid-column:3;grid-row:1;margin-top:2px}
+  .inputs-toggle b{font-size:17px}
+  .inputs-body{padding:4px 12px 16px}
+  .pr-presets{gap:6px}
+  .pr-presets button{padding:10px}
+  .pr-presets button b{font-size:14px}
+  .pr-tiles b{font-size:22px}
+}
+@media print{.savebar,.inputs-toggle .chev{display:none!important}}
+
 /* ---------- Úzké obrazovky ---------- */
 @media (max-width:820px){
   .topbar{height:56px;gap:12px;padding:0 8px 0 14px;top:calc(8px + var(--sat));left:8px;right:8px}
@@ -678,6 +809,7 @@ body.linear .guide-card{display:none}
 </div>
 <div class="hint" id="hint">Táhněte myší = posun · kolečko = přiblížit · klik na kartu = výstup · F = celá mapa</div>
 <div class="modelbadge" id="modelbadge">Modelová data · fiktivní firma</div>
+<div class="savebar" id="savebar" hidden role="status"><span id="sbText"></span><button class="btn btn-red" id="sbBtn" type="button" data-save>Uložit a poslat</button></div>
 
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Menu">
@@ -807,13 +939,39 @@ window.XD_CLIENT = {
   /* ---------------- B · Kalkulačka ---------------- */
   calc: {
     title: 'Jaký to bude mít dopad na čísla STATINGu?',
-    lead: 'Výchozí bod je účetní závěrka 2024/25. Zapněte oblasti, kterým věříte, a posuňte, o kolik se zlepší.',
-    disclaimer: 'Tržby a výsledek jsou z účetní závěrky 2024/25, ostatní vstupy jsou odhad. Stavebnictví má tenkou marži, proto i malé zlepšení dělá velký rozdíl. Je to výpočet, ne příslib.',
+    lead: 'Výchozí bod je účetní závěrka 2024/25. Doplňte svá čísla, zapněte oblasti, kterým věříte, a posuňte, o kolik se zlepší.',
+    disclaimer: 'Tržby a výsledek jsou z účetní závěrky 2024/25, ostatní vstupy jsou náš odhad. Nahraďte je svými čísly. Stavebnictví má tenkou marži, proto i malé zlepšení dělá velký rozdíl. Je to výpočet, ne příslib.',
     howText: 'Provozní výsledek = tržby × příspěvek zakázek po subdodávkách a materiálu − fixní náklady + ušetřený čas. Tržby rostou s počtem nabídek i jejich úspěšností. Ušetřený čas počítáme cenou hodiny z osobních nákladů (49,9 mil. Kč / 59 lidí ≈ 480 Kč/h).',
     targetLabel: 'Ilustrativní cíl: +30 %',
     eurRate: 25,
     target: 8.8e6,
     base: { revenue: 463.3e6, grossMargin: 0.07, variableCosts: 0, fixedCosts: 25.68e6 },
+    // Vaše čísla: klient přepíše naše odhady, model se přepočítá (revenue, contrib, profit, goal a hodiny × rate se napojí samy)
+    inputsTitle: 'Upravte kalkulačku na čísla STATINGu',
+    inputs: [
+      { id: 'revenue', label: 'Tržby ročně',                          unit: 'mil. Kč', value: 463.3, src: 'závěrka 2024/25' },
+      { id: 'profit',  label: 'Provozní výsledek',                    unit: 'mil. Kč', value: 6.75,  src: 'závěrka 2024/25', min: 0.1 },
+      { id: 'contrib', label: 'Příspěvek zakázek po subdodávkách',    unit: '%',       value: 7,     src: 'odhad XD', max: 100 },
+      { id: 'bids',    label: 'Podaných nabídek ročně',               unit: 'nabídek', value: 60,    src: 'odhad XD' },
+      { id: 'win',     label: 'Úspěšnost nabídek',                    unit: '%',       value: 20,    src: 'odhad XD', max: 100 },
+      { id: 'rate',    label: 'Cena hodiny práce',                    unit: 'Kč/h',    value: 480,   src: 'ze závěrky' },
+      { id: 'hBack',   label: 'Soupisy, fakturace, subdodávky',       unit: 'h ročně', value: 12000, src: 'odhad XD' },
+      { id: 'hDel',    label: 'Příprava a řízení staveb',             unit: 'h ročně', value: 9000,  src: 'odhad XD' },
+      { id: 'goal',    label: 'Cíl růstu provozního výsledku',        unit: '%',       value: 30,    src: 'návrh XD' }
+    ],
+    kpiExample: ['Počet staveb ročně', '77', '85', 'staveb'],
+    // strom hodnoty: co z čísel STATINGu plyne (tenká marže → i bod příspěvku je hodně peněz)
+    explain: (v, h) => {
+      const c = v.contrib / 100, perBid = v.bids > 0 ? v.revenue / v.bids : 0, perPt = v.win > 0 ? v.revenue / v.win : 0;
+      return [
+        '**Provozní výsledek** ' + h.n(v.profit, 2) + ' mil. Kč = tržby ' + h.n(v.revenue) + ' mil. Kč × příspěvek ' + h.n(v.contrib) + ' % − fixní náklady ' + h.n(v.revenue * c - v.profit) + ' mil. Kč',
+        '**Příspěvek o 1 bod vyšší** ≈ +' + h.n(v.revenue / 100) + ' mil. Kč výsledku ročně. To je ' + h.n(v.profit > 0 ? v.revenue / v.profit : 0, 0) + ' % dnešního výsledku',
+        '**Každá nabídka navíc** ≈ +' + h.n(perBid) + ' mil. Kč tržeb a +' + h.n(perBid * c, 2) + ' mil. Kč výsledku (dnes ' + h.n(v.bids) + ' nabídek ročně, stejná úspěšnost)',
+        '**Úspěšnost o 1 bod vyšší** ≈ +' + h.n(perPt) + ' mil. Kč tržeb a +' + h.n(perPt * c, 2) + ' mil. Kč výsledku (dnes ' + h.n(v.win) + ' %)',
+        '**Čas lidí** za ' + h.n(v.rate) + ' Kč/h: administrativa ' + h.n(v.hBack * v.rate / 1e6) + ' mil. Kč a příprava a řízení staveb ' + h.n(v.hDel * v.rate / 1e6) + ' mil. Kč ročně',
+        '**Cíl +' + h.n(v.goal) + ' %** = ' + h.n(v.profit * (1 + v.goal / 100), 2) + ' mil. Kč provozního výsledku, o ' + h.n(v.profit * v.goal / 100, 2) + ' mil. Kč víc než dnes'
+      ];
+    },
     assumptions: [
       ['Tržby 2024/25 (závěrka)', '463,3 mil. Kč'],
       ['Provozní výsledek 2024/25 (závěrka)', '≈ 6,7 mil. Kč'],
@@ -827,19 +985,19 @@ window.XD_CLIENT = {
     ],
     areas: [
       { agent: 'ceo', title: 'AI Strategické boostery', short: 'Rozpočty', items: ['Přesné rozpočty', 'Kontrola ceny', 'Centrální AI mozek'], arrows: ['↑ přesnější rozpočty', '↓ méně víceprací na vlastní náklady', '↑ vyšší marže'],
-        sliderLabel: 'Vyšší příspěvek zakázek', lever: 'margin', max: 0.15, default: 0.03,
+        sliderLabel: 'Vyšší příspěvek zakázek', lever: 'margin', max: 0.15, default: 0.03, input: 'contrib',
         display: { label: 'Příspěvek zakázek (odhad)', base: 7, unit: '%', dec: 2 }, sub: 'Rozpočty podle skutečných nákladů podobných staveb' },
       { agent: 'sales', title: 'AI Tendrové boostery', short: 'Tendry', items: ['Radar zakázek', 'Ocenění výkazu', 'Poptávky subdodavatelům'], arrows: ['↑ víc podaných nabídek', '↓ méně přesčasů přípravářů', '↑ víc tržeb'],
-        sliderLabel: 'Víc podaných nabídek', lever: 'revenue', max: 0.30, default: 0.05,
+        sliderLabel: 'Víc podaných nabídek', lever: 'revenue', max: 0.30, default: 0.05, input: 'bids',
         display: { label: 'Nabídek ročně (odhad)', base: 60 }, sub: '+{rev} tržeb ročně při stejné úspěšnosti' },
       { agent: 'sales', title: 'AI Obchodní boostery a CRM', short: 'Úspěšnost', items: ['Investiční plány obcí', 'Firmy a Design & Build', 'Péče po předání'], arrows: ['↑ vyšší úspěšnost', '↑ víc opakovaných zakázek', '↑ víc soukromých investorů'],
-        sliderLabel: 'Vyšší úspěšnost nabídek', lever: 'revenue', max: 0.30, default: 0.03,
+        sliderLabel: 'Vyšší úspěšnost nabídek', lever: 'revenue', max: 0.30, default: 0.03, input: 'win',
         display: { label: 'Úspěšnost nabídek (odhad)', base: 20, unit: '%', dec: 1 }, sub: '+{rev} tržeb ročně' },
       { agent: 'ops', title: 'AI Back-office boostery', short: 'Back-office', items: ['Soupisy a fakturace', 'Subdodavatelé', 'Reporting zakázek'], arrows: ['↓ méně papírů', '↑ rychlejší fakturace', '↑ čas na stavby'],
-        sliderLabel: 'Méně času na administrativu', lever: 'cost', pool: 5.8e6, hoursPool: 230, max: 0.50, default: 0.15,
+        sliderLabel: 'Méně času na administrativu', lever: 'cost', pool: 5.8e6, hoursPool: 230, max: 0.50, default: 0.15, input: 'hBack',
         display: { label: 'Hodin ročně (odhad)', base: 12000, unit: 'h', dir: -1 }, sub: 'Úspora {money} ročně · až {hours} h týdně zpět' },
       { agent: 'prod', title: 'AI Boostery pro projekci a stavby', short: 'Stavby', items: ['Kontrola PD', 'Kontrolní dny', 'Předání a kolaudace'], arrows: ['↓ méně chyb v PD', '↑ termíny pod kontrolou', '↑ rychlejší předání'],
-        sliderLabel: 'Méně času na přípravu a řízení', lever: 'cost', pool: 4.3e6, hoursPool: 173, max: 0.40, default: 0.15, module: 6, moduleNote: 'Volitelný modul · +2 týdny programu',
+        sliderLabel: 'Méně času na přípravu a řízení', lever: 'cost', pool: 4.3e6, hoursPool: 173, max: 0.40, default: 0.15, module: 6, moduleNote: 'Volitelný modul · +2 týdny programu', input: 'hDel',
         display: { label: 'Hodin ročně (odhad)', base: 9000, unit: 'h', dir: -1 }, sub: 'Úspora {money} ročně · až {hours} h týdně zpět' }
     ]
   },
@@ -871,7 +1029,22 @@ window.XD_CLIENT = {
       { name: 'AI Transformační program', term: '{dur}', sub: '{weeks} · pilot s konzultanty', highlight: true, items: ['Nasazení agentů krok za krokem', 'Každý týden workshop s vaším týmem', 'Napojení na rozpočty, e-mail a dokumenty', 'Ladění, měření přínosů a předání týmu', 'Konzultanti se zkušeností z KPMG, SAP, Oracle a IBM'] },
       { name: 'Provoz, bezpečnost a rozvoj', term: '12 měsíců', sub: 'po pilotu · podpora a měření', items: ['Měsíční review výsledků s partnerem', 'Monitoring agentů a auditní log', 'Nové boostery podle priorit', 'Podpora, když se něco zasekne'] }
     ],
-    cta: { title: 'Projdeme mapu společně?', text: 'Workshop zabere 90 minut a je zdarma. Odnesete si výběr agentů pro pilot a přepočítanou kalkulačku.' }
+    pickTitle: 'Váš výběr pro pilot',
+    pickLead: 'V detailu každé karty označte Chceme, Možná nebo Nechceme a připište poznámku. Z výběru sestavíme pořadí nasazení a tři agenty pro pilot.',
+    cta: { title: 'Projdeme mapu společně?', text: 'Workshop zabere 90 minut a je zdarma. Projdeme vaše čísla a výběr a domluvíme pilot.' }
+  },
+
+  /* ---------------- Cena: pevná a výkonová složka ---------------- */
+  // Kotva = pevná cena programu (price). Dokud ji nemáme, počítá se v % ceny.
+  // Nižší pevná část → vyšší výkonová složka (přirážka za riziko až maxPremium při minFixed).
+  pricing: {
+    kicker: 'Cena podle vás',
+    title: 'Kolik zaplatíte pevně a kolik podle výsledku?',
+    lead: 'Výchozí je pevná cena programu. Část z ní můžete převést na výkonovou složku, kterou zaplatíte, jen když se čísla STATINGu opravdu zlepší. Čím menší pevná část, tím víc rizika neseme my, a proto výkonová složka roste.',
+    price: null,
+    minFixed: 0.3, maxPremium: 0.4, floor: 0.5, cap: 1.5, defaultFixed: 1,
+    presets: [{ label: 'Jistota', fixed: 1 }, { label: 'Vyvážená', fixed: 0.7 }, { label: 'Partnerská', fixed: 0.4 }],
+    kpis: ['příspěvek zakázek (rozpočet proti skutečnosti)', 'počet podaných nabídek', 'hodiny ušetřené v administrativě']
   },
 
   weeksIntro: {
@@ -882,7 +1055,7 @@ window.XD_CLIENT = {
   weeksEnd: {
     kicker: 'Hotovo?',
     title: 'Teď si spočítejte dopad',
-    text: 'Vraťte se do kalkulačky a zapněte oblasti, kterým věříte. Nebo si domluvte workshop a projdeme mapu s vaším týmem.'
+    text: 'Vraťte se do kalkulačky, doplňte svá čísla a zapněte oblasti, kterým věříte. V sekci D najdete svůj výběr boosterů a zvolíte si, kolik z ceny zaplatíte podle výsledku.'
   },
 
   /* ---------------- Fáze ---------------- */
@@ -1462,7 +1635,11 @@ const ICONS = {
   info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
   map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
   page: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
-  chat: '<path d="M4 5h16v11H9l-5 4z"/>'
+  chat: '<path d="M4 5h16v11H9l-5 4z"/>',
+  pencil: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  chevron: '<path d="M6 9l6 6 6-6"/>',
+  x: '<path d="M6 6l12 12M18 6 6 18"/>'
 };
 const icon = (n, cls = '') => '<svg class="ic ' + cls + '" viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[n] || ICONS.info) + '</svg>';
 
@@ -1495,6 +1672,7 @@ function boot(data) {
   C.weeks.forEach(w => w.cards.forEach(c => { cardIndex.set(c.id, { card: c, week: w }); cardOrder.push(c.id); }));
   C.weeks.forEach(w => { if (w.optional) modState[w.n] = !!w.on; });
   computeSchedule();
+  inputsInit(); applyInputs();
 
   world.innerHTML =
     '<div class="row row-1">' +
@@ -1506,8 +1684,11 @@ function boot(data) {
   initCalc();
   applySchedule();
   initFeed();
+  initInputsUI();
   bindGlobal();
+  bindInputs();
   setMode();
+  if (personal()) loadInputs();
   // po načtení webfontu se změní rozměry → znovu zaměřit (jen když uživatel ještě nehýbal)
   document.fonts?.ready.then(() => { if (!isLinear() && !interacted) { computeMin(); go(startKey(), false); } });
   // přímý odkaz na kartu: index.html#k-3.1
@@ -1554,7 +1735,7 @@ function fillDyn(t) {
 function setModule(n, on) {
   modState[n] = on;
   C.calc.areas.forEach((a, i) => { if (a.module === n) calcState.on[i] = on; });
-  applySchedule(); updateCalc();
+  applySchedule(); updateCalc(); markDirty();
 }
 function applySchedule() {
   computeSchedule();
@@ -1672,12 +1853,13 @@ function renderB() {
     '<div class="chip-sec"><b>B</b>Kalkulačka</div>' +
     '<div class="b-head"><div><h2 class="display h2" id="b-title">' + esc(K.title) + '</h2><p class="lead">' + esc(K.lead) + '</p></div>' +
       '<div class="cur" role="group" aria-label="Měna"><button type="button" data-cur="czk" aria-pressed="true">Kč</button><button type="button" data-cur="eur" aria-pressed="false">€</button></div></div>' +
+    inputsPanelHTML() +
     '<div class="calc">' +
       '<div class="result" aria-live="polite">' +
         '<div class="lbl">Nárůst zisku ročně</div>' +
         '<div class="res-val" id="resVal">+0</div>' +
         '<div class="res-sub" id="resSub"></div>' +
-        '<div class="target"><div class="target-top"><span class="lbl">' + esc(K.targetLabel || 'Váš cíl z roadmapy') + '</span><span class="target-v" id="tgtV"></span></div>' +
+        '<div class="target"><div class="target-top"><span class="lbl" id="tgtLbl">' + esc(K.targetLabel || 'Váš cíl z roadmapy') + '</span><span class="target-v" id="tgtV"></span></div>' +
           '<div class="track" id="track"><div class="fill"></div><div class="over"></div><div class="mark" data-m="base"></div><div class="mark" data-m="tgt"></div></div>' +
           '<div class="track-lbls"><span id="trkL"></span><span id="trkR"></span></div>' +
           '<div class="target-msg" id="tgtMsg"></div></div>' +
@@ -1694,7 +1876,7 @@ function renderB() {
           '<div class="area-ctl"><div class="area-row"><span>' + esc(a.sliderLabel) + '</span><span class="lift" data-lift="' + i + '">0 %</span></div>' +
           '<input type="range" min="0" max="100" step="1" value="0" id="calc-' + esc(a.lever) + '" data-rng="' + i + '" aria-label="' + esc(a.sliderLabel) + '" disabled>' +
           '<div class="area-row"><span data-mk="' + i + '"></span><b data-mv="' + i + '"></b></div>' +
-          '<div class="area-sub" data-ms="' + i + '"></div></div>' +
+          '<div class="area-sub" data-ms="' + i + '"></div><div class="area-meas" data-meas="' + i + '"></div></div>' +
         '</div>').join('') + '</div>' +
     '</div></section>';
 }
@@ -1719,17 +1901,16 @@ function money(v, d = 2) {
 }
 function initCalc() {
   const K = C.calc; K.areas.forEach((a, i) => { calcState.on[i] = a.module ? !!modState[a.module] : false; calcState.x[i] = a.default; });
-  const b = K.base;
-  $('#howTbl').innerHTML = K.assumptions.map(r => '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>').join('');
+  renderHow();
   $('#sec-b').addEventListener('click', e => {
     const sw = e.target.closest('[data-sw]');
-    if (sw) { const i = +sw.dataset.sw, a = K.areas[i]; if (a.module) setModule(a.module, !calcState.on[i]); else { calcState.on[i] = !calcState.on[i]; updateCalc(); } return; }
+    if (sw) { const i = +sw.dataset.sw, a = K.areas[i]; if (a.module) setModule(a.module, !calcState.on[i]); else { calcState.on[i] = !calcState.on[i]; updateCalc(); saveLocal(); } return; }
     const cur = e.target.closest('[data-cur]');
     if (cur) { calcState.cur = cur.dataset.cur; $$('[data-cur]').forEach(x => x.setAttribute('aria-pressed', String(x === cur))); updateCalc(); }
   });
   $('#sec-b').addEventListener('input', e => {
     const r = e.target.closest('[data-rng]'); if (!r) return;
-    const i = +r.dataset.rng; calcState.x[i] = K.areas[i].max * (+r.value / 100); updateCalc();
+    const i = +r.dataset.rng; calcState.x[i] = K.areas[i].max * (+r.value / 100); updateCalc(); saveLocal();
   });
   K.areas.forEach((a, i) => { const r = $('[data-rng="' + i + '"]'); r.value = Math.round(a.default / a.max * 100); });
   updateCalc();
@@ -1743,6 +1924,7 @@ function updateCalc() {
   $('#resVal').classList.toggle('pos', delta > 0);
   $('#resSub').innerHTML = 'z <b>' + money(base) + '</b> na <b>' + money(now) + '</b> ročně · ' + fmt(now / base, 2) + '× (' + (delta >= 0 ? '+' : '') + fmt(delta / base * 100, 0) + ' %)';
   $('#tgtV').textContent = fmt(tgt / base, 2) + '× · ' + money(base, 1) + ' → ' + money(tgt, 1);
+  $('#tgtLbl').textContent = targetLabel();
   // track
   const maxV = Math.max(tgt, now) * 1.04;
   const pct = v => clamp(v / maxV * 100, 0, 100) + '%';
@@ -1773,6 +1955,7 @@ function updateCalc() {
     el.querySelector('[data-mk]').textContent = k;
     el.querySelector('[data-mv]').textContent = v;
     el.querySelector('[data-ms]').textContent = sub || '';
+    el.querySelector('[data-meas]').innerHTML = measHTML(a);
   });
   // vodopád
   const steps = []; let prev = base; const acc = K.areas.map(() => 0);
@@ -1826,6 +2009,360 @@ function waterfall(base, steps, total, tgt) {
   return out + '</svg>';
 }
 
+/* ============ Vstupy klienta · výběr boosterů · cena · uložení ============ */
+// Klient může nahradit naše odhady svými čísly, přidat vlastní ukazatele, označit boostery, které chce,
+// a zvolit, kolik z ceny zaplatí pevně a kolik podle výsledku. Stav se drží v prohlížeči. Když stránka
+// zná adresu úložiště (window.XD_INPUTS vloží sestavení pro web), pošle ho klient tlačítkem XpertDigital.
+const ui = { values: {}, edited: {}, kpis: [], prio: {}, wish: '', fixed: 1, dirty: false, rev: 0, saving: false, status: '', statusAt: 0 };
+const PRIO = [['yes', 'Chceme', 'ok'], ['maybe', 'Možná', 'warn'], ['no', 'Nechceme', 'info']];
+const STATUS = { agreed: ['Dohodnuto', 'info'], deploying: ['V nasazení', 'warn'], live: ['Běží', 'ok'] };
+const MAX_KPIS = 6;
+const isDev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const personal = () => !!(C && (C.calc.inputs || C.pricing));
+const endpoint = () => (isDev && params.get('vstupy')) || (window.XD_INPUTS || {}).endpoint || '';
+const inputKey = () => (isDev && params.get('klic')) || (window.XD_INPUTS || {}).key || '';
+const canSend = () => !!(personal() && C.meta.slug && endpoint() && inputKey());
+const lsKey = () => 'vstupy:' + (C.meta.slug || clientId);
+const nfIn = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 3 });
+const fmtIn = v => v == null || !isFinite(v) ? '' : nfIn.format(v);
+const fmtAuto = (v, d = 1) => Number.isInteger(+v) ? fmt(v) : fmt(v, d);
+const fmtDate = d => { const t = new Date(d); return isNaN(t) ? String(d || '') : t.getDate() + '. ' + (t.getMonth() + 1) + '. ' + t.getFullYear(); };
+const parseNum = s => { const t = String(s ?? '').replace(/[\s  ]/g, '').replace(',', '.'); if (!t) return null; const v = Number(t); return isFinite(v) ? v : null; };
+const inputDef = id => (C.calc.inputs || []).find(i => i.id === id);
+
+function inputsInit() {
+  (C.calc.inputs || []).forEach(i => { ui.values[i.id] = i.value; });
+  if (C.pricing) ui.fixed = clamp(C.pricing.defaultFixed ?? 1, C.pricing.minFixed, 1);
+}
+// Čísla klienta → model kalkulačky: tržby, příspěvek, výsledek, výchozí stav oblastí, hodiny × cena hodiny, cíl.
+function applyInputs() {
+  const K = C.calc, v = ui.values; if (!K.inputs) return;
+  const num = id => (id in v && isFinite(v[id])) ? +v[id] : null;
+  if (num('revenue') != null) K.base.revenue = num('revenue') * 1e6;
+  if (num('contrib') != null) K.base.grossMargin = num('contrib') / 100;
+  if (num('profit') != null) K.base.fixedCosts = K.base.revenue * (K.base.grossMargin - (K.base.variableCosts || 0)) - num('profit') * 1e6;
+  K.areas.forEach(a => {
+    const val = a.input ? num(a.input) : null; if (val == null) return;
+    if (a.display) a.display.base = val;
+    const rate = num(a.rateInput || 'rate');
+    if (a.lever === 'cost' && rate != null) { a.pool = val * rate; a.hoursPool = val / 52; }
+  });
+  if (typeof K.bind === 'function') { try { K.bind(v, K); } catch (e) {} }   // vlastní strom hodnoty klienta
+  if (num('goal') != null) K.target = model([]) * (1 + num('goal') / 100);
+}
+function targetLabel() {
+  const K = C.calc;
+  if (inputDef('goal')) return (ui.edited.goal ? 'Váš cíl' : (K.goalLabel || 'Ilustrativní cíl')) + ': +' + fmtAuto(ui.values.goal) + ' %';
+  return K.targetLabel || 'Váš cíl z roadmapy';
+}
+
+/* --- B · Vaše čísla a vlastní ukazatele --- */
+function srcChip(i) {
+  const own = !!ui.edited[i.id], est = /odhad|návrh/i.test(i.src || 'odhad');
+  return '<span class="inp-src' + (own ? ' own' : est ? ' est' : '') + '" data-src="' + esc(i.id) + '">' + esc(own ? 'vaše číslo' : (i.src || 'odhad')) + '</span>';
+}
+function refreshSrc() {
+  (C.calc.inputs || []).forEach(i => { const el = $('[data-src="' + CSS.escape(i.id) + '"]'); if (el) el.outerHTML = srcChip(i); });
+  const n = Object.keys(ui.edited).length + ui.kpis.filter(k => k.name.trim()).length, c = $('#inpCount');
+  if (c) { c.textContent = n ? n + ' ' + plural(n, 'vaše číslo', 'vaše čísla', 'vašich čísel') : ''; c.hidden = !n; }
+}
+const noteText = () => canSend()
+  ? (C.vendor.inputsNote || 'Tlačítkem Uložit a poslat pošlete zadaná čísla, výběr a poznámky XpertDigital k této nabídce. Uvidí je jen náš tým. Nepište sem prosím osobní údaje.')
+  : 'Vaše změny zůstávají jen v tomto prohlížeči.';
+const saveUI = label => '<div class="inp-actions save-ui" hidden><button class="btn btn-red" type="button" data-save>' + esc(label) + icon('arrowR') + '</button><span class="save-status" data-save-status aria-live="polite"></span></div>';
+function inputsPanelHTML() {
+  const K = C.calc; if (!K.inputs) return '';
+  return '<div class="inputs" id="inputs">' +
+    '<button class="inputs-toggle" type="button" id="inputsToggle" aria-expanded="false" aria-controls="inputsBody"><i>' + icon('pencil') + '</i>' +
+      '<span><b>' + esc(K.inputsTitle || 'Upravte kalkulačku na vaše čísla') + '</b><span>' + esc(K.inputsLead || 'Nahraďte naše odhady skutečností a přidejte ukazatele, podle kterých řídíte firmu. Všechno se hned přepočítá.') + '</span></span>' +
+      '<em class="inp-count" id="inpCount" hidden></em>' + icon('chevron', 'chev') + '</button>' +
+    '<div class="inputs-body" id="inputsBody" hidden><div class="inp-main"><div class="inp-grid">' + K.inputs.map(i =>
+      '<label class="inp" for="in-' + esc(i.id) + '"><span class="inp-l">' + esc(i.label) + '</span>' +
+      '<span class="inp-row"><input id="in-' + esc(i.id) + '" data-in="' + esc(i.id) + '" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="' + esc(fmtIn(i.value)) + '"><span class="inp-u">' + esc(i.unit || '') + '</span></span>' + srcChip(i) + '</label>').join('') + '</div>' +
+      '<div class="okpis"><div class="explain-h">Vaše vlastní ukazatele</div><p class="inp-hint">' + esc(K.kpiHint || 'Řídíte firmu podle čísla, které tu chybí? Přidejte ho. Můžeme na něj navázat cíle programu i výkonovou část ceny.') + '</p>' +
+        '<div id="ownKpis"></div><button class="btn btn-ghost" type="button" data-kpi-add>' + icon('plus') + 'Přidat ukazatel</button></div></div>' +
+      '<div class="inp-side"><div class="explain-h">Co z vašich čísel plyne</div><div class="explain" id="explain"></div>' +
+        '<div class="inp-actions"><button class="btn btn-ghost" type="button" data-reset-inputs>Vrátit naše odhady</button></div>' +
+        saveUI('Uložit a poslat XpertDigital') + '<p class="inp-note">' + esc(noteText()) + '</p></div>' +
+    '</div></div>';
+}
+function renderKpis(focusLast) {
+  const box = $('#ownKpis'); if (!box) return;
+  const ex = C.calc.kpiExample || ['Počet obchodníků', '8', '10', 'lidí'];
+  box.innerHTML = ui.kpis.map((k, i) => '<div class="okpi">' +
+    '<input data-kpi="' + i + '" data-f="name" maxlength="80" aria-label="Název ukazatele" placeholder="' + esc('Např. ' + ex[0].toLowerCase()) + '" value="' + esc(k.name) + '">' +
+    '<input data-kpi="' + i + '" data-f="now" maxlength="24" aria-label="Dnes" placeholder="' + esc('Dnes (' + ex[1] + ')') + '" value="' + esc(k.now) + '">' +
+    '<input data-kpi="' + i + '" data-f="goal" maxlength="24" aria-label="Cíl" placeholder="' + esc('Cíl (' + ex[2] + ')') + '" value="' + esc(k.goal) + '">' +
+    '<input data-kpi="' + i + '" data-f="unit" maxlength="20" aria-label="Jednotka" placeholder="' + esc('Jednotka (' + ex[3] + ')') + '" value="' + esc(k.unit) + '">' +
+    '<button class="okpi-del" type="button" data-kpi-del="' + i + '" aria-label="Odebrat ukazatel">' + icon('x') + '</button></div>').join('');
+  const add = $('[data-kpi-add]'); if (add) add.hidden = ui.kpis.length >= MAX_KPIS;
+  if (focusLast) { const f = $$('[data-f="name"]', box).pop(); if (f) f.focus(); }
+}
+function renderHow() {
+  const K = C.calc, t = $('#howTbl'); if (!t) return;
+  const rows = K.inputs ? K.inputs.map(i => [i.label + ' (' + (ui.edited[i.id] ? 'vaše číslo' : (i.src || 'odhad')) + ')', fmtAuto(ui.values[i.id]) + (i.unit ? ' ' + i.unit : '')]) : K.assumptions;
+  t.innerHTML = rows.map(r => '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>').join('');
+}
+function renderExplain() {
+  renderHow();
+  const el = $('#explain'); if (!el) return;
+  let lines = [];
+  try { lines = typeof C.calc.explain === 'function' ? (C.calc.explain(ui.values, { fmt, n: fmtAuto }) || []) : []; } catch (e) { lines = []; }
+  el.innerHTML = lines.map(l => '<div>' + rich(l) + '</div>').join('');
+  el.hidden = !lines.length; el.previousElementSibling.hidden = !lines.length;
+}
+function onInputField(el) {
+  const id = el.dataset.in, def = inputDef(id); if (!def) return;
+  const v = parseNum(el.value), bad = v == null || v < (def.min ?? 0) || (def.max != null && v > def.max);
+  el.classList.toggle('bad', bad); el.setAttribute('aria-invalid', String(bad));
+  if (bad) return;
+  ui.values[id] = v;
+  if (Math.abs(v - def.value) > 1e-9) ui.edited[id] = true; else delete ui.edited[id];
+  recalcInputs(); markDirty();
+}
+function recalcInputs() { applyInputs(); updateCalc(); renderExplain(); refreshSrc(); }
+function resetInputs() {
+  (C.calc.inputs || []).forEach(i => { ui.values[i.id] = i.value; const el = document.getElementById('in-' + i.id); if (el) { el.value = fmtIn(i.value); el.classList.remove('bad'); el.removeAttribute('aria-invalid'); } });
+  ui.edited = {}; recalcInputs(); markDirty();
+}
+function openInputs() { const t = $('#inputsToggle'); if (!t) return; t.setAttribute('aria-expanded', 'true'); $('#inputsBody').hidden = false; }
+
+/* --- Stav karet a naměřené hodnoty (po startu programu) --- */
+function statusChip(c) { const s = STATUS[c.status]; return s ? '<span class="pill ' + s[1] + '">' + s[0] + (c.since ? ' od ' + esc(fmtDate(c.since)) : '') + '</span>' : ''; }
+function measHTML(a) {
+  if (!C.calc.inputs || !a.display || !a.input) return '';
+  const M = C.calc.measured, m = M && M.values ? +M.values[a.input] : NaN;
+  if (!isFinite(m)) return 'Naměřeno: doplníme po startu programu';
+  const d = a.display, f = v => fmt(v, d.dec ?? 0) + (d.unit ? ' ' + d.unit : ''), b = d.base;
+  const x = b ? (d.dir === -1 ? 1 - m / b : m / b - 1) : null;
+  return 'Naměřeno k ' + esc(fmtDate(M.date)) + ': <b>' + f(m) + '</b>' + (x != null ? ' (' + (x >= 0 ? '+' : '−') + fmt(Math.abs(x) * 100, 0) + ' %)' : '');
+}
+
+/* --- Výběr boosterů --- */
+function prioChip(id) { const d = PRIO.find(x => x[0] === (ui.prio[id] || {}).p); return d ? '<span class="pill ' + d[2] + '">' + d[1] + '</span>' : ''; }
+function cardFlags(c) { return (personal() || c.status) ? '<span class="card-flags">' + statusChip(c) + '<span data-cprio="' + esc(c.id) + '">' + prioChip(c.id) + '</span></span>' : ''; }
+function refreshPrioChips() { $$('[data-cprio]').forEach(el => { el.innerHTML = prioChip(el.dataset.cprio); }); }
+function prioHTML(id) {
+  if (!personal()) return '';
+  const cur = ui.prio[id] || {};
+  return '<div class="prio"><div class="prio-top"><span class="prio-l">Chcete to u vás?</span><div class="prio-btns" role="group" aria-label="Váš zájem o tento booster">' +
+    PRIO.map(p => '<button type="button" data-prio="' + p[0] + '" data-prio-id="' + esc(id) + '" aria-pressed="' + (cur.p === p[0]) + '">' + p[1] + '</button>').join('') + '</div></div>' +
+    '<textarea data-prio-note="' + esc(id) + '" rows="2" maxlength="600" aria-label="Vaše poznámka k tomuto boosteru" placeholder="Poznámka pro nás (nepovinné): co upravit, kdo by to u vás používal">' + esc(cur.note || '') + '</textarea></div>';
+}
+function setPrio(id, p) {
+  if (!cardIndex.has(id)) return;
+  const cur = ui.prio[id] || {};
+  if (cur.p === p) delete cur.p; else cur.p = p;
+  if (!cur.p && !cur.note) delete ui.prio[id]; else ui.prio[id] = cur;
+  $$('[data-prio-id="' + CSS.escape(id) + '"]').forEach(b => b.setAttribute('aria-pressed', String((ui.prio[id] || {}).p === b.dataset.prio)));
+  refreshPrioChips(); renderPick(); markDirty();
+}
+function setNote(id, text) {
+  if (!cardIndex.has(id)) return;
+  const cur = ui.prio[id] || {}, t = String(text || '').slice(0, 600);
+  if (t.trim()) cur.note = t; else delete cur.note;
+  if (!cur.p && !cur.note) delete ui.prio[id]; else ui.prio[id] = cur;
+  renderPick(); markDirty();
+}
+function pickHTML() {
+  if (!personal()) return '';
+  return '<div class="pick" id="pick"><div class="pick-head"><h3>' + esc(C.needs.pickTitle || 'Váš výběr boosterů') + '</h3><span class="pick-count" id="pickCount"></span></div>' +
+    '<p class="pick-lead">' + esc(C.needs.pickLead || 'V detailu každé karty označte Chceme, Možná nebo Nechceme a připište poznámku. Z vašeho výběru sestavíme pořadí nasazení.') + '</p>' +
+    '<div id="pickBody"></div>' +
+    '<label class="pick-wish" for="wish"><span>Chybí vám tu něco? Napište, co dalšího byste svěřili AI týmu.</span><textarea id="wish" data-wish rows="3" maxlength="1200"></textarea></label>' +
+    saveUI('Uložit výběr a poslat XpertDigital') + '<p class="inp-note">' + esc(noteText()) + '</p></div>';
+}
+function renderPick() {
+  const body = $('#pickBody'); if (!body) return;
+  const by = p => cardOrder.filter(id => (ui.prio[id] || {}).p === p);
+  const yes = by('yes'), maybe = by('maybe'), no = by('no'), n = yes.length + maybe.length;
+  $('#pickCount').textContent = n ? n + ' ' + plural(n, 'booster', 'boostery', 'boosterů') : '';
+  const item = id => { const hit = cardIndex.get(id), note = (ui.prio[id] || {}).note; return '<button type="button" class="pick-item" data-open="' + esc(id) + '"><span class="card-id">' + esc(id) + '</span><span class="pick-t">' + esc(hit.card.title) + (note ? '<small>' + esc(note) + '</small>' : '') + '</span><span class="pick-wk" data-wk="' + hit.week.n + '">' + esc(wkLabel(hit.week.n)) + '</span></button>'; };
+  const grp = (label, ids) => ids.length ? '<div class="pick-grp"><h4>' + label + ' · ' + ids.length + '</h4><div class="pick-items">' + ids.map(item).join('') + '</div></div>' : '';
+  body.innerHTML = (n || no.length)
+    ? grp('Chceme', yes) + grp('Možná', maybe) + (no.length ? '<p class="pick-no">Nechcete: ' + no.map(id => esc(id + ' ' + cardIndex.get(id).card.title)).join(' · ') + '</p>' : '')
+    : '<div class="pick-empty"><p>Zatím jste nic neoznačili. Otevřete kteroukoli kartu v programu a klikněte na <b>Chceme</b>, <b>Možná</b> nebo <b>Nechceme</b>.</p><button class="btn btn-ghost" type="button" data-go="w' + C.weeks[0].n + '">Projít boostery' + icon('arrowR') + '</button></div>';
+}
+
+/* --- Cena: pevná a výkonová složka podle volby klienta --- */
+// Kotvou je pevná cena programu P. Klient zvolí pevnou část f (min. minFixed). Zbytek (1 − f)·P se mění na výkonovou
+// složku V = (1 − f)·P·(1 + přirážka); přirážka roste lineárně až do maxPremium při nejnižší pevné části.
+// Výplata podle splnění cíle a: pod prahem floor nic, jinak V·min(a, cap).
+function pricingHTML() {
+  const P = C.pricing; if (!P) return '';
+  const maxPerf = Math.round((1 - P.minFixed) * 100);
+  return '<div class="pricing" id="pricing"><div class="kicker">' + esc(P.kicker || 'Cena podle vás') + '</div><h3>' + esc(P.title) + '</h3><p class="pr-lead">' + esc(P.lead) + '</p>' +
+    '<div class="pr-grid"><div class="pr-ctl">' +
+      '<div class="pr-presets" role="group" aria-label="Předvolby rozdělení ceny">' + P.presets.map(p => '<button type="button" data-preset="' + p.fixed + '" aria-pressed="false"><b>' + esc(p.label) + '</b><span>' + (p.fixed >= 1 ? 'celá cena pevně' : fmt(p.fixed * 100) + ' % pevně') + '</span></button>').join('') + '</div>' +
+      '<label class="pr-slider" for="prPerf"><span>Podle výsledku zaplatíte</span><b id="prPerfV"></b></label>' +
+      '<input type="range" id="prPerf" data-prperf min="0" max="' + maxPerf + '" step="5" value="0">' +
+      '<div class="pr-scale"><span>0 %: pevná cena</span><span>' + maxPerf + ' %: nejvíc rizika neseme my</span></div>' +
+      '<div class="pr-tiles" id="prTiles"></div>' +
+    '</div><div class="pr-out"><div class="tbl-wrap"><table class="tbl" id="prTbl"></table></div><ul class="pr-rules" id="prRules"></ul></div></div>' +
+    saveUI('Uložit volbu a poslat XpertDigital') + '</div>';
+}
+function priceCalc(f) {
+  const P = C.pricing, base = P.price || 100, span = 1 - P.minFixed;
+  const prem = span > 0 ? P.maxPremium * (1 - f) / span : 0, V = (1 - f) * base * (1 + prem);
+  return { base, prem, V, fixedPay: f * base, total: a => f * base + (a < P.floor ? 0 : V * Math.min(a, P.cap)) };
+}
+function priceFmt(v, signed) {
+  const s = signed ? (v > 0 ? '+' : v < 0 ? '−' : '') : '', a = signed ? Math.abs(v) : v;
+  if (!C.pricing.price) return s + fmt(a, 0) + ' % ceny';
+  return s + (a >= 1e6 ? fmt(a / 1e6, 2) + ' mil. Kč' : fmt(Math.round(a / 1000) * 1000) + ' Kč');
+}
+function updatePricing() {
+  const P = C.pricing, el = $('#pricing'); if (!P || !el) return;
+  const f = clamp(ui.fixed ?? 1, P.minFixed, 1), q = priceCalc(f), perf = Math.round((1 - f) * 100);
+  const r = $('#prPerf'); r.value = perf; r.style.setProperty('--p', (+r.max ? perf / +r.max * 100 : 0) + '%');
+  $('#prPerfV').textContent = perf + ' %';
+  $$('[data-preset]', el).forEach(b => b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.preset - f) < 0.001)));
+  $('#prTiles').innerHTML = [
+    [priceFmt(q.fixedPay), 'zaplatíte pevně'],
+    [priceFmt(q.V), 'výkonová složka při splnění cíle'],
+    [priceFmt(q.total(1)), 'celkem při splnění cíle'],
+    [q.prem > 0 ? '+' + fmt(q.prem * 100, 0) + ' %' : '0 %', 'přirážka k výkonové složce za riziko, které neseme']
+  ].map(t => '<div><b>' + t[0] + '</b><span>' + t[1] + '</span></div>').join('');
+  const rows = [[0, 'pod ' + fmt(P.floor * 100) + ' % (práh)'], [P.floor, fmt(P.floor * 100) + ' %'], [0.8, '80 %'], [1, '100 % (cíl)'], [1.2, '120 %'], [P.cap, fmt(P.cap * 100) + ' % a víc']];
+  $('#prTbl').innerHTML = '<thead><tr><th>Splnění cíle</th><th class="num">Zaplatíte celkem</th><th class="num">Proti pevné ceně</th></tr></thead><tbody>' +
+    rows.map(([a, l]) => { const t = q.total(a), d = t - q.base, same = Math.abs(d) < 1e-6 * q.base; return '<tr><td>' + l + '</td><td class="num">' + priceFmt(t) + '</td><td class="num"><span class="pill ' + (same ? 'info' : d < 0 ? 'ok' : 'warn') + '">' + (same ? 'stejně' : priceFmt(d, true)) + '</span></td></tr>'; }).join('') + '</tbody>';
+  const own = ui.kpis.filter(k => k.name.trim());
+  $('#prRules').innerHTML = [
+    'Výkonovou složku počítáme podle splnění cílů, které společně nastavíme na začátku: ' + P.kpis.join(', ') + '.',
+    own.length ? 'Navázat ji můžeme i na vaše ukazatele: ' + own.map(k => k.name.trim() + (k.now || k.goal ? ' (' + (k.now || '?') + ' → ' + (k.goal || '?') + (k.unit ? ' ' + k.unit : '') + ')' : '')).join(', ') + '.' : '',
+    'Pod ' + fmt(P.floor * 100) + ' % splnění se výkonová složka neplatí. Nad cílem platíte poměrně, nejvýš ' + fmt(P.cap * 100) + ' %.',
+    'Výsledky měříme každý měsíc a uvidíte je přímo v této mapě.',
+    P.price ? 'Ceny jsou bez DPH.' : 'Cenu programu upřesníme po úvodní diagnostice. Rozdělení rizika si ale můžete zvolit už teď.'
+  ].filter(Boolean).map(t => '<li>' + esc(t) + '</li>').join('');
+}
+
+/* --- Uložení: vždy v prohlížeči, XpertDigital po kliknutí --- */
+function snapshot() {
+  return { v: 1, client: C.meta.client, slug: C.meta.slug || clientId, values: Object.assign({}, ui.values), edited: Object.assign({}, ui.edited),
+    kpis: ui.kpis.map(k => Object.assign({}, k)), prio: JSON.parse(JSON.stringify(ui.prio)), wish: ui.wish,
+    fixed: C.pricing ? Math.round(ui.fixed * 100) / 100 : null, modules: Object.assign({}, modState),
+    calc: { on: calcState.on.slice(), x: calcState.x.map(x => Math.round(x * 1000) / 1000) },
+    sent: !ui.dirty, savedAt: new Date().toISOString() };
+}
+// čitelný souhrn pro tabulku a e-mail XpertDigital
+function summaryText(s) {
+  const K = C.calc, L = [];
+  const own = (K.inputs || []).filter(i => s.edited[i.id]);
+  if (own.length) L.push('Vaše čísla: ' + own.map(i => i.label + ' ' + fmtAuto(s.values[i.id]) + (i.unit ? ' ' + i.unit : '')).join('; '));
+  const kp = s.kpis.filter(k => k.name.trim());
+  if (kp.length) L.push('Vlastní ukazatele: ' + kp.map(k => k.name.trim() + ' ' + (k.now || '?') + ' → ' + (k.goal || '?') + (k.unit ? ' ' + k.unit : '')).join('; '));
+  PRIO.forEach(([p, label]) => { const ids = cardOrder.filter(id => (s.prio[id] || {}).p === p); if (ids.length) L.push(label + ': ' + ids.map(id => id + ' ' + cardIndex.get(id).card.title).join('; ')); });
+  const notes = cardOrder.filter(id => (s.prio[id] || {}).note);
+  if (notes.length) L.push('Poznámky: ' + notes.map(id => id + ': ' + s.prio[id].note.replace(/\s+/g, ' ')).join(' | '));
+  if (C.pricing && s.fixed != null) L.push('Cena: ' + fmt(s.fixed * 100) + ' % pevně, ' + fmt((1 - s.fixed) * 100) + ' % podle výsledku');
+  const mods = C.weeks.filter(w => w.optional);
+  if (mods.length) L.push('Moduly: ' + mods.map(w => w.short + ' ' + (s.modules[w.n] ? 'ano' : 'ne')).join(', '));
+  L.push('Kalkulačka: ' + K.areas.map((a, i) => a.short + ' ' + (s.calc.on[i] ? fmt(s.calc.x[i] * 100) + ' %' : 'vypnuto')).join(', '));
+  if (s.wish.trim()) L.push('Přání: ' + s.wish.trim().replace(/\s+/g, ' '));
+  return L.join('\n');
+}
+function saveLocal() { if (personal()) store.set(lsKey(), JSON.stringify(snapshot())); }
+function markDirty() {
+  if (!personal()) return;
+  ui.rev++; ui.dirty = true; ui.status = '';
+  $$('[data-save-status]').forEach(el => { el.textContent = ''; el.className = 'save-status'; });
+  saveLocal(); updateSaveUI();
+}
+function setSaveStatus(kind) {
+  ui.status = kind; ui.statusAt = Date.now();
+  const time = new Date().toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
+  const txt = { saving: 'Ukládám…', ok: 'Uloženo v ' + time + '. XpertDigital to uvidí.', fail: 'Odeslání se nepovedlo. Změny máte uložené v prohlížeči, zkuste to prosím znovu.' }[kind] || '';
+  $$('[data-save-status]').forEach(el => { el.textContent = txt; el.className = 'save-status ' + kind; });
+  if (kind === 'ok') setTimeout(updateSaveUI, 3000);
+  updateSaveUI();
+}
+function updateSaveUI() {
+  const show = canSend();
+  $$('.save-ui').forEach(el => { el.hidden = !show; });
+  $$('[data-save]').forEach(b => { b.disabled = ui.saving; });
+  const sb = $('#savebar'); if (!sb) return;
+  const okFlash = ui.status === 'ok' && Date.now() - ui.statusAt < 2900;
+  const vis = show && (ui.dirty || ui.saving || okFlash || ui.status === 'fail');
+  sb.hidden = !vis;
+  $('#sbText').textContent = ui.saving ? 'Ukládám…' : ui.status === 'fail' ? 'Odeslání se nepovedlo. Zkuste to znovu.' : ui.dirty ? 'Máte neodeslané změny' : 'Uloženo. XpertDigital to uvidí.';
+  $('#sbBtn').hidden = ui.saving || !(ui.dirty || ui.status === 'fail');
+  $('#hint').classList.toggle('under', vis); $('#modelbadge').classList.toggle('under', vis);
+}
+async function post(body) {
+  const r = await fetch(endpoint(), { method: 'POST', body: JSON.stringify(Object.assign({ slug: C.meta.slug, key: inputKey() }, body)) });
+  return r.json();
+}
+async function saveRemote() {
+  if (!canSend() || ui.saving) return;
+  ui.saving = true; const rev0 = ui.rev;
+  setSaveStatus('saving');
+  try {
+    const snap = snapshot(); snap.sent = true;
+    const j = await post({ action: 'save', data: snap, summary: summaryText(snap) });
+    if (!j || !j.ok) throw new Error((j && j.error) || 'save');
+    if (ui.rev === rev0) ui.dirty = false;
+    ui.saving = false; saveLocal(); setSaveStatus('ok');
+  } catch (e) { console.warn('[vstupy] uložení se nepovedlo', e); ui.saving = false; setSaveStatus('fail'); }
+}
+async function loadInputs() {
+  let local = null;
+  try { local = JSON.parse(store.get(lsKey()) || 'null'); } catch (e) { local = null; }
+  if (local) applySnapshot(local);
+  if (!canSend() || (local && local.sent === false)) return;   // neodeslané změny z tohoto prohlížeče mají přednost
+  try {
+    const j = await post({ action: 'load' });
+    if (j && j.ok && j.data && ui.rev === 0) { applySnapshot(Object.assign(j.data, { sent: true })); saveLocal(); }
+  } catch (e) { console.warn('[vstupy] načtení z úložiště se nepovedlo', e); }
+}
+function applySnapshot(s) {
+  if (!s || typeof s !== 'object') return;
+  const K = C.calc, str = (v, n) => typeof v === 'string' ? v.slice(0, n) : '';
+  (K.inputs || []).forEach(i => { const v = s.values ? +s.values[i.id] : NaN; if (isFinite(v) && v >= (i.min ?? 0)) ui.values[i.id] = v; });
+  ui.edited = {}; (K.inputs || []).forEach(i => { if (s.edited && s.edited[i.id] && ui.values[i.id] !== i.value) ui.edited[i.id] = true; });
+  ui.kpis = Array.isArray(s.kpis) ? s.kpis.slice(0, MAX_KPIS).filter(k => k && typeof k === 'object').map(k => ({ name: str(k.name, 80), now: str(k.now, 24), goal: str(k.goal, 24), unit: str(k.unit, 20) })) : [];
+  ui.prio = {};
+  if (s.prio && typeof s.prio === 'object') Object.keys(s.prio).forEach(id => {
+    const p = s.prio[id]; if (!cardIndex.has(id) || !p || typeof p !== 'object') return;
+    const o = {}; if (PRIO.some(x => x[0] === p.p)) o.p = p.p; if (str(p.note, 600).trim()) o.note = str(p.note, 600);
+    if (o.p || o.note) ui.prio[id] = o;
+  });
+  ui.wish = str(s.wish, 1200);
+  if (C.pricing && s.fixed != null && isFinite(+s.fixed)) ui.fixed = clamp(+s.fixed, C.pricing.minFixed, 1);
+  if (s.modules && typeof s.modules === 'object') C.weeks.forEach(w => { if (w.optional && w.n in s.modules) modState[w.n] = !!s.modules[w.n]; });
+  if (s.calc && Array.isArray(s.calc.x)) K.areas.forEach((a, i) => { const x = +s.calc.x[i]; if (isFinite(x)) calcState.x[i] = clamp(x, 0, a.max); if (Array.isArray(s.calc.on) && typeof s.calc.on[i] === 'boolean') calcState.on[i] = s.calc.on[i]; });
+  K.areas.forEach((a, i) => { if (a.module) calcState.on[i] = !!modState[a.module]; });
+  ui.dirty = s.sent === false;
+  (K.inputs || []).forEach(i => { const el = document.getElementById('in-' + i.id); if (el) { el.value = fmtIn(ui.values[i.id]); el.classList.remove('bad'); el.removeAttribute('aria-invalid'); } });
+  K.areas.forEach((a, i) => { const r = $('[data-rng="' + i + '"]'); if (r) r.value = Math.round(calcState.x[i] / a.max * 100); });
+  const w = $('#wish'); if (w) w.value = ui.wish;
+  applyInputs(); applySchedule(); updateCalc(); renderExplain(); renderKpis(); refreshSrc(); updatePricing(); renderPick(); refreshPrioChips(); updateSaveUI();
+  if (Object.keys(ui.edited).length || ui.kpis.length) openInputs();
+}
+function initInputsUI() { if (!personal()) return; renderExplain(); renderKpis(); refreshSrc(); updatePricing(); renderPick(); updateSaveUI(); }
+function bindInputs() {
+  if (!personal()) return;
+  document.addEventListener('click', e => {
+    const t = e.target;
+    const pb = t.closest('[data-prio]'); if (pb) { setPrio(pb.dataset.prioId, pb.dataset.prio); return; }
+    if (t.closest('#inputsToggle')) { const b = $('#inputsToggle'), open = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', String(open)); $('#inputsBody').hidden = !open; return; }
+    if (t.closest('[data-reset-inputs]')) { resetInputs(); return; }
+    if (t.closest('[data-kpi-add]')) { if (ui.kpis.length < MAX_KPIS) { ui.kpis.push({ name: '', now: '', goal: '', unit: '' }); renderKpis(true); } return; }
+    const kd = t.closest('[data-kpi-del]'); if (kd) { ui.kpis.splice(+kd.dataset.kpiDel, 1); renderKpis(); refreshSrc(); updatePricing(); markDirty(); return; }
+    const ps = t.closest('[data-preset]'); if (ps) { ui.fixed = +ps.dataset.preset; updatePricing(); markDirty(); return; }
+    if (t.closest('[data-save]')) saveRemote();
+  });
+  document.addEventListener('input', e => {
+    const t = e.target;
+    if (t.matches('[data-in]')) onInputField(t);
+    else if (t.matches('[data-kpi]')) { const k = ui.kpis[+t.dataset.kpi]; if (k) { k[t.dataset.f] = t.value; refreshSrc(); updatePricing(); markDirty(); } }
+    else if (t.matches('[data-prio-note]')) setNote(t.dataset.prioNote, t.value);
+    else if (t.matches('[data-wish]')) { ui.wish = t.value.slice(0, 1200); markDirty(); }
+    else if (t.matches('[data-prperf]')) { ui.fixed = 1 - (+t.value) / 100; updatePricing(); markDirty(); }
+  });
+  // po opuštění pole číslo hezky naformátovat
+  document.addEventListener('change', e => { const t = e.target; if (t.matches('[data-in]') && !t.classList.contains('bad')) { const v = parseNum(t.value); if (v != null) t.value = fmtIn(v); } });
+}
+
 /* ============ C · Co bude hotové ============ */
 function renderC() {
   const D = C.deliver;
@@ -1853,6 +2390,7 @@ function renderD() {
       '<div class="prod' + (p.highlight ? ' hl' : '') + '"><div class="prod-num" data-dyn="' + esc(p.term || '') + '">' + esc(fillDyn(p.term || '')) + '</div>' +
       '<div class="prod-name">' + esc(p.name) + '</div><div class="prod-sub" data-dyn="' + esc(p.sub) + '">' + esc(fillDyn(p.sub)) + '</div>' +
       '<ul>' + p.items.map(t => '<li>' + icon('check') + '<span>' + esc(t) + '</span></li>').join('') + '</ul></div>').join('') + '</div>' +
+    pickHTML() + pricingHTML() +
     '<div class="cta-box"><div><strong>' + esc(D.cta.title) + '</strong><span>' + esc(D.cta.text) + '</span></div><button class="btn btn-red" type="button" data-cta>' + esc(C.vendor.cta.button) + icon('arrowR') + '</button></div>' +
     '</section>';
 }
@@ -1887,7 +2425,7 @@ function renderLane(w) {
 function renderCard(c, w) {
   const prev = c.preview || [c.output[0]];
   return '<article class="card" data-card="' + esc(c.id) + '">' +
-    '<div class="card-meta"><span class="card-id">' + esc(c.id) + '</span><span data-wk="' + w.n + '">' + esc(wkLabel(w.n)) + '</span> · ' + esc(w.short) + '</div>' +
+    '<div class="card-meta"><span class="card-id">' + esc(c.id) + '</span><span data-wk="' + w.n + '">' + esc(wkLabel(w.n)) + '</span> · ' + esc(w.short) + cardFlags(c) + '</div>' +
     '<h4 class="card-title">' + esc(c.title) + '</h4>' +
     '<p class="card-desc">' + rich(c.desc) + '</p>' +
     '<div class="prompt"><span class="prompt-lbl">PROMPT</span><span>' + esc(c.prompt) + '</span></div>' +
@@ -2055,10 +2593,11 @@ function openCard(id) {
   const { card: c, week: w } = hit, ag = C.agents[w.agent];
   curCard = id;
   if ($('#modal').hidden) lastFocus = document.activeElement;
-  $('#mHead').innerHTML = '<div class="card-meta"><span class="card-id">' + esc(c.id) + '</span>' + esc(wkLabel(w.n)) + ' · ' + esc(w.short) + ' · ' + esc(ag.name) + '</div>' +
+  $('#mHead').innerHTML = '<div class="card-meta"><span class="card-id">' + esc(c.id) + '</span>' + esc(wkLabel(w.n)) + ' · ' + esc(w.short) + ' · ' + esc(ag.name) + cardFlags(c) + '</div>' +
     '<h2 class="m-title" id="mTitle">' + esc(c.title) + '</h2><p class="m-desc">' + rich(c.desc) + '</p>' +
     '<div class="prompt" style="max-width:820px;background:#fff"><span class="prompt-lbl">PROMPT</span><span>' + esc(c.prompt) + '</span></div>' +
-    '<div class="booster">' + esc(c.booster?.type || w.booster) + ' · ' + (c.booster?.skill || '').split('+').map(s => '<code>' + esc(s.trim()) + '</code>').join(' + ') + '</div>';
+    '<div class="booster">' + esc(c.booster?.type || w.booster) + ' · ' + (c.booster?.skill || '').split('+').map(s => '<code>' + esc(s.trim()) + '</code>').join(' + ') + '</div>' +
+    prioHTML(c.id);
   $('#mBody').innerHTML = blocks(c.output, false);
   initWidgets($('#mBody'), c);
   const i = cardOrder.indexOf(id), p = cardOrder[i - 1], n = cardOrder[i + 1];
@@ -2256,6 +2795,8 @@ function bindGlobal() {
     else if (z === 'help') { $('#guide').hidden ? openGuide() : closeGuide(); }
   });
   mqNarrow.addEventListener('change', () => { linearForced = modeParam; setMode(); });
+  // fokus do pole mimo obraz nesmí posunout skrytý posuvník mapy (mapu posouvá jen transformace)
+  vp.addEventListener('scroll', () => { if (!isLinear() && (vp.scrollTop || vp.scrollLeft)) { vp.scrollTop = 0; vp.scrollLeft = 0; } });
   window.addEventListener('resize', () => { if (!isLinear()) computeMin(); });
 
   // Klávesnice
@@ -2268,7 +2809,7 @@ function bindGlobal() {
     }
     if (!$('#modal').hidden) {
       if (e.key === 'Escape') closeCard();
-      else if (tag !== 'input' && tag !== 'select') {
+      else if (tag !== 'input' && tag !== 'select' && tag !== 'textarea') {
         if (e.key === 'ArrowRight') { const n = cardOrder[cardOrder.indexOf(curCard) + 1]; if (n) openCard(n); }
         if (e.key === 'ArrowLeft') { const p = cardOrder[cardOrder.indexOf(curCard) - 1]; if (p) openCard(p); }
         if (e.key === 'Tab') trapFocus(e, $('#modal .m-panel'));
@@ -2343,12 +2884,12 @@ function bindGlobal() {
     zoomAt(Math.exp(-dy * (e.ctrlKey ? 0.012 : 0.0016)), e.clientX - r.left, e.clientY - r.top);
   }, { passive: false });
   vp.addEventListener('dblclick', e => {
-    if (isLinear() || e.target.closest('.card,button,a,input,.area')) return;
+    if (isLinear() || e.target.closest('.card,button,a,input,textarea,.area,.inputs,.pick,.pricing')) return;
     const r = vp.getBoundingClientRect(); zoomAt(1.6, e.clientX - r.left, e.clientY - r.top);
   });
 }
 function trapFocus(e, root) {
-  const f = $$('button:not([disabled]),a[href],input,select,[tabindex]:not([tabindex="-1"])', root).filter(x => x.offsetParent !== null);
+  const f = $$('button:not([disabled]),a[href],input,select,textarea,[tabindex]:not([tabindex="-1"])', root).filter(x => x.offsetParent !== null);
   if (!f.length) return;
   const first = f[0], last = f[f.length - 1];
   if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
