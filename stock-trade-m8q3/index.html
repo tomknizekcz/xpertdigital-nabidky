@@ -1042,6 +1042,7 @@ window.XD_CLIENT = {
     title: 'Kolik zaplatíte pevně a kolik podle výsledku?',
     lead: 'Výchozí je pevná cena programu. Část z ní můžete převést na výkonovou složku, kterou zaplatíte, jen když se čísla Stock-Trade opravdu zlepší. Čím menší pevná část, tím víc rizika neseme my, a proto výkonová složka roste.',
     price: null,
+    settleMonths: 6,   // vyúčtování výkonové složky od startu programu
     rate: 11000,   // Kč za MD; cena = MD týmu × sazba, s modulem +2 týdny se přepočítá
     team: [{ label: 'AI specialista (plný úvazek)', perWeek: 5 }, { label: 'projektový manažer (30 %)', perWeek: 1.5 }, { label: 'senior strategický konzultant', md: 10 }],
     minFixed: 0.3, maxPremium: 0.4, floor: 0.5, cap: 1.8, defaultFixed: 1,
@@ -2135,6 +2136,7 @@ function updatePricing() {
     own.length ? 'Navázat ji můžeme i na vaše ukazatele: ' + own.map(k => k.name.trim() + (k.now || k.goal ? ' (' + (k.now || '?') + ' → ' + (k.goal || '?') + (k.unit ? ' ' + k.unit : '') + ')' : '')).join(', ') + '.' : '',
     'Pod ' + fmt(P.floor * 100) + ' % splnění se výkonová složka neplatí. Nad cílem platíte poměrně, nejvýš ' + fmt(P.cap * 100) + ' %.',
     'Výsledky měříme každý měsíc a uvidíte je přímo v této mapě.',
+    P.settleMonths ? 'Výkonovou složku vyúčtujeme po ' + P.settleMonths + ' měsících od startu programu podle naměřených čísel.' : '',
     progPrice() ? 'Ceny jsou bez DPH.' : 'Cenu programu upřesníme po úvodní diagnostice. Rozdělení rizika si ale můžete zvolit už teď.'
   ].filter(Boolean).map(t => '<li>' + esc(t) + '</li>').join('');
 }
