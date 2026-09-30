@@ -378,7 +378,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeri
 .pill.warn{background:var(--amber-50);color:var(--amber)}
 .pill.bad{background:var(--red-50);color:var(--red-ink)}
 .pill.info{background:#EFEFEF;color:#4A4A4A}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:10px}
 .kpi{background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:14px 14px 12px}
 .kpi-v{font-stretch:76%;font-weight:800;font-size:31px;color:var(--ink);line-height:1.05;font-variant-numeric:tabular-nums}
 .kpi-l{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.35}
@@ -708,7 +708,7 @@ body.linear .pick{padding:18px}
 .pick-wk{font-size:12px;color:var(--muted);white-space:nowrap}
 .pick-no{font-size:13.5px;color:var(--muted);margin:12px 0 0;line-height:1.5}
 .pick-empty{margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;background:var(--panel-2);border:1px dashed #CFCFCF;border-radius:14px;padding:14px 16px}
-.pick-empty p{margin:0;font-size:15px;line-height:1.5;flex:1;min-width:240px}
+.pick-empty p{margin:0;font-size:15px;line-height:1.5;flex:1;min-width:min(240px,100%)}
 .pick-wish{display:grid;gap:6px;margin-top:18px;font-size:14.5px;color:var(--text)}
 .pricing{margin-top:26px;border-radius:22px;background:var(--dark);color:#fff;padding:30px 32px}
 body.linear .pricing{padding:22px 18px}
@@ -732,6 +732,7 @@ body:not(.linear) .pr-grid{grid-template-columns:620px minmax(0,1fr);gap:34px}
 .pr-tiles div{background:var(--dark-2);border-radius:14px;padding:12px 14px}
 .pr-tiles b{display:block;font-stretch:76%;font-size:27px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;line-height:1.1}
 .pr-tiles span{display:block;font-size:12.5px;color:var(--on-dark-muted);line-height:1.35;margin-top:3px}
+.pr-dm{display:none}
 .pr-rules{margin:14px 0 0;padding:0 0 0 18px;font-size:13.5px;line-height:1.55;color:var(--on-dark-muted)}
 .pr-rules li+li{margin-top:4px}
 .pricing .inp-actions{margin-top:20px}
@@ -830,6 +831,94 @@ body.d-square .callout{border-radius:0}
 .cta-short{display:none}
 @media (max-width:560px){.topbar .cta-long{display:none}.topbar .cta-short{display:inline}.tb-client span{display:none}}
 @media (max-width:380px){.tb-client{display:none}}
+/* ---------- Telefon: opravy rozložení (úzké obrazovky) ---------- */
+.area-head>div{min-width:0}
+.area-t{overflow-wrap:anywhere}
+.mail-meta span,.mail-meta b,.chat-head b,.chat-head span,.br-logo,.pick-t,.inp-l{overflow-wrap:anywhere}
+/* tabulka složená do řádků pod sebe (fitTables, jen telefon) */
+.tbl.stack thead{display:none}
+.tbl.stack,.tbl.stack tbody,.tbl.stack tr{display:block}
+.tbl.stack tr{padding:9px 12px 8px}
+.tbl.stack tr+tr{border-top:1px solid var(--line-2)}
+.tbl.stack tbody td,.tbl.stack tbody td:first-child,.tbl.stack tbody td:last-child{display:flow-root;border:0;padding:2px 0;text-align:right;white-space:normal}
+.tbl.stack tbody td::before{content:attr(data-l);float:left;margin:2px 12px 0 0;max-width:50%;text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.tbl.stack tbody td:first-child{text-align:left;padding-bottom:5px;font-weight:700}
+.tbl.stack tbody td:first-child::before{content:none}
+.tbl.stack .pill{white-space:normal;text-align:left;border-radius:10px}
+@media (max-width:620px){
+  .c .br-in{grid-template-columns:1fr}
+  .c .br-nav{flex-direction:row;flex-wrap:wrap}
+}
+@media (max-width:560px){
+  .area{padding:14px 14px 12px}
+  .area-head{gap:10px}
+  .area-ic{width:36px;height:36px}
+  .area-head .switch .sw-t{display:none}
+  .mail-meta{grid-template-columns:1fr;gap:2px}
+  .mail-meta span{padding-top:6px}
+  .mail-meta span:first-child{padding-top:0}
+  table.tbl{font-size:13px}
+  .tbl th,.tbl td{padding:8px 9px}
+  .tbl th,.tbl th.num{white-space:normal}
+  /* stín u okraje: tabulka pokračuje do strany */
+  .tbl-wrap{background:linear-gradient(90deg,#fff 30%,rgba(255,255,255,0)) 0 0/28px 100% no-repeat local,linear-gradient(270deg,#fff 30%,rgba(255,255,255,0)) 100% 0/28px 100% no-repeat local,radial-gradient(farthest-side at 0 50%,rgba(0,0,0,.16),rgba(0,0,0,0)) 0 0/10px 100% no-repeat scroll,radial-gradient(farthest-side at 100% 50%,rgba(0,0,0,.16),rgba(0,0,0,0)) 100% 0/10px 100% no-repeat scroll #fff}
+  .card-meta{display:block;line-height:2}
+  .card-meta .card-id{display:inline-block;margin-right:8px;line-height:1.3}
+  .card-meta .card-flags{margin-left:8px;vertical-align:middle}
+  .booster code{display:inline-block;max-width:100%;overflow-wrap:anywhere}
+  .c table.tbl{font-size:12px}
+  .c .tbl th,.c .tbl td{padding:6px 7px}
+  /* náhled v kartě: jen první dva a poslední sloupec, celá tabulka je v detailu */
+  .c .tbl th:nth-child(n+3):not(:last-child),.c .tbl td:nth-child(n+3):not(:last-child){display:none}
+  .pr-presets{grid-template-columns:1fr}
+  .pr-presets button{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .pr-tiles b{font-size:20px}
+  .pricing .tbl .pill{font-size:11.5px;padding:2px 7px}
+  .kpi-v{font-size:26px}
+  .wcalc-out{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wcalc-out b{font-size:20px}
+  .g-row,.g-hours{grid-template-columns:84px 1fr}
+  .g-l{padding:8px;font-size:11.5px}
+  .g-blk{font-size:10.5px;padding:4px 5px}
+  body.linear .story-val{font-size:clamp(32px,10vw,64px)}
+  body.linear .pain-val{font-size:clamp(30px,9.5vw,44px)}
+  body.linear .res-val{font-size:clamp(32px,10vw,84px)}
+  body.linear.d-plain .res-val{font-size:clamp(28px,8.5vw,60px)}
+  body.linear .lane-num{font-size:clamp(72px,24vw,132px)}
+  body.linear.d-plain .lane-num{font-size:clamp(60px,20vw,104px)}
+  body.linear .lane-impact b{font-size:clamp(28px,9vw,44px)}
+  .lane-top{flex-wrap:wrap;row-gap:6px}
+  .lane-impact{margin-left:auto}
+  .score-row{grid-template-columns:92px 1fr 52px;gap:10px}
+  .score-row b{font-size:32px}
+}
+@media (max-width:420px){
+  .tbl th,.tbl td,.c .tbl th,.c .tbl td{padding:7px 6px}
+  .tbl th{letter-spacing:.04em}
+  .tbl th:first-child,.tbl td:first-child{padding-left:10px}
+  .tbl th:last-child,.tbl td:last-child{padding-right:10px}
+  .pricing .tbl th:nth-child(3),.pricing .tbl td:nth-child(3){display:none}
+  .pricing .tbl th:nth-child(2),.pricing .tbl td:nth-child(2){padding-right:10px}
+  .pricing .tbl .pr-dm{display:block;margin-top:4px}
+  .pricing .tbl th .pr-dm{font-weight:700;opacity:.8}
+}
+@media (max-width:400px){
+  .pr-tiles{grid-template-columns:1fr}
+  body.linear .sec{padding:26px 16px 24px}
+  body.linear .lane{padding:18px 12px}
+  .lane-mod{flex-wrap:wrap;gap:8px 12px}
+  .lane-mod>span{flex:1 1 100%}
+  .c .tbl th:nth-child(2):not(:last-child),.c .tbl td:nth-child(2):not(:last-child){display:none}
+  .fact{padding:10px 11px}
+  .fact span{hyphens:auto;overflow-wrap:anywhere}
+  .inputs-toggle{grid-template-columns:36px minmax(0,1fr) 22px;align-items:center}
+  .inputs-toggle>i{width:36px;height:36px;grid-row:1}
+  .inputs-toggle>span{display:contents}
+  .inputs-toggle b{grid-column:2;grid-row:1}
+  .inputs-toggle>span>span{grid-column:1/-1;grid-row:2;margin-top:0}
+  .inputs-toggle .inp-count{grid-column:1/-1;grid-row:3}
+  .inputs-toggle .chev{grid-row:1;margin-top:0}
+}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
@@ -920,7 +1009,7 @@ body.d-square .callout{border-radius:0}
   </div>
 </div>
 
-<script>window.XD_INPUTS = {"endpoint":"https://script.google.com/macros/s/AKfycby8F6FapZOSQ_6zbJIFMoWzX06q4kLJnk3DHAxojDa6_jO-k3cZ7z3ZW76rxc_js3Z1/exec","key":"5e70d86ee51d6901d8aa4386d3697299","v":"2026-09-30 07:30 · 4088ab"};</script>
+<script>window.XD_INPUTS = {"endpoint":"https://script.google.com/macros/s/AKfycby8F6FapZOSQ_6zbJIFMoWzX06q4kLJnk3DHAxojDa6_jO-k3cZ7z3ZW76rxc_js3Z1/exec","key":"5e70d86ee51d6901d8aa4386d3697299","v":"2026-09-30 08:26 · 4088ab"};</script>
 <script>
 /* =====================================================================
    STATING s.r.o. (Hradec Králové) · personalizovaná AI mapa XpertDigital
@@ -1805,6 +1894,7 @@ function boot(data) {
   bindGlobal();
   bindInputs();
   setMode();
+  document.fonts?.ready.then(() => fitTables(world));
   if (personal()) loadInputs();
   mrInit();
   // po načtení webfontu se změní rozměry → znovu zaměřit (jen když uživatel ještě nehýbal)
@@ -2467,8 +2557,9 @@ function updatePricing() {
   ].map(t => '<div><b>' + t[0] + '</b><span>' + t[1] + '</span></div>').join('');
   const rows = [[0, 'pod ' + fmt(P.floor * 100) + ' % (práh)'], [P.floor, fmt(P.floor * 100) + ' %'], [0.8, '80 %'], [1, '100 % (cíl)'], [1.2, '120 %'], [1.5, '150 %']]
     .filter(([a], i) => i === 0 || (a >= P.floor && a < P.cap)).concat([[P.cap, fmt(P.cap * 100) + ' % a víc (strop)']]);
-  $('#prTbl').innerHTML = '<thead><tr><th>Splnění cíle</th><th class="num">Zaplatíte celkem</th><th class="num">Proti pevné ceně</th></tr></thead><tbody>' +
-    rows.map(([a, l]) => { const t = q.total(a), d = t - q.base, same = Math.abs(d) < 1e-6 * q.base; return '<tr><td>' + l + '</td><td class="num">' + priceFmt(t) + '</td><td class="num"><span class="pill ' + (same ? 'info' : d < 0 ? 'ok' : 'warn') + '">' + (same ? 'stejně' : priceFmt(d, true)) + '</span></td></tr>'; }).join('') + '</tbody>';
+  // na telefonu se třetí sloupec skryje a rozdíl se ukáže pod částkou (.pr-dm)
+  $('#prTbl').innerHTML = '<thead><tr><th>Splnění cíle</th><th class="num">Zaplatíte celkem<span class="pr-dm">rozdíl proti pevné ceně</span></th><th class="num">Proti pevné ceně</th></tr></thead><tbody>' +
+    rows.map(([a, l]) => { const t = q.total(a), d = t - q.base, same = Math.abs(d) < 1e-6 * q.base, pill = '<span class="pill ' + (same ? 'info' : d < 0 ? 'ok' : 'warn') + '">' + (same ? 'stejně' : priceFmt(d, true)) + '</span>'; return '<tr><td>' + l + '</td><td class="num">' + priceFmt(t) + '<span class="pr-dm">' + pill + '</span></td><td class="num">' + pill + '</td></tr>'; }).join('') + '</tbody>';
   const own = ui.kpis.filter(k => k.name.trim());
   $('#prRules').innerHTML = [
     P.rate && P.team ? 'Cena programu na ' + totalWeeks + ' ' + unitN(totalWeeks) + ': ' + teamMD().map(t => t[0] + ' ' + fmtAuto(t[1]) + ' MD').join(', ') + ' = ' + fmtAuto(teamMD().reduce((a, t) => a + t[1], 0)) + ' MD × ' + fmt(P.rate) + ' Kč = ' + fmt(progPrice()) + ' Kč.' : '',
@@ -2707,7 +2798,7 @@ const R = {
     const num = b.num || [];
     const colsIdx = c && b.compactCols ? b.compactCols : b.cols.map((_, i) => i);
     return '<div class="tbl-wrap"><table class="tbl"><thead><tr>' + colsIdx.map(i => '<th' + (num.includes(i) ? ' class="num"' : '') + '>' + esc(b.cols[i]) + '</th>').join('') + '</tr></thead><tbody>' +
-      rows.map(r => '<tr>' + colsIdx.map(i => '<td' + (num.includes(i) ? ' class="num"' : '') + '>' + cell(r[i]) + '</td>').join('') + '</tr>').join('') +
+      rows.map(r => '<tr>' + colsIdx.map(i => '<td' + (num.includes(i) ? ' class="num"' : '') + ' data-l="' + esc(b.cols[i]) + '">' + cell(r[i]) + '</td>').join('') + '</tr>').join('') +
       '</tbody></table></div>' + (!c && b.note ? '<div class="tbl-note">' + rich(b.note) + '</div>' : '');
   },
   kpis(b, c) {
@@ -2729,7 +2820,7 @@ const R = {
     if (c) return '<div class="q-compact"><div><div class="q-no"><small>NABÍDKA</small>' + esc(b.number) + '</div><div class="q-meta">' + esc(b.customer) + '<br>' + b.items.length + ' položek · ' + fmt(kg / 1000, 1) + ' t</div></div><div class="q-sum"><span class="q-meta">Celkem bez DPH</span><b>' + kc(baseV) + '</b></div></div>';
     return '<div class="quote"><div class="q-head"><div class="q-no"><small>NABÍDKA</small>' + esc(b.number) + '</div><div class="q-meta">' + b.meta.map(m => esc(m[0]) + ': <b>' + esc(m[1]) + '</b>').join('<br>') + '</div></div>' +
       '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Položka</th><th class="num">Množství</th><th class="num">Jedn. cena</th><th class="num">Celkem</th></tr></thead><tbody>' +
-      b.items.map(i => '<tr><td>' + esc(i.name) + (i.note ? '<br><span style="font-weight:400;color:#6B6B6B;font-size:12.5px">' + esc(i.note) + '</span>' : '') + '</td><td class="num">' + fmt(i.qty) + ' ' + esc(i.unit) + '</td><td class="num">' + (Number.isInteger(i.price) ? kc(i.price) : fmt(i.price, 2) + ' Kč') + '</td><td class="num">' + kc(i.qty * i.price) + '</td></tr>').join('') +
+      b.items.map(i => '<tr><td>' + esc(i.name) + (i.note ? '<br><span style="font-weight:400;color:#6B6B6B;font-size:12.5px">' + esc(i.note) + '</span>' : '') + '</td><td class="num" data-l="Množství">' + fmt(i.qty) + ' ' + esc(i.unit) + '</td><td class="num" data-l="Jedn. cena">' + (Number.isInteger(i.price) ? kc(i.price) : fmt(i.price, 2) + ' Kč') + '</td><td class="num" data-l="Celkem">' + kc(i.qty * i.price) + '</td></tr>').join('') +
       '</tbody></table></div><div class="q-tot">' +
       '<div><span>Mezisoučet</span><span>' + kc(sub) + '</span></div>' +
       (disc ? '<div><span>Sleva ' + fmt(b.discountPct) + ' % na materiál</span><span>−' + kc(disc) + '</span></div>' : '') +
@@ -2833,6 +2924,15 @@ function initWidgets(root, card) {
 
 /* ============ Modal karty ============ */
 let curCard = null, lastFocus = null;
+// telefon: tabulka, která se nevejde na šířku, se složí do řádků pod sebe (popisky sloupců z data-l)
+function fitTables(root) {
+  if (!root) return;
+  root.querySelectorAll('.tbl-wrap > table.tbl').forEach(t => {
+    if (!t.querySelector('td[data-l]')) return;
+    t.classList.remove('stack');
+    if (innerWidth <= 560 && t.parentNode.scrollWidth > t.parentNode.clientWidth + 4) t.classList.add('stack');
+  });
+}
 function openCard(id) {
   const hit = cardIndex.get(id); if (!hit) return;
   const { card: c, week: w } = hit, ag = C.agents[w.agent];
@@ -2851,6 +2951,7 @@ function openCard(id) {
   if (p) { pb.innerHTML = icon('arrowL') + '<span>' + esc(p + ' · ' + cardIndex.get(p).card.title) + '</span>'; pb.onclick = () => openCard(p); }
   if (n) { nb.innerHTML = '<span>' + esc(n + ' · ' + cardIndex.get(n).card.title) + '</span>' + icon('arrowR'); nb.onclick = () => openCard(n); }
   $('#modal').hidden = false;
+  fitTables($('#mBody'));
   $('#mScroll').scrollTop = 0;
   try { history.replaceState(null, '', '#k-' + id); } catch (e) {}
   $('.m-close', $('#modal')).focus({ preventScroll: true });
@@ -2944,6 +3045,7 @@ function setMode() {
     requestAnimationFrame(() => { computeMin(); go(startKey(), false); });
     hintIntro();
   } else $('#guide').hidden = true;
+  fitTables(world);
 }
 
 /* ============ Pan & zoom ============ */
@@ -3042,7 +3144,8 @@ function bindGlobal() {
   mqNarrow.addEventListener('change', () => { linearForced = modeParam; setMode(); });
   // fokus do pole mimo obraz nesmí posunout skrytý posuvník mapy (mapu posouvá jen transformace)
   vp.addEventListener('scroll', () => { if (!isLinear() && (vp.scrollTop || vp.scrollLeft)) { vp.scrollTop = 0; vp.scrollLeft = 0; } });
-  window.addEventListener('resize', () => { if (!isLinear()) computeMin(); });
+  let fitT = 0;
+  window.addEventListener('resize', () => { if (!isLinear()) computeMin(); clearTimeout(fitT); fitT = setTimeout(() => fitTables(document), 150); });
 
   // Klávesnice
   document.addEventListener('keydown', e => {
