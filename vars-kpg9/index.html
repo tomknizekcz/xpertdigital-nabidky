@@ -777,6 +777,35 @@ body.locked .consent{display:none!important}
 .dr-privacy b{color:var(--ink)}
 .dr-privacy:hover{color:var(--ink)}
 @media print{.consent{display:none!important}}
+/* ---------- Velín: platnost, Poslat kolegovi, kdo odesílá ---------- */
+.gone{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:calc(20px + var(--sat)) 16px calc(20px + var(--sab));background:var(--panel-2);overflow:auto}
+.gone[hidden]{display:none}
+body.gone-on .topbar,body.gone-on .fab,body.gone-on #viewport,body.gone-on .zoomctl,body.gone-on .hint,body.gone-on .modelbadge,body.gone-on .savebar,body.gone-on .consent,body.gone-on .guide-card,body.gone-on .drawer,body.gone-on .scrim{display:none!important}
+.gone-card{width:min(480px,100%);background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px 28px 26px;box-shadow:0 20px 50px rgba(0,0,0,.1)}
+.gone-card .kicker{margin-bottom:10px}
+.gone-card h1{margin:0 0 10px;font-size:28px;line-height:1.15;color:var(--ink);text-wrap:balance}
+.gone-card p{margin:0 0 22px;font-size:16px;line-height:1.55;color:var(--text)}
+.gone-card .btn{white-space:normal}
+.who-line{flex-basis:100%;font-size:13px;line-height:1.5;color:var(--muted)}
+.who-line:empty{display:none}
+.who-line b{color:var(--ink)}
+.who-line button{font:inherit;font-weight:700;color:var(--red-ink);text-decoration:underline;text-underline-offset:2px;padding:4px 0}
+.pricing .who-line{color:var(--on-dark-muted)}
+.pricing .who-line b{color:#fff}
+.pricing .who-line button{color:var(--red-on-dark)}
+.share .m-panel{width:min(540px,100%)}
+.sh-form{display:grid;gap:12px}
+.sh-f{display:grid;gap:6px;font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.sh-f input{font:inherit;font-size:16px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:var(--panel-2);width:100%;min-width:0}
+.sh-f input:focus{outline:none;border-color:var(--red);background:#fff;box-shadow:0 0 0 3px var(--red-100)}
+.sh-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.sh-form .btn{justify-self:start}
+.sh-msg{min-height:1.4em;font-size:14px;font-weight:700;color:var(--red-ink);margin:0}
+.sh-url{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px 10px 10px 14px;background:var(--panel-2);margin:0 0 14px}
+.sh-url span{font-size:15px;font-weight:700;color:var(--ink);overflow-wrap:anywhere;user-select:all;-webkit-user-select:all}
+.sh-url .ct-copy{padding:10px 12px}
+@media (max-width:480px){.sh-2{grid-template-columns:1fr}.save-ui .btn{white-space:normal}}   /* dlouhé „Uložit … a poslat XpertDigital“ nesmí na 375 px rozšířit stránku */
+@media print{.gone,.who-line{display:none!important}}
 .lock{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:20px;background:#ECECEC}
 .lock[hidden]{display:none}
 .lock-card{width:min(420px,100%);background:#fff;border:1px solid #E2E2E2;border-radius:24px;padding:30px 28px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12);display:grid;gap:12px}
@@ -976,12 +1005,22 @@ body.d-square .callout{border-radius:0}
   <div class="cs-btns"><button class="btn btn-red" type="button" data-consent="ano">V pořádku</button><button class="btn btn-ghost" type="button" data-consent="ne">Raději ne</button></div>
   <small><span id="csNow"></span> Volbu změníte kdykoli v menu.</small>
 </div>
+<div class="gone" id="gone" hidden role="dialog" aria-modal="true" aria-labelledby="goTitle" aria-describedby="goText">
+  <div class="gone-card"><div class="kicker" id="goKicker"></div><h1 id="goTitle"></h1><p id="goText"></p><button class="btn btn-red" id="goBtn" type="button" data-cta></button></div>
+</div>
+<div class="modal share" id="share" hidden role="dialog" aria-modal="true" aria-labelledby="shTitle">
+  <div class="m-back" data-shclose></div>
+  <div class="m-panel">
+    <button class="m-close" type="button" data-shclose aria-label="Zavřít (Esc)"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="ct-in" id="shIn"></div>
+  </div>
+</div>
 
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Menu">
   <div class="dr-head"><b>MENU</b><button class="icon-btn" id="drClose" aria-label="Zavřít menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="dr-body" id="drBody"></div>
-  <div class="dr-foot"><button class="btn btn-ghost" id="modeBtn" type="button">Číst jako stránku</button><button class="dr-privacy" id="privacyBtn" type="button" hidden></button></div>
+  <div class="dr-foot"><button class="btn btn-ghost" id="modeBtn" type="button">Číst jako stránku</button><button class="btn btn-ghost" id="shareBtn" type="button" data-share hidden>Poslat kolegovi</button><button class="dr-privacy" id="privacyBtn" type="button" hidden></button></div>
 </aside>
 
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle">
@@ -1009,7 +1048,7 @@ body.d-square .callout{border-radius:0}
   </div>
 </div>
 
-<script>window.XD_INPUTS = {"endpoint":"https://script.google.com/macros/s/AKfycby8F6FapZOSQ_6zbJIFMoWzX06q4kLJnk3DHAxojDa6_jO-k3cZ7z3ZW76rxc_js3Z1/exec","key":"752b213e3d70f7c9af8c6dc105264d85","v":"2026-09-30 08:26 · 4bab45"};</script>
+<script>window.XD_INPUTS = {"endpoint":"https://script.google.com/macros/s/AKfycby8F6FapZOSQ_6zbJIFMoWzX06q4kLJnk3DHAxojDa6_jO-k3cZ7z3ZW76rxc_js3Z1/exec","key":"752b213e3d70f7c9af8c6dc105264d85","v":"2026-09-30 09:13 · 4bab45"};</script>
 <script>
 /* =====================================================================
    VARS BRNO a.s. (člen skupiny VINCI Energies) · personalizovaná AI mapa
@@ -1941,6 +1980,7 @@ function boot(data) {
   document.fonts?.ready.then(() => fitTables(world));
   if (personal()) loadInputs();
   mrInit();
+  mrExtras();
   // po načtení webfontu se změní rozměry → znovu zaměřit (jen když uživatel ještě nehýbal)
   document.fonts?.ready.then(() => { if (!isLinear() && !interacted) { computeMin(); go(startKey(), false); } });
   // přímý odkaz na kartu: index.html#k-3.1
@@ -2440,7 +2480,7 @@ function refreshSrc() {
 const noteText = () => canSend()
   ? (C.vendor.inputsNote || 'Tlačítkem Uložit a poslat pošlete zadaná čísla, výběr a poznámky ' + vendorName() + ' k této nabídce. Uvidí je jen náš tým. Nepište sem prosím osobní údaje.')
   : preview ? 'Náhled pro ' + vendorName() + ': změny zůstávají jen v tomto prohlížeči a nikam se neposílají.' : 'Vaše změny zůstávají jen v tomto prohlížeči.';
-const saveUI = label => '<div class="inp-actions save-ui" hidden><button class="btn btn-red" type="button" data-save>' + esc(label) + icon('arrowR') + '</button><span class="save-status" data-save-status aria-live="polite"></span></div>';
+const saveUI = label => '<div class="inp-actions save-ui" hidden><button class="btn btn-red" type="button" data-save>' + esc(label) + icon('arrowR') + '</button><span class="save-status" data-save-status aria-live="polite"></span><span class="who-line" data-who></span></div>';
 function inputsPanelHTML() {
   const K = C.calc; if (!K.inputs) return '';
   return '<div class="inputs" id="inputs">' +
@@ -2678,7 +2718,7 @@ async function saveRemote() {
   setSaveStatus('saving');
   try {
     const snap = snapshot(); snap.sent = true;
-    const j = await post({ action: 'save', data: snap, summary: summaryText(snap), p: MR.p || '' });
+    const j = await post({ action: 'save', data: snap, summary: summaryText(snap), p: MR.p || '', who: mrSender() });
     if (!j || !j.ok) throw new Error((j && j.error) || 'save');
     if (ui.rev === rev0) ui.dirty = false;
     ui.saving = false; saveLocal(); setSaveStatus('ok'); mrEv('save', 1); mrSoon();
@@ -3285,7 +3325,7 @@ function bindGlobal() {
 // Bez souhlasu jen anonymní zobrazení. Hodnoty formulářů nikdy: ty přijdou až tlačítkem Uložit a poslat.
 // ?nahled a zařízení označená ?interni se neměří vůbec (?interni=0 označení zruší).
 const MR = { on: false, full: false, viewed: false, meta: false, sid: '', did: '', p: '', t0: 0, q: [], dw: {}, act: 0,
-  lastAct: 0, tickAt: 0, flushAt: 0, soon: 0, sec: '', secLog: '', card: '', lin: null, thr: {}, vt: 0, vsent: false };
+  lastAct: 0, tickAt: 0, flushAt: 0, soon: 0, sec: '', secLog: '', card: '', lin: null, thr: {}, vt: 0, vsent: false, reader: null, shText: '', shFocus: null };
 const mrSlug = () => (C && C.meta.slug) || '';
 const mrOk = v => /^[a-z0-9]{3,12}$/.test(v || '');
 function mrRand(n) {
@@ -3450,6 +3490,134 @@ function mrPrivacyBtn() {
   const b = $('#privacyBtn'); if (!b) return;
   b.hidden = !(MR.on && personal());
   b.innerHTML = 'Měření návštěvy: <b>' + (MR.full ? 'zapnuto' : 'vypnuto') + '</b> · změnit';
+}
+
+/* --- Velín: platnost nabídky, Poslat kolegovi, kdo odesílá --- */
+// Platnost se ověřuje i bez souhlasu s měřením (nic se při tom neukládá), ?nahled ji přeskočí.
+function mrExtras() {
+  const b = $('#shareBtn'); if (b) b.hidden = !canSend();
+  document.addEventListener('click', mrExtrasClick);
+  document.addEventListener('submit', e => {
+    const f = e.target.closest && e.target.closest('[data-shform]'); if (!f) return;
+    e.preventDefault();
+    if (f.dataset.shform === 'who') mrWhoSave(); else mrShareSend(f);
+  });
+  // dialog Poslat kolegovi: Esc zavře, Tab zůstane uvnitř, mapa pod ním na klávesy nereaguje
+  window.addEventListener('keydown', e => {
+    if ($('#share').hidden) return;
+    e.stopImmediatePropagation();
+    if (e.key === 'Escape') mrShareClose(); else if (e.key === 'Tab') trapFocus(e, $('#share .m-panel'));
+  }, true);
+  mrWhoUI();
+  mrStatus();
+}
+async function mrStatus() {
+  if (preview || !mrSlug() || !endpoint() || !inputKey()) return;
+  const tp = (params.get('p') || '').toLowerCase(), sp = store.get('ctenar:' + mrSlug()) || '';
+  let j = null;
+  try { j = await post({ action: 'status', p: mrOk(tp) ? tp : mrOk(sp) ? sp : '' }); } catch (e) { return; }
+  if (!j || !j.ok) return;
+  if (j.reader && j.reader.name) { MR.reader = { name: String(j.reader.name).slice(0, 80), role: String(j.reader.role || '').slice(0, 80) }; mrWhoUI(); }
+  if (j.revoked || j.valid === false) mrGone(j);
+}
+// po skončení platnosti nebo zneplatnění odkazu ukáže místo mapy kontakt
+function mrGone(j) {
+  const client = C.meta.client || '', u = j.until ? new Date(j.until) : null;
+  const d = u && !isNaN(u) ? u.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' }) : '';
+  $('#goKicker').textContent = vendorName();
+  $('#goTitle').textContent = j.revoked ? 'Tento odkaz už neplatí' : 'Platnost nabídky skončila';
+  $('#goText').textContent = j.revoked
+    ? 'Osobní odkaz na nabídku' + (client ? ' pro ' + client : '') + ' byl zrušen. Pokud ji potřebujete, ozvěte se nám a pošleme aktuální verzi.'
+    : 'Nabídka' + (client ? ' pro ' + client : '') + (d && !j.ended ? ' platila do ' + d + '.' : ' už neplatí.') + ' Rádi vám připravíme aktuální verzi.';
+  $('#goBtn').innerHTML = esc('Kontakt na ' + vendorName()) + icon('arrowR');
+  if (!$('#drawer').hidden) openMenu(false);
+  if (!$('#modal').hidden) closeCard();
+  mrShareClose();
+  document.body.classList.add('gone-on');
+  $('#gone').hidden = false;
+  $('#goBtn').focus({ preventScroll: true });
+}
+// kdo odesílá: jméno z osobního odkazu, nebo co čtenář sám vyplnil (jen v tomto prohlížeči)
+function mrSender() {
+  try {
+    const s = JSON.parse(store.get('odesilatel:' + mrSlug()) || 'null');
+    if (s && typeof s.name === 'string' && s.name.trim()) return { name: s.name.trim().slice(0, 80), role: String(s.role || '').trim().slice(0, 80) };
+  } catch (e) {}
+  return null;
+}
+function mrWhoUI() {
+  const s = mrSender() || MR.reader;
+  const html = !canSend() ? '' : (s ? 'Odesíláte jako <b>' + esc(s.name) + '</b>' + (s.role ? ', ' + esc(s.role) : '') + ' · <button type="button" data-who-edit>změnit</button>'
+    : 'Odesíláte bez jména · <button type="button" data-who-edit>doplnit</button>') + ' · <button type="button" data-share>Poslat kolegovi</button>';
+  $$('[data-who]').forEach(el => { el.innerHTML = html; });
+}
+function mrWhoSave() {
+  const n = $('#sh-me').value.trim().slice(0, 80), r = $('#sh-merole').value.trim().slice(0, 80);
+  store.set('odesilatel:' + mrSlug(), n ? JSON.stringify({ name: n, role: r }) : '');
+  mrWhoUI(); mrShareClose();
+}
+function mrExtrasClick(e) {
+  const t = e.target && e.target.closest ? e.target : null; if (!t) return;
+  if (t.closest('[data-share]')) { mrShareOpen('share'); return; }
+  if (t.closest('[data-who-edit]')) { mrShareOpen('who'); return; }
+  if (t.closest('[data-shclose]')) { mrShareClose(); return; }
+  const cm = t.closest('[data-shcopy]'); if (cm) { mrCopy(cm, MR.shText); return; }
+  if (t.closest('[data-shnative]')) { try { navigator.share({ title: 'Nabídka ' + vendorName(), text: MR.shText }).catch(() => {}); } catch (err) {} }
+}
+function mrShareOpen(mode) {
+  if (!canSend()) return;
+  if (!$('#drawer').hidden) openMenu(false);
+  MR.shFocus = document.activeElement;
+  const me = mrSender() || MR.reader;
+  const f = (id, label, val, ac) => '<label class="sh-f" for="' + id + '">' + label + '<input id="' + id + '" maxlength="80" autocomplete="' + (ac || 'off') + '" value="' + esc(val || '') + '"></label>';
+  const head = (title, text) => '<div class="kicker">' + esc(vendorName()) + '</div><h2 class="ct-title" id="shTitle">' + title + '</h2><p class="ct-text">' + text + '</p>';
+  $('#shIn').innerHTML = mode === 'who'
+    ? head('Kdo odesílá', 'Jméno připojíme k tomu, co pošlete tlačítkem Uložit a poslat, ať víme, komu odpovědět. Zůstane jen v tomto prohlížeči.') +
+      '<form class="sh-form" data-shform="who" novalidate><div class="sh-2">' + f('sh-me', 'Vaše jméno', me && me.name, 'name') + f('sh-merole', 'Role (nepovinné)', me && me.role, 'organization-title') + '</div><button class="btn btn-red" type="submit">Uložit' + icon('check') + '</button></form>'
+    : head('Poslat kolegovi', 'Další člověk z vašeho týmu dostane vlastní odkaz na tuto mapu. Uvidí stejný obsah a může poslat svůj pohled. My uvidíme, od koho je.') +
+      '<form class="sh-form" data-shform="share" novalidate><div class="sh-2">' + f('sh-name', 'Komu: jméno', '') + f('sh-role', 'Role (nepovinné)', '') + '</div>' +
+      (me ? '' : f('sh-from', 'Vaše jméno (nepovinné)', '', 'name')) +
+      '<p class="sh-msg" id="shMsg" role="alert"></p><button class="btn btn-red" type="submit">Vytvořit odkaz' + icon('arrowR') + '</button></form>';
+  $('#share').hidden = false;
+  const first = $('#shIn input'); if (first) first.focus({ preventScroll: true });
+}
+function mrShareClose() {
+  if ($('#share').hidden) return;
+  $('#share').hidden = true;
+  MR.shFocus?.focus?.({ preventScroll: true });
+}
+async function mrShareSend(form) {
+  const btn = $('button[type="submit"]', form), msg = $('#shMsg'), nameEl = $('#sh-name'), fromEl = $('#sh-from');
+  const name = nameEl.value.trim(), role = $('#sh-role').value.trim();
+  if (!name) { msg.textContent = 'Doplňte prosím jméno.'; nameEl.focus(); return; }
+  const me = mrSender() || MR.reader, from = me ? me.name : (fromEl ? fromEl.value.trim().slice(0, 80) : '');
+  if (fromEl && from) store.set('odesilatel:' + mrSlug(), JSON.stringify({ name: from, role: '' }));
+  btn.disabled = true; msg.textContent = '';
+  let j = null;
+  try { j = await post({ action: 'share', name: name, role: role, p: MR.p || '', from: from }); } catch (e) { j = null; }
+  btn.disabled = false;
+  if (!j || !j.ok || !j.url) { msg.textContent = j && j.error === 'rate' ? 'Teď to nejde, zkuste to prosím za chvíli.' : 'Odkaz se nepodařilo vytvořit. Zkuste to prosím znovu.'; return; }
+  mrEv('share'); mrSoon(); mrWhoUI();
+  const client = C.meta.client || '', subj = 'Nabídka ' + vendorName() + (client ? ' pro ' + client : '');
+  MR.shText = 'Dobrý den,\nposílám odkaz na nabídku od ' + vendorName() + (client ? ' pro ' + client : '') + ':\n' + j.url + '\n\nOdkaz je jen pro vás. Svůj pohled můžete poslat přímo z mapy tlačítkem Uložit a poslat.' + (window.XD_ENC ? '\nHeslo k nabídce pošlu zvlášť.' : '');
+  $('#shIn').innerHTML = '<div class="kicker">' + esc(vendorName()) + '</div><h2 class="ct-title" id="shTitle">Odkaz je připravený</h2>' +
+    '<p class="ct-text">Komu: <b>' + esc(name) + '</b>' + (role ? ', ' + esc(role) : '') + '. Odkaz je jen pro tohoto člověka, pošlete ho, jak jste zvyklí.</p>' +
+    '<div class="sh-url"><span id="sh-url">' + esc(j.url) + '</span><button class="ct-copy" type="button" data-copy="sh-url">Kopírovat</button></div>' +
+    '<div class="ct-actions" style="margin-top:0"><a class="btn btn-red" href="mailto:?subject=' + encodeURIComponent(subj) + '&amp;body=' + encodeURIComponent(MR.shText) + '">Napsat e-mail' + icon('arrowR') + '</a>' +
+    '<button class="btn btn-ghost" type="button" data-shcopy>Kopírovat zprávu</button>' + (navigator.share ? '<button class="btn btn-ghost" type="button" data-shnative>Sdílet…</button>' : '') + '</div>' +
+    (window.XD_ENC ? '<p class="ct-addr">Nabídka je chráněná heslem. Heslo pošlete zvlášť, ne ve stejné zprávě.</p>' : '');
+  $('.m-close', $('#share')).focus({ preventScroll: true });
+}
+function mrCopy(btn, text) {
+  const old = btn.textContent, done = () => { btn.textContent = 'Zkopírováno'; setTimeout(() => { btn.textContent = old; }, 1800); };
+  const legacy = () => {
+    const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    ta.remove();
+    if (ok) done(); else btn.textContent = 'Nejde zkopírovat, použijte e-mail';
+  };
+  try { navigator.clipboard.writeText(text).then(done, legacy); } catch (e) { legacy(); }
 }
 function trapFocus(e, root) {
   const f = $$('button:not([disabled]),a[href],input,select,textarea,[tabindex]:not([tabindex="-1"])', root).filter(x => x.offsetParent !== null);
