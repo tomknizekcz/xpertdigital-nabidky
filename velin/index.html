@@ -372,6 +372,10 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 .panel.forget h4{margin:0 0 6px;font-size:16px;color:var(--ink)}
 .panel.forget p{margin:0 0 8px;font-size:14px}
 .who-me{color:var(--on-rail)}
+.sync{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--on-rail-muted);opacity:.4;margin-right:6px;vertical-align:1px}
+.sync.on{background:var(--green);opacity:1;animation:syncp 1s ease-in-out infinite}
+@keyframes syncp{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.sync.on{animation:none}}
 .signin .gsi{margin-top:16px;min-height:44px}
 .chk{display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink);cursor:pointer;align-self:end;min-height:38px}
 .chk input{width:17px;height:17px;margin:0;accent-color:var(--red-btn)}
@@ -515,8 +519,33 @@ function signOut() {
   render(false);
 }
 
+/* ============ překreslení bez blikání ============ */
+// patch(el, html) přepíše jen uzly, které se liší: zůstane posun stránky, fokus, rozepsaná pole (prohlížeč je chrání
+// příznakem změny) i rozbalené části <details> (atribut open nastavuje jen uživatel). Uzly se párují podle pořadí.
+function patch(el, html) {
+  const tpl = document.createElement(el.tagName);
+  tpl.innerHTML = html;
+  morphKids(el, tpl);
+}
+function morphKids(from, to) {
+  const fc = Array.from(from.childNodes), tc = Array.from(to.childNodes);
+  tc.forEach((t, i) => {
+    const f = fc[i];
+    if (!f) from.appendChild(t);
+    else if (f.nodeType !== t.nodeType || f.nodeName !== t.nodeName) from.replaceChild(t, f);
+    else if (f.nodeType === 1) morphEl(f, t);
+    else if (f.nodeValue !== t.nodeValue) f.nodeValue = t.nodeValue;
+  });
+  for (let i = fc.length - 1; i >= tc.length; i--) from.removeChild(fc[i]);
+}
+function morphEl(f, t) {
+  Array.from(f.attributes).forEach(x => { if (!t.hasAttribute(x.name) && !(x.name === 'open' && f.nodeName === 'DETAILS')) f.removeAttribute(x.name); });
+  Array.from(t.attributes).forEach(x => { if (f.getAttribute(x.name) !== x.value) f.setAttribute(x.name, x.value); });
+  morphKids(f, t);
+}
+
 /* ============ stav a data ============ */
-const V = { view: 'prehled', slug: '', tab: 'souhrn', range: 7, err: '', busy: false, loadedAt: 0, link: {}, setupMsg: '', setup: false, forget: null, team: {}, teamDel: '', teamRot: '', signin: false };
+const V = { view: 'prehled', slug: '', tab: 'souhrn', range: 7, err: '', busy: false, loadedAt: 0, link: {}, setupMsg: '', setup: false, forget: null, team: {}, teamDel: '', teamRot: '', signin: false, tv: {}, gen: 0, refreshing: false };
 const main = $('#main'), tip = $('#tip');
 let D = null;   // připravená data ze serveru (model.gs)
 
@@ -531,6 +560,26 @@ function prep(M) {
 const isOwner = () => !!(D && D.me.owner);
 const canEdit = () => !!(D && (D.me.owner || D.me.role === 'edit'));
 const FORGOTTEN = 'smazáno na žádost';
+// fáze, hodnota, platnost a stupeň zájmu po ruční změně (stejně jako model.gs), aby se změna ukázala hned
+const STAGES = { ready: ['Připraveno', 'line'], sent: ['Odesláno', 'line'], opened: ['Otevřeno', ''], engaged: ['Zapojeno', 'warm'], filled: ['Vyplněno', 'ok'],
+  meeting: ['Schůzka', 'dark'], won: ['Vyhráno', 'ok'], lost: ['Prohráno', 'bad'], paused: ['Pozastaveno', 'line'] };
+const bandFor = v => v >= 70 ? ['hot', 'Vysoký zájem'] : v >= 45 ? ['warm', 'Střední zájem'] : v >= 20 ? ['cool', 'Nízký zájem'] : ['cold', 'Minimální zájem'];
+function derive(o) {
+  const st = STAGES[o.manual.stage] ? o.manual.stage : o.autoStage;
+  o.stage = [st, STAGES[st][0], STAGES[st][1]];
+  o.value = o.manual.value != null ? o.manual.value : o.valueAuto;
+  o.valid = o.manual.ended ? 'ended' : o.manual.until && o.manual.until < sod(NOW) ? 'expired' : 'ok';
+  o.band = st === 'won' || st === 'lost' ? null : !o.views ? ['none', 'Neotevřeno'] : bandFor(o.score.total);
+}
+// úprava nabídky v prohlížeči; vrátí funkci, která ji vrátí zpět (když server změnu odmítne)
+function editOffer(slug, fn) {
+  const o = D.O[slug];
+  if (!o) return null;
+  const was = JSON.stringify({ manual: o.manual, stage: o.stage, value: o.value, valid: o.valid, band: o.band });
+  fn(o.manual);
+  derive(o);
+  return () => Object.assign(o, JSON.parse(was));
+}
 const stageChip = o => chip(o.stage[2], o.stage[1] + (o.stage[0] === 'meeting' && o.manual.meeting ? ' ' + DOW[new Date(o.manual.meeting).getDay()] + ' ' + dm(o.manual.meeting) : ''));
 function secLabel(o, k) {
   const L = { a: 'A · Úvod', b: 'B · Kalkulačka', c: 'C · Co bude hotové', d: 'D · Co potřebujete', cena: 'Cena', prehled: 'Celá mapa', program: 'Program po týdnech' };
@@ -554,9 +603,10 @@ function table(cols, rows, right) {
     rows.map(r => '<tr>' + r.map((c, i) => '<td' + (right.indexOf(i) >= 0 ? ' class="r"' : '') + '>' + c + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>';
 }
 function fig(title, sub, chart, tbl, note) {
-  return '<figure class="fig panel" data-fig><div class="fig-h"><div><h4>' + title + '</h4>' + (sub ? '<p>' + sub + '</p>' : '') + '</div>' +
-    '<button class="tv" type="button" data-tv aria-pressed="false">' + icon('table') + 'Tabulka</button></div>' +
-    '<div class="fig-c">' + chart + '</div><div class="fig-t" hidden>' + tbl + '</div>' + (note ? '<p class="fig-note">' + note + '</p>' : '') + '</figure>';
+  const on = !!V.tv[title];   // tabulka místo grafu: přepnutí vydrží i obnovu dat
+  return '<figure class="fig panel" data-fig data-fig-title="' + esc(title) + '"><div class="fig-h"><div><h4>' + title + '</h4>' + (sub ? '<p>' + sub + '</p>' : '') + '</div>' +
+    '<button class="tv" type="button" data-tv aria-pressed="' + on + '">' + (on ? icon('chart') + 'Graf' : icon('table') + 'Tabulka') + '</button></div>' +
+    '<div class="fig-c"' + (on ? ' hidden' : '') + '>' + chart + '</div><div class="fig-t"' + (on ? '' : ' hidden') + '>' + tbl + '</div>' + (note ? '<p class="fig-note">' + note + '</p>' : '') + '</figure>';
 }
 function hbars(rows, opts) {
   opts = opts || {};
@@ -1022,19 +1072,19 @@ function vError() { return '<div class="center"><div class="card"><h2>' + (/pozv
 function renderRail() {
   const cur = V.view === 'detail' ? 'nabidky' : V.view;
   const open = D ? D.actions.filter(a => !a.done).length : 0;
-  $('#rnav').innerHTML = [['prehled', 'grid', 'Přehled', open, true], ['nabidky', 'file', 'Nabídky', D ? D.list.filter(o => o.meta.personal !== false).length : 0], ['analytika', 'chart', 'Analytika'], ['nastaveni', 'gear', 'Nastavení']].map(i => '<button type="button" data-nav="' + i[0] + '"' + (cur === i[0] ? ' aria-current="page"' : '') + '>' + icon(i[1]) + '<span>' + i[2] + '</span>' + (i[3] ? '<span class="cnt' + (i[4] ? ' hot' : '') + '"' + (i[4] ? ' title="kroky Na tah"' : '') + '>' + i[3] + '</span>' : '') + '</button>').join('');
-  $('#rshort').innerHTML = D && D.list.length ? '<div class="rail-h">Podle zájmu</div>' + D.list.filter(o => o.meta.personal !== false).slice().sort((a, b) => (b.live - a.live) || ((b.band ? b.score.total : -1) - (a.band ? a.score.total : -1))).slice(0, 12).map(o => '<button type="button" data-offer="' + esc(o.slug) + '"' + (V.view === 'detail' && V.slug === o.slug ? ' aria-current="page"' : '') + '><i class="dot ' + (o.live ? 'live' : o.stage[0] === 'won' ? 'ok' : o.band && o.score.total >= 45 ? 'act' : '') + '"></i><span>' + esc(o.short) + '</span><em>' + (o.live ? 'teď' : o.band ? (o.band[0] === 'none' ? '–' : o.score.total) : o.stage[1]) + '</em></button>').join('') : '';
-  if (V.signin) { $('#rfoot').innerHTML = '<span class="note">Nepřihlášeno</span>'; return; }
-  $('#rfoot').innerHTML = (D && !D.me.owner ? '<span class="note who-me">' + esc(D.me.name) + ' · ' + (D.me.role === 'edit' ? 'může upravovat' : 'jen čtení') + '</span>' : '') + '<span class="note">Načteno ' + (V.loadedAt ? hm(V.loadedAt) : '…') + ', obnovuje se každou minutu.</span><button type="button" data-reload>' + icon('refresh') + 'Obnovit</button>' + (D && D.M.sheetUrl ? '<a href="' + esc(D.M.sheetUrl) + '" target="_blank" rel="noopener">' + icon('sheet') + 'Tabulka</a>' : '') +
-    (WEB && !K && D ? '<button type="button" data-signout>' + icon('x') + 'Odhlásit</button>' : '');
+  patch($('#rnav'), [['prehled', 'grid', 'Přehled', open, true], ['nabidky', 'file', 'Nabídky', D ? D.list.filter(o => o.meta.personal !== false).length : 0], ['analytika', 'chart', 'Analytika'], ['nastaveni', 'gear', 'Nastavení']].map(i => '<button type="button" data-nav="' + i[0] + '"' + (cur === i[0] ? ' aria-current="page"' : '') + '>' + icon(i[1]) + '<span>' + i[2] + '</span>' + (i[3] ? '<span class="cnt' + (i[4] ? ' hot' : '') + '"' + (i[4] ? ' title="kroky Na tah"' : '') + '>' + i[3] + '</span>' : '') + '</button>').join(''));
+  patch($('#rshort'), D && D.list.length ? '<div class="rail-h">Podle zájmu</div>' + D.list.filter(o => o.meta.personal !== false).slice().sort((a, b) => (b.live - a.live) || ((b.band ? b.score.total : -1) - (a.band ? a.score.total : -1))).slice(0, 12).map(o => '<button type="button" data-offer="' + esc(o.slug) + '"' + (V.view === 'detail' && V.slug === o.slug ? ' aria-current="page"' : '') + '><i class="dot ' + (o.live ? 'live' : o.stage[0] === 'won' ? 'ok' : o.band && o.score.total >= 45 ? 'act' : '') + '"></i><span>' + esc(o.short) + '</span><em>' + (o.live ? 'teď' : o.band ? (o.band[0] === 'none' ? '–' : o.score.total) : o.stage[1]) + '</em></button>').join('') : '');
+  if (V.signin) { patch($('#rfoot'), '<span class="note">Nepřihlášeno</span>'); return; }
+  patch($('#rfoot'), (D && !D.me.owner ? '<span class="note who-me">' + esc(D.me.name) + ' · ' + (D.me.role === 'edit' ? 'může upravovat' : 'jen čtení') + '</span>' : '') + '<span class="note"><i class="sync' + (V.refreshing ? ' on' : '') + '" aria-hidden="true"></i>' + (V.refreshing ? 'Načítám změny…' : 'Načteno ' + (V.loadedAt ? hm(V.loadedAt) : '…') + ', obnova každých 30 s.') + '</span><button type="button" data-reload>' + icon('refresh') + 'Obnovit</button>' + (D && D.M.sheetUrl ? '<a href="' + esc(D.M.sheetUrl) + '" target="_blank" rel="noopener">' + icon('sheet') + 'Tabulka</a>' : '') +
+    (WEB && !K && D ? '<button type="button" data-signout>' + icon('x') + 'Odhlásit</button>' : ''));
 }
-function render(focus) {
-  hideTip();
-  if (V.signin) main.innerHTML = vSignIn();
-  else if (V.err && !D) main.innerHTML = vError();
-  else if (V.setup) main.innerHTML = vSetup();
-  else if (!D) main.innerHTML = '<div class="center"><p>Načítám data z tabulky…</p></div>';
-  else main.innerHTML = ({ prehled: vOverview, nabidky: vOffers, detail: vDetail, analytika: vAnalytics, nastaveni: vSettings }[V.view] || vOverview)();
+// soft = překreslit jen změny (obnova dat, akce); jinak celý pohled (přechod mezi obrazovkami)
+function render(focus, soft) {
+  soft = soft && !V.signin;   // přihlašovací tlačítko Google kreslí knihovna Googlu, to se nepřepisuje
+  if (!soft) hideTip();
+  const html = V.signin ? vSignIn() : V.err && !D ? vError() : V.setup ? vSetup() : !D ? '<div class="center"><p>Načítám data z tabulky…</p></div>'
+    : ({ prehled: vOverview, nabidky: vOffers, detail: vDetail, analytika: vAnalytics, nastaveni: vSettings }[V.view] || vOverview)();
+  if (soft) patch(main, html); else main.innerHTML = html;
   renderRail();
   if (V.signin) gisButton();
   if (focus) { const h = $('[data-vh]', main); if (h) h.focus({ preventScroll: true }); }
@@ -1042,9 +1092,12 @@ function render(focus) {
 function go(view, extra) { Object.assign(V, { view: view }, extra || {}); render(true); window.scrollTo(0, 0); }
 async function load(quiet) {
   if (V.busy && quiet) return;
-  if (quiet) main.classList.add('loading');
+  const gen = V.gen;
+  V.refreshing = true; renderRail();
   try {
     const raw = await api('velinData');
+    // mezitím proběhla změna z Velínu: data by byla starší než ona, aktuální přijdou po jejím uložení
+    if (gen !== V.gen) { V.refreshing = false; renderRail(); return; }
     const M = typeof raw === 'string' ? JSON.parse(raw) : raw;
     V.signin = false;
     if (M && M.setup) { V.setup = true; D = null; } else { V.setup = false; D = prep(M); V.err = ''; V.loadedAt = Date.now(); applyStart(); }
@@ -1056,22 +1109,34 @@ async function load(quiet) {
       setToken(''); D = null; V.signin = true;
     } else if (D) toast('Obnovení se nepovedlo: ' + V.err, true);
   }
-  main.classList.remove('loading');
-  const y = window.scrollY, active = document.activeElement && document.activeElement.id;
-  if (quiet && active && /^(nl-|sh-|f-|tm-)/.test(active)) { renderRail(); return; }   // nepřepisovat rozepsaný formulář
-  render(false);
-  if (quiet) window.scrollTo(0, y);
+  V.refreshing = false;
+  const el = document.activeElement;
+  // do pole, ve kterém se právě píše, obnova nesahá (překreslí se jen lišta)
+  if (quiet && el && main.contains(el) && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) { renderRail(); return; }
+  render(false, quiet);
 }
 let toastT = 0;
 function toast(msg, err) { const t = $('#toast'); t.textContent = msg; t.className = 'toast' + (err ? ' err' : ''); t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 3500); }
-async function call(fn, args, okMsg) {
+// Akce z Velínu: local() změnu ukáže hned (upraví data v prohlížeči a vrátí funkci pro vrácení zpět), uložení na server
+// a obnova dat doběhnou na pozadí. Když server změnu odmítne, vrátí se a ukáže se chyba.
+async function call(fn, args, okMsg, local) {
+  V.gen++;
+  let undo = null;
+  if (local && D) { try { undo = local(); } catch (e) { undo = null; } render(false, true); }
   V.busy = true;
   try {
     const r = await api.apply(null, [fn].concat(args));
-    if (r && r.ok === false) { toast(r.error || 'Nepovedlo se.', true); V.busy = false; return r; }
+    V.busy = false;
+    if (r && r.ok === false) { if (undo) { undo(); render(false, true); } toast(r.error || 'Nepovedlo se.', true); return r; }
     if (okMsg) toast(okMsg);
-    V.busy = false; await load(true); return r;
-  } catch (e) { V.busy = false; toast(errText(e), true); return { ok: false }; }
+    load(true);
+    return r;
+  } catch (e) {
+    V.busy = false;
+    if (undo) { undo(); render(false, true); }
+    toast(errText(e), true);
+    return { ok: false };
+  }
 }
 /* ============ Export do CSV (Excel v češtině: středník, UTF-8 s BOM) ============ */
 const csvCell = v => { const s = v == null ? '' : String(v); return /[;"\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
@@ -1137,23 +1202,40 @@ document.addEventListener('click', async e => {
   if (!t) return;
   const d = t.dataset;
   if (d.copytext != null) return copy(t);
-  if (d.tv != null) { const f = t.closest('[data-fig]'), on = t.getAttribute('aria-pressed') !== 'true'; t.setAttribute('aria-pressed', String(on)); $('.fig-c', f).hidden = on; $('.fig-t', f).hidden = !on; t.innerHTML = on ? icon('chart') + 'Graf' : icon('table') + 'Tabulka'; return; }
+  if (d.tv != null) { const f = t.closest('[data-fig]'), on = t.getAttribute('aria-pressed') !== 'true'; V.tv[f.getAttribute('data-fig-title')] = on; t.setAttribute('aria-pressed', String(on)); $('.fig-c', f).hidden = on; $('.fig-t', f).hidden = !on; t.innerHTML = on ? icon('chart') + 'Graf' : icon('table') + 'Tabulka'; return; }
   if (d.reload != null) return load(!!D);
   if (d.signout != null) return signOut();
-  if (d.task) return call('velinTask', [d.task, d.taskDone === '1', d.taskSlug, d.taskRule], d.taskDone === '1' ? 'Hotovo.' : 'Vráceno mezi otevřené.');
+  if (d.task) return call('velinTask', [d.task, d.taskDone === '1', d.taskSlug, d.taskRule], d.taskDone === '1' ? 'Hotovo.' : 'Vráceno mezi otevřené.', () => {
+    const x = D.actions.find(y => y.key === d.task), was = x ? x.done : 0;
+    if (x) x.done = d.taskDone === '1' ? Date.now() : 0;
+    return () => { if (x) x.done = was; };
+  });
   if (d.nav) return go(d.nav);
   if (d.offer) return go('detail', { slug: d.offer, tab: d.gotab || 'souhrn' });
-  if (d.tab) { V.tab = d.tab; render(false); const b = $('[role="tab"][aria-selected="true"]', main); if (b) b.focus({ preventScroll: true }); return; }
-  if (d.range) { V.range = +d.range; return render(false); }
+  if (d.tab) { V.tab = d.tab; render(false, true); const b = $('[role="tab"][aria-selected="true"]', main); if (b) b.focus({ preventScroll: true }); return; }
+  if (d.range) { V.range = +d.range; return render(false, true); }
   if (d.saveOffer) {
     const val = $('#f-value').value.replace(/[\s ]/g, '').replace(',', '.'), mt = $('#f-meeting').value, un = $('#f-until').value;
     if (val && !isFinite(+val)) return toast('Hodnota musí být číslo v korunách.', true);
-    return call('velinSetOffer', [d.saveOffer, { stage: $('#f-stage').value, value: val === '' ? '' : +val, meeting: mt ? new Date(mt).toISOString() : '', until: un ? new Date(un + 'T12:00').toISOString() : '', note: $('#f-note').value }], 'Uloženo.');
+    const stage = $('#f-stage').value, note = $('#f-note').value;
+    return call('velinSetOffer', [d.saveOffer, { stage: stage, value: val === '' ? '' : +val, meeting: mt ? new Date(mt).toISOString() : '', until: un ? new Date(un + 'T12:00').toISOString() : '', note: note }], 'Uloženo.',
+      () => editOffer(d.saveOffer, m => { m.stage = stage; m.value = val === '' ? null : Math.round(+val); m.meeting = mt ? new Date(mt).getTime() : 0; m.until = un ? new Date(un + 'T12:00').getTime() : 0; m.note = note; }));
   }
-  if (d.extend) { const o = D.O[d.extend], b = Math.max(o.manual.until || 0, sod(NOW)); return call('velinSetOffer', [d.extend, { until: new Date(b + 14 * 864e5 + 12 * 36e5).toISOString(), ended: false }], 'Platnost prodloužena do ' + dm(b + 14 * 864e5)); }
-  if (d.end) return call('velinSetOffer', [d.end, { ended: d.endOn === '1' }], d.endOn === '1' ? 'Platnost ukončena, mapa ukáže kontakt.' : 'Platnost obnovena.');
-  if (d.revoke) return call('velinRevoke', [d.revoke, d.revokeOn === '1'], d.revokeOn === '1' ? 'Odkaz zneplatněn.' : 'Odkaz obnoven.');
-  if (d.digest) return call('velinDigest', [d.digest === '1'], d.digest === '1' ? 'Ranní přehled zapnut, přijde kolem 7:30.' : 'Ranní přehled vypnut.');
+  if (d.extend) {
+    const o = D.O[d.extend], b = Math.max(o.manual.until || 0, sod(NOW)), u = b + 14 * 864e5 + 12 * 36e5;
+    return call('velinSetOffer', [d.extend, { until: new Date(u).toISOString(), ended: false }], 'Platnost prodloužena do ' + dm(u), () => editOffer(d.extend, m => { m.until = u; m.ended = 0; }));
+  }
+  if (d.end) return call('velinSetOffer', [d.end, { ended: d.endOn === '1' }], d.endOn === '1' ? 'Platnost ukončena, mapa ukáže kontakt.' : 'Platnost obnovena.',
+    () => editOffer(d.end, m => { m.ended = d.endOn === '1' ? Date.now() : 0; }));
+  if (d.revoke) return call('velinRevoke', [d.revoke, d.revokeOn === '1'], d.revokeOn === '1' ? 'Odkaz zneplatněn.' : 'Odkaz obnoven.', () => {
+    const hit = [];
+    D.list.forEach(o => o.links.forEach(l => { if (l.token === d.revoke) { hit.push([l, l.revoked]); l.revoked = d.revokeOn === '1' ? Date.now() : 0; } }));
+    return () => hit.forEach(h => { h[0].revoked = h[1]; });
+  });
+  if (d.digest) return call('velinDigest', [d.digest === '1'], d.digest === '1' ? 'Ranní přehled zapnut, přijde kolem 7:30.' : 'Ranní přehled vypnut.', () => {
+    const was = D.settings.digest; D.settings.digest = d.digest === '1';
+    return () => { D.settings.digest = was; };
+  });
   if (d.digestTest != null) { toast('Posílám…'); const r = await call('velinDigestTest', [], null); if (r && r.ok) toast('Odesláno: ' + (r.subject || 'ranní přehled')); return; }
   if (d.export) return exportCsv(d.export);
   if (d.forget) { V.forget = { slug: d.forgetSlug, key: d.forget }; render(false); const h = $('#fg-h'); if (h) { h.scrollIntoView({ block: 'center' }); h.focus({ preventScroll: true }); } return; }
@@ -1193,10 +1275,21 @@ document.addEventListener('click', async e => {
     } else toast((r && r.error) || 'Nový odkaz se nepodařilo vytvořit.', true);
     return load(true);
   }
-  if (d.teamRole) return call('velinTeamSet', [d.teamRole, { role: d.role }], d.role === 'edit' ? 'Kolega teď může upravovat.' : 'Kolega má teď přístup jen ke čtení.');
+  if (d.teamRole) return call('velinTeamSet', [d.teamRole, { role: d.role }], d.role === 'edit' ? 'Kolega teď může upravovat.' : 'Kolega má teď přístup jen ke čtení.', () => {
+    const x = (D.settings.team || []).find(y => y.id === d.teamRole), was = x && x.role;
+    if (x) x.role = d.role;
+    return () => { if (x) x.role = was; };
+  });
   if (d.teamAsk) { V.teamDel = d.teamAsk; return render(false); }
   if (d.teamKeep != null) { V.teamDel = ''; V.teamRot = ''; return render(false); }
-  if (d.teamOff) { V.teamDel = ''; return call('velinTeamSet', [d.teamOff, { revoked: true }], 'Přístup odebrán, odkaz kolegy přestal platit.'); }
+  if (d.teamOff) {
+    V.teamDel = '';
+    return call('velinTeamSet', [d.teamOff, { revoked: true }], 'Přístup odebrán, odkaz kolegy přestal platit.', () => {
+      const x = (D.settings.team || []).find(y => y.id === d.teamOff);
+      if (x) x.revoked = Date.now();
+      return () => { if (x) x.revoked = 0; };
+    });
+  }
   if (d.setup != null) {
     const url = $('#sh-url').value.trim(); V.setupMsg = '';
     const r = await api('velinSetup', url).catch(err => ({ ok: false, error: errText(err) }));
@@ -1239,8 +1332,8 @@ document.addEventListener('pointerout', e => { const el = e.target.closest && e.
 document.addEventListener('focusin', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if (el) showTip(el); else hideTip(); });
 document.addEventListener('focusout', hideTip);
 addEventListener('scroll', hideTip, { passive: true });
-setInterval(() => { if (document.visibilityState === 'visible' && D && !V.busy) load(true); }, 60000);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && D && Date.now() - V.loadedAt > 60000) load(true); });
+setInterval(() => { if (document.visibilityState === 'visible' && D && !V.busy && !V.refreshing) load(true); }, 30000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && D && !V.refreshing && Date.now() - V.loadedAt > 30000) load(true); });
 // přímý odkaz z e-mailu nebo upozornění: ?nabidka=<konec adresy>&tab=<záložka>
 let START = null;
 function applyStart() {
