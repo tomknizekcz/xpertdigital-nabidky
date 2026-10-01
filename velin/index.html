@@ -1091,15 +1091,16 @@ function render(focus, soft) {
 }
 function go(view, extra) { Object.assign(V, { view: view }, extra || {}); render(true); window.scrollTo(0, 0); }
 // mode: 'poll' = tichý dotaz „změnilo se něco?“ (každých 12 s, odpověď beze změny je pár bajtů),
-// 'fresh' = tlačítko Obnovit (server přepočítá přehled bez mezipaměti). Celá data přijdou jen po změně.
+// 'fresh' = tlačítko Obnovit (server přepočítá přehled bez mezipaměti), 'check' = dotaz na změny hned po otevření
+// (server při otevření pošle poslední hotový přehled, quick: true). Celá data přijdou jen po změně.
 function typing() { const el = document.activeElement; return !!(el && main.contains(el) && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)); }
 async function load(quiet, mode) {
   if (V.busy && quiet) return;
-  const poll = mode === 'poll';
+  const poll = mode === 'poll' || mode === 'check';
   if (poll && V.refreshing) return;
   const gen = V.gen;
   V.refreshing = true;
-  if (!poll) { V.loading = true; renderRail(); }
+  if (!poll || mode === 'check') { V.loading = true; renderRail(); }
   try {
     const raw = await api('velinData', D && mode !== 'fresh' ? V.stamp : '', mode === 'fresh');
     // mezitím proběhla změna z Velínu: data by byla starší než ona, aktuální přijdou po jejím uložení
@@ -1114,7 +1115,7 @@ async function load(quiet, mode) {
       if (tick && !typing()) render(false, true); else renderRail();
       return;
     }
-    if (M && M.setup) { V.setup = true; D = null; V.stamp = ''; } else { V.setup = false; D = prep(M); V.stamp = M.stamp || ''; V.err = ''; V.loadedAt = Date.now(); applyStart(); }
+    if (M && M.setup) { V.setup = true; D = null; V.stamp = ''; } else { V.setup = false; D = prep(M); V.stamp = M.stamp || ''; V.err = ''; V.loadedAt = Date.now(); applyStart(); if (M.quick) setTimeout(() => load(true, 'check'), 0); }
   } catch (e) {
     V.err = errText(e);
     // vlastní adresa: vypršené přihlášení nebo cizí účet Google → přihlašovací obrazovka
