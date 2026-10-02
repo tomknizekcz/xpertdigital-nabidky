@@ -501,7 +501,7 @@ function gisReady() {
   if (AUTH.ready) return true;
   if (!(window.google && google.accounts && google.accounts.id)) return false;
   google.accounts.id.initialize({ client_id: WEB.clientId, auto_select: true, use_fedcm_for_prompt: true, itp_support: true, context: 'signin',
-    callback: r => { setToken(r.credential); AUTH.waiting.splice(0).forEach(w => w.res(AUTH.token)); if (V.signin) { V.signin = false; V.err = ''; load(false); } } });
+    callback: r => { setToken(r.credential); AUTH.waiting.splice(0).forEach(w => w.res(AUTH.token)); if (V.signin) { V.signin = false; V.err = ''; start(); } } });
   AUTH.ready = true;
   return true;
 }
@@ -513,7 +513,7 @@ function gisButton() {
   google.accounts.id.renderButton(el, { theme: 'filled_black', size: 'large', shape: 'pill', text: 'signin_with', locale: 'cs', width: 260 });
 }
 function signOut() {
-  setToken('');
+  setToken(''); forgetData();
   if (AUTH.ready) google.accounts.id.disableAutoSelect();
   D = null; V.err = ''; V.signin = true;
   render(false);
@@ -545,7 +545,7 @@ function morphEl(f, t) {
 }
 
 /* ============ stav a data ============ */
-const V = { view: 'prehled', slug: '', tab: 'souhrn', range: 7, err: '', busy: false, loadedAt: 0, link: {}, setupMsg: '', setup: false, forget: null, team: {}, teamDel: '', teamRot: '', signin: false, tv: {}, gen: 0, refreshing: false, loading: false, stamp: '', checkedAt: 0, pollFail: 0 };
+const V = { view: 'prehled', slug: '', tab: 'souhrn', range: 7, err: '', busy: false, loadedAt: 0, link: {}, setupMsg: '', setup: false, forget: null, team: {}, teamDel: '', teamRot: '', signin: false, tv: {}, gen: 0, refreshing: false, loading: false, stamp: '', checkedAt: 0, pollFail: 0, savedAt: 0 };
 const main = $('#main'), tip = $('#tip');
 let D = null;   // připravená data ze serveru (model.gs)
 
@@ -1075,7 +1075,7 @@ function renderRail() {
   patch($('#rnav'), [['prehled', 'grid', 'Přehled', open, true], ['nabidky', 'file', 'Nabídky', D ? D.list.filter(o => o.meta.personal !== false).length : 0], ['analytika', 'chart', 'Analytika'], ['nastaveni', 'gear', 'Nastavení']].map(i => '<button type="button" data-nav="' + i[0] + '"' + (cur === i[0] ? ' aria-current="page"' : '') + '>' + icon(i[1]) + '<span>' + i[2] + '</span>' + (i[3] ? '<span class="cnt' + (i[4] ? ' hot' : '') + '"' + (i[4] ? ' title="kroky Na tah"' : '') + '>' + i[3] + '</span>' : '') + '</button>').join(''));
   patch($('#rshort'), D && D.list.length ? '<div class="rail-h">Podle zájmu</div>' + D.list.filter(o => o.meta.personal !== false).slice().sort((a, b) => (b.live - a.live) || ((b.band ? b.score.total : -1) - (a.band ? a.score.total : -1))).slice(0, 12).map(o => '<button type="button" data-offer="' + esc(o.slug) + '"' + (V.view === 'detail' && V.slug === o.slug ? ' aria-current="page"' : '') + '><i class="dot ' + (o.live ? 'live' : o.stage[0] === 'won' ? 'ok' : o.band && o.score.total >= 45 ? 'act' : '') + '"></i><span>' + esc(o.short) + '</span><em>' + (o.live ? 'teď' : o.band ? (o.band[0] === 'none' ? '–' : o.score.total) : o.stage[1]) + '</em></button>').join('') : '');
   if (V.signin) { patch($('#rfoot'), '<span class="note">Nepřihlášeno</span>'); return; }
-  patch($('#rfoot'), (D && !D.me.owner ? '<span class="note who-me">' + esc(D.me.name) + ' · ' + (D.me.role === 'edit' ? 'může upravovat' : 'jen čtení') + '</span>' : '') + '<span class="note"><i class="sync' + (V.loading ? ' on' : '') + '" aria-hidden="true"></i>' + (V.loading ? 'Načítám změny…' : V.pollFail ? 'Spojení vypadlo, zkouším to znovu…' : 'Aktuální k ' + (V.checkedAt ? hm(V.checkedAt) : '…') + ', změny se hlídají každých 12 s.') + '</span><button type="button" data-reload>' + icon('refresh') + 'Obnovit</button>' + (D && D.M.sheetUrl ? '<a href="' + esc(D.M.sheetUrl) + '" target="_blank" rel="noopener">' + icon('sheet') + 'Tabulka</a>' : '') +
+  patch($('#rfoot'), (D && !D.me.owner ? '<span class="note who-me">' + esc(D.me.name) + ' · ' + (D.me.role === 'edit' ? 'může upravovat' : 'jen čtení') + '</span>' : '') + '<span class="note"><i class="sync' + (V.loading ? ' on' : '') + '" aria-hidden="true"></i>' + (V.loading ? (V.savedAt ? 'Uloženo ' + hm(V.savedAt) + ', načítám změny…' : 'Načítám změny…') : !D ? '' : V.pollFail ? 'Spojení vypadlo, zkouším to znovu…' : 'Aktuální k ' + (V.checkedAt ? hm(V.checkedAt) : '…') + ', změny se hlídají každých 12 s.') + '</span><button type="button" data-reload>' + icon('refresh') + 'Obnovit</button>' + (D && D.M.sheetUrl ? '<a href="' + esc(D.M.sheetUrl) + '" target="_blank" rel="noopener">' + icon('sheet') + 'Tabulka</a>' : '') +
     (WEB && !K && D ? '<button type="button" data-signout>' + icon('x') + 'Odhlásit</button>' : ''));
 }
 // soft = překreslit jen změny (obnova dat, akce); jinak celý pohled (přechod mezi obrazovkami)
@@ -1093,6 +1093,39 @@ function go(view, extra) { Object.assign(V, { view: view }, extra || {}); render
 // mode: 'poll' = tichý dotaz „změnilo se něco?“ (každých 12 s, odpověď beze změny je pár bajtů),
 // 'fresh' = tlačítko Obnovit (server přepočítá přehled bez mezipaměti), 'check' = dotaz na změny hned po otevření
 // (server při otevření pošle poslední hotový přehled, quick: true). Celá data přijdou jen po změně.
+/* ---------- poslední data v tomto prohlížeči ---------- */
+// Po každém stažení si Velín uloží data do localStorage tohoto prohlížeče a při dalším otevření je ukáže hned (server pak jen
+// ověří, jestli se něco změnilo). Platí pro jednoho uživatele (vlastník, nebo kolega podle otisku kódu z odkazu); smaže je
+// odhlášení, odepřený přístup a stáří přes SAVE_DAYS dní. Na záložní adrese script.google.com se neukládá nic.
+const SAVE_DAYS = 7;
+let LAST_RAW = '', SAVED_AT = 0;
+const whoKey = () => K ? 'k' + Array.prototype.reduce.call(K, (h, c) => Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0, 2166136261).toString(36) : 'owner';
+function saveData(raw) {
+  if (GAS) return;
+  LAST_RAW = raw; SAVED_AT = Date.now();
+  try { localStorage.setItem('velin-data', JSON.stringify({ v: 1, who: whoKey(), at: Date.now(), raw: raw })); } catch (e) {}
+}
+function savedData() {
+  if (GAS) return null;
+  try {
+    const s = JSON.parse(localStorage.getItem('velin-data') || 'null');
+    if (s && s.v === 1 && s.who === whoKey() && Date.now() - s.at < SAVE_DAYS * 864e5 && typeof s.raw === 'string') return s;
+    if (s) localStorage.removeItem('velin-data');
+  } catch (e) {}
+  return null;
+}
+function forgetData() { LAST_RAW = ''; SAVED_AT = 0; try { localStorage.removeItem('velin-data'); } catch (e) {} }
+// otevření: uložená data hned a k nim dotaz na změny; bez nich běžné načtení
+function start() {
+  const s = savedData();
+  let M = null;
+  try { M = s ? JSON.parse(s.raw) : null; } catch (e) { M = null; }
+  if (!M || M.setup || !Array.isArray(M.offers)) { load(false); return; }
+  D = prep(M); NOW = Date.now(); LAST_RAW = s.raw; SAVED_AT = s.at;
+  Object.assign(V, { stamp: M.stamp || '', savedAt: s.at, signin: false, err: '' });
+  applyStart(); render(false);
+  load(true, 'check');
+}
 function typing() { const el = document.activeElement; return !!(el && main.contains(el) && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)); }
 async function load(quiet, mode) {
   if (V.busy && quiet) return;
@@ -1112,12 +1145,18 @@ async function load(quiet, mode) {
       V.refreshing = V.loading = false; V.err = '';
       const tick = Math.floor((M.at || 0) / 6e4) !== Math.floor(NOW / 6e4);
       if (M.at) NOW = M.at;
+      V.savedAt = 0;
+      if (LAST_RAW && Date.now() - SAVED_AT > 36e5) saveData(LAST_RAW);   // platnost uložených dat se posune
       if (tick && !typing()) render(false, true); else renderRail();
       return;
     }
-    if (M && M.setup) { V.setup = true; D = null; V.stamp = ''; } else { V.setup = false; D = prep(M); V.stamp = M.stamp || ''; V.err = ''; V.loadedAt = Date.now(); applyStart(); if (M.quick) setTimeout(() => load(true, 'check'), 0); }
+    V.savedAt = 0;
+    if (M && M.setup) { V.setup = true; D = null; V.stamp = ''; forgetData(); } else { V.setup = false; D = prep(M); V.stamp = M.stamp || ''; V.err = ''; V.loadedAt = Date.now(); applyStart(); saveData(typeof raw === 'string' ? raw : JSON.stringify(raw)); if (M.quick) setTimeout(() => load(true, 'check'), 0); }
   } catch (e) {
     V.err = errText(e);
+    V.savedAt = 0;
+    // přístup odepřený (zneplatněný odkaz, cizí účet): uložená data pryč a nic se neukazuje
+    if (/pozvané/.test(V.err)) { forgetData(); D = null; }
     // vlastní adresa: vypršené přihlášení nebo cizí účet Google → přihlašovací obrazovka
     if (WEB && !K && /pozvané|Přihlášení vypršelo/.test(V.err)) {
       if (/pozvané/.test(V.err)) { V.err = 'Tenhle účet Google do Velínu přístup nemá. Přihlaste se účtem, pod kterým Velín běží.'; if (AUTH.ready) google.accounts.id.disableAutoSelect(); }
@@ -1372,11 +1411,11 @@ function boot(p) {
   if (WEB && !K) {
     let t = '';
     try { t = sessionStorage.getItem('velin-idt') || ''; } catch (e) {}
-    if (t && jwtExp(t) - Date.now() > 120000) { setToken(t); gisReady(); load(false); return; }
+    if (t && jwtExp(t) - Date.now() > 120000) { setToken(t); gisReady(); start(); return; }
     V.signin = true; render(false); gisPrompt();
     return;
   }
-  load(false);
+  start();
 }
 renderRail();
 try {
