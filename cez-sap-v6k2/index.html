@@ -834,12 +834,12 @@ body.d-square .gone-card,body.d-square .sh-f input,body.d-square .sh-url{border-
 .art-t{font-size:11px;font-weight:700;fill:#6B6B6B;font-family:var(--font)}
 /* ---------- Design klienta: rovné nadpisy (d-plain), hranaté rohy (d-square) ---------- */
 body.d-plain *{font-stretch:100%!important}
-body.d-plain .display{text-transform:none;font-weight:700;letter-spacing:-.015em;line-height:1.04}
+body.d-plain .display{text-transform:none;font-weight:var(--head-weight,700);letter-spacing:-.015em;line-height:1.04}
 body.d-plain .hero-title{font-size:88px}
 body.d-plain .h2{font-size:54px}
 body.d-plain:not(.linear) .weeks-head .h2{font-size:64px}
 body.d-plain .lane-num{font-size:104px}
-body.d-plain .lane-title{text-transform:none;font-size:30px;line-height:1.12}
+body.d-plain .lane-title{text-transform:none;font-size:30px;line-height:1.12;font-weight:var(--head-weight,800)}
 body.d-plain .story-val{font-size:40px;line-height:1.08}
 body.d-plain .res-val{font-size:62px}
 body.d-plain .pain-val{font-size:36px}
@@ -1086,7 +1086,7 @@ body.linear .c .bar-track,.lane-ov .bar-track{grid-column:1/-1;grid-row:2}
   </div>
 </div>
 
-<script>window.XD_INPUTS = {"endpoint":"https://script.google.com/macros/s/AKfycby8F6FapZOSQ_6zbJIFMoWzX06q4kLJnk3DHAxojDa6_jO-k3cZ7z3ZW76rxc_js3Z1/exec","key":"bc3855e67c0d97f0ce908fbca6a36fee","v":"2026-10-01 17:20 · 19385a"};</script>
+<script>window.XD_INPUTS = {"endpoint":"https://script.google.com/macros/s/AKfycby8F6FapZOSQ_6zbJIFMoWzX06q4kLJnk3DHAxojDa6_jO-k3cZ7z3ZW76rxc_js3Z1/exec","key":"bc3855e67c0d97f0ce908fbca6a36fee","v":"2026-10-02 09:00 · 22c1c4"};</script>
 <script>
 /* =====================================================================
    ČEZ ICT Services, a. s. · kompetenční centrum SAP skupiny ČEZ
@@ -1180,6 +1180,24 @@ window.XD_CLIENT = {
     { n: 3, short: 'Plný provoz', len: 3, when: 'od měsíce 10' }
   ] },
   terms: { item: ['karta', 'karty', 'karet'], browse: 'Projít služby', wave: ['Fáze', 'Fáze'] },
+
+  // Vzhled podle webu cez.cz (2. 10. 2026): oranžová ČEZ #F24F00, text #363738, šedá #63666A, linky #DADFE3,
+  // světlé pozadí #EEF1F3, světle oranžová #FEF1EB, tmavé plochy v šedé ČEZ, hranaté rohy, nadpisy bez verzálek
+  // a středně tučné. Firemní písmo Roobert (RoobertCEZ) je licencované, proto blízké volné DM Sans.
+  // Nabízí dál Connea Consulting: logo, kontakt a ikona stránky jsou její (vendor).
+  design: {
+    font: "'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
+    fontCss: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap',
+    display: 'plain', corners: 'square', headWeight: 500,
+    vars: {
+      'red': '#F24F00', 'red-ink': '#C94300', 'red-btn': '#F24F00', 'red-on-dark': '#FF8A4C', 'accent-dark': '#F24F00',
+      'red-50': '#FEF1EB', 'red-100': '#FCD9C6',
+      'ink': '#363738', 'text': '#363738', 'muted': '#63666A', 'faint': '#989EA3',
+      'line': '#DADFE3', 'line-2': '#EEF1F3', 'bg': '#EEF1F3', 'dot': '#D3D9DE', 'panel-2': '#F6F7F8',
+      'dark': '#363738', 'dark-2': '#434446', 'dark-3': '#2A2B2C', 'dark-line': '#57595C', 'on-dark-muted': '#B9BCC0',
+      'chat-bg': '#EEF1F3', 'msg-mine': '#FEF1EB'
+    }
+  },
 
   // nabízí Connea Consulting: logo, kontakt a barva ikony stránky jsou její (stejně jako u OVB)
   vendor: {
@@ -1924,6 +1942,7 @@ function applyDesign() {
   const root = document.documentElement;
   if (D.vars) Object.keys(D.vars).forEach(k => root.style.setProperty('--' + k, D.vars[k]));
   if (D.font) root.style.setProperty('--font', D.font);
+  if (D.headWeight) root.style.setProperty('--head-weight', D.headWeight);   // tučnost nadpisů v režimu plain (např. 500 u ČEZ)
   if (D.fontCss && !document.querySelector('link[data-design-font]')) {
     document.head.appendChild(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: D.fontCss })).dataset.designFont = '1';
     // po načtení písma znovu zaměřit mapu (jen když uživatel ještě nehýbal)
@@ -2138,9 +2157,9 @@ function medicalArt() {
     '</svg>';
 }
 function energyArt() {
-  // plyn, stožár elektřiny, dům s fotovoltaikou, tepelné čerpadlo, stojan CNG
-  const s = 'fill="none" stroke="#FA2B2B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
-  const g = 'fill="none" stroke="#484848" stroke-width="1.5" stroke-dasharray="4 5"';
+  // plyn, stožár elektřiny, dům s fotovoltaikou, tepelné čerpadlo, stojan CNG (barva z design.vars přes třídy art-s, art-g)
+  const s = 'class="art-s"';
+  const g = 'class="art-g"';
   const t = (x, y, txt) => '<text x="' + x + '" y="' + y + '" font-size="11" font-weight="700" fill="#6B6B6B" text-anchor="middle" style="font-family:var(--font)">' + txt + '</text>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
     '<line x1="0" y1="112" x2="560" y2="112" ' + g + '/>' +
