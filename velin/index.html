@@ -1163,6 +1163,8 @@ document.addEventListener('click', async e => {
   if (d.syncNow != null) {
     toast('Synchronizuji…');
     const r = await call('velinSyncNow', [], null);
+    // stav do panelu hned (synchronizace beze změn data Velínu nezmění, takže by se nenačetl)
+    if (r && r.ok) { D.settings.sync = Object.assign(D.settings.sync || {}, { info: { at: Date.now(), mails: r.mails, meetings: r.meetings, contacts: r.contacts, removed: r.removed, more: r.more, errors: r.errors || [] } }); render(false, true); }
     if (r && r.ok) toast(r.errors && r.errors.length ? r.errors[0] : 'Hotovo: ' + r.mails + ' ' + plural(r.mails, 'e-mail', 'e-maily', 'e-mailů') + ', ' + r.meetings + ' ' + plural(r.meetings, 'schůzka', 'schůzky', 'schůzek') + (r.more ? ', zbytek dodělá další běh.' : '.'), !!(r.errors && r.errors.length));
     return;
   }
