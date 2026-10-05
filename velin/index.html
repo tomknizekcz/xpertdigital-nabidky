@@ -386,6 +386,59 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 @media (max-width:560px){.rot{justify-content:flex-start}.rot small{text-align:left}}
 .links small{overflow-wrap:anywhere}
 @media (max-width:560px){.links li{grid-template-columns:minmax(0,1fr)}.links li > span:last-child{justify-content:flex-start!important}}
+/* CRM */
+.mb{margin-bottom:14px}
+.hrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.search{height:38px;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:0 12px;color:var(--ink);font:inherit;font-size:14px;min-width:min(260px,100%)}
+.search:focus{outline:2px solid var(--red);outline-offset:0;border-color:transparent}
+.form.f4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.form.f4 .txt{grid-column:1 / -1}
+@media (max-width:900px){.form.f4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.form.f4{grid-template-columns:1fr}}
+.muted-p{font-size:13.5px;color:var(--muted)}
+.muted-s{color:var(--muted);font-size:12px}
+.nx{color:var(--ink);font-weight:600;display:inline-block;max-width:210px;vertical-align:top}
+.lnk.dim{color:var(--muted);font-weight:600}
+.av.sm{width:24px;height:24px;font-size:10px}
+.sh{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+.sh:first-child{margin-top:0}
+.todos{display:grid}
+.todo{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:4px 10px;align-items:start;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:13.5px}
+.todo:last-child{border-bottom:0}
+.todo .tk{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--faint);display:grid;place-items:center;margin-top:1px;background:var(--panel);color:var(--panel)}
+.todo .tk .ic{width:14px;height:14px}
+.todo .tk:hover:not(:disabled){border-color:var(--ink);color:var(--faint)}
+.todo.done .tk{background:var(--green);border-color:var(--green);color:#fff}
+.todo .tt{color:var(--ink);font-weight:600}
+.todo.done .tt{text-decoration:line-through;color:var(--muted);font-weight:500}
+.todo .tm{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-top:3px;font-size:12px;color:var(--muted)}
+.todo .tm .ic{width:13px;height:13px;vertical-align:-2px}
+.todo .x{color:var(--faint);padding:2px;border-radius:6px}
+.todo .x:hover{color:var(--red-ink)}
+.tadd{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:flex-end;border-top:1px solid var(--line-2);padding-top:12px}
+.tadd .fld{flex:1 1 140px;min-width:0}
+.tadd .fld:first-child{flex:3 1 240px}
+.tadd .btn{flex:none}
+.kb{display:grid;grid-template-columns:repeat(6,minmax(148px,1fr));gap:10px;overflow-x:auto;padding-bottom:6px}
+.kc{background:var(--sunk);border-radius:14px;padding:10px;display:grid;gap:8px;align-content:start;min-height:140px}
+.kc h5{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:6px}
+.kc .ks{font-size:12px;color:var(--muted);margin-top:-4px;font-variant-numeric:tabular-nums}
+.kd{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 11px;display:grid;gap:5px;cursor:pointer;font-size:13px}
+.kd:hover{border-color:var(--ink)}
+.kd b{color:var(--ink);font-size:14px}
+.kd .kf{font-size:12px;color:var(--muted)}
+.kd .kv{display:flex;justify-content:space-between;gap:6px;color:var(--ink);font-variant-numeric:tabular-nums}
+.kd .km{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.kd .av.sm{margin-left:auto}
+.cmp{display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,1fr) 200px;gap:8px;align-items:end}
+.cmp .txt{grid-column:1 / -1}
+.cmp .btnrow{grid-column:1 / -1;margin:0}
+@media (max-width:760px){.cmp{grid-template-columns:1fr 1fr}}
+.ct td .btn{padding:5px 8px}
+.ct tr.edit td{background:var(--panel-2)}
+.dir{font-size:11px;font-weight:700;border-radius:999px;padding:0 7px;background:var(--chip);color:var(--chip-ink);white-space:nowrap}
+.dir.in{background:var(--blue-50);color:var(--blue)}
+.oh .meta .lnk .ic{width:15px;height:15px}
 </style>
 </head>
 <body>
@@ -429,6 +482,9 @@ const isoDate = t => { const d = new Date(t); return d.getFullYear() + '-' + pad
 const isoLocal = t => isoDate(t) + 'T' + pad(new Date(t).getHours()) + ':' + pad(new Date(t).getMinutes());
 const OFFERS_URL = 'https://offers.xpertdigital.com/';
 const IC = {
+  building: '<path d="M4 21V5l8-2v18"/><path d="M12 8h8v13"/><path d="M3 21h18"/><path d="M7.5 8.5h1M7.5 12h1M7.5 15.5h1M15.5 12h1M15.5 15.5h1"/>',
+  phone: '<path d="M5 3.5h3.5l1.8 4.5-2.3 1.5a11 11 0 0 0 6.5 6.5l1.5-2.3 4.5 1.8V19a2 2 0 0 1-2.2 2A17 17 0 0 1 3 5.7 2 2 0 0 1 5 3.5z"/>',
+  columns: '<rect x="3.5" y="4" width="5" height="16" rx="1.5"/><rect x="9.5" y="4" width="5" height="11" rx="1.5"/><rect x="15.5" y="4" width="5" height="7" rx="1.5"/>',
   grid: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
   file: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/>',
   chart: '<path d="M4 20h16"/><path d="M7 16v-5"/><path d="M12 16V6"/><path d="M17 16v-8"/>',
@@ -558,7 +614,7 @@ function prep(M) {
   const RB = {}, O = {};
   M.links.forEach(l => { RB[l.token] = l; });
   M.offers.forEach(o => { o.meta = o.meta || {}; O[o.slug] = o; });
-  return { M: M, O: O, list: M.offers, RB: RB, actions: M.actions || [], A: M.analytics || {}, settings: M.settings || {}, me: M.me || { owner: true, role: 'owner', name: '' } };
+  return crmPrep({ M: M, O: O, list: M.offers, RB: RB, actions: M.actions || [], A: M.analytics || {}, settings: M.settings || {}, me: M.me || { owner: true, role: 'owner', name: '', id: 'owner' } });
 }
 // práva: vlastník vše, kolega „edit“ mění údaje nabídek, odkazy a kroky, kolega „read“ jen čte
 const isOwner = () => !!(D && D.me.owner);
@@ -574,15 +630,16 @@ function derive(o) {
   o.value = o.manual.value != null ? o.manual.value : o.valueAuto;
   o.valid = o.manual.ended ? 'ended' : o.manual.until && o.manual.until < sod(NOW) ? 'expired' : 'ok';
   o.band = st === 'won' || st === 'lost' ? null : !o.views ? ['none', 'Neotevřeno'] : bandFor(o.score.total);
+  crmDerive(o);
 }
 // úprava nabídky v prohlížeči; vrátí funkci, která ji vrátí zpět (když server změnu odmítne)
 function editOffer(slug, fn) {
   const o = D.O[slug];
   if (!o) return null;
-  const was = JSON.stringify({ manual: o.manual, stage: o.stage, value: o.value, valid: o.valid, band: o.band });
+  const was = JSON.stringify({ manual: o.manual, stage: o.stage, value: o.value, valid: o.valid, band: o.band, prob: o.prob, weighted: o.weighted });
   fn(o.manual);
   derive(o);
-  return () => Object.assign(o, JSON.parse(was));
+  return () => { Object.assign(o, JSON.parse(was)); crmPrep(D); };
 }
 const stageChip = o => chip(o.stage[2], o.stage[1] + (o.stage[0] === 'meeting' && o.manual.meeting ? ' ' + DOW[new Date(o.manual.meeting).getDay()] + ' ' + dm(o.manual.meeting) : ''));
 function secLabel(o, k) {
@@ -694,7 +751,7 @@ function vOverview() {
   const seg = '<div class="seg" role="group" aria-label="Období">' + [[7, '7 dní'], [30, '30 dní']].map(x => '<button type="button" data-range="' + x[0] + '" aria-pressed="' + (R === x[0]) + '">' + x[1] + '</button>').join('') + '</div>';
   const byScore = D.list.filter(o => o.meta.personal !== false).slice().sort((a, b) => (b.live - a.live) || ((b.band ? b.score.total : -1) - (a.band ? a.score.total : -1)) || (b.last - a.last));
   return vh('Přehled', new Date(NOW).toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' }) + ' · ' + hm(NOW), seg) + kp +
-    '<div class="grid g2"><div class="stack">' + acts + offersTable(byScore.slice(0, 8), true) + '</div><div class="stack">' + liveHTML + feedHTML + '</div></div>';
+    '<div class="grid g2"><div class="stack">' + myTodos() + acts + offersTable(byScore.slice(0, 8), true) + '</div><div class="stack">' + liveHTML + feedHTML + '</div></div>';
 }
 function feedItems(slug) {
   const it = [];
@@ -729,6 +786,395 @@ function vOffers() {
   return vh('Nabídky', pers.length + ' ' + plural(pers.length, 'osobní nabídka', 'osobní nabídky', 'osobních nabídek'), exp) + offersTable(pers, false) +
     (pub.length ? '<div class="panel mt"><div class="ph"><h4>Veřejné stránky</h4><span>jen anonymní měření</span></div>' + table(['Stránka', 'Zobrazení', 'Kontakt', 'Odkud přišli', ''], pub.map(o => ['<b style="color:var(--ink)">' + esc(o.short) + '</b> <span class="mono" style="color:var(--muted)">/' + esc(o.slug) + '/</span>', o.anon.views.length, o.anon.cta.length, esc(Object.keys(o.anon.refs).sort((a, b) => o.anon.refs[b] - o.anon.refs[a]).slice(0, 3).map(k => k + ' ' + o.anon.refs[k]).join(', ') || '—'), '<button class="btn" type="button" data-offer="' + esc(o.slug) + '" aria-label="Detail">' + icon('arrow') + '</button>']), [1, 2]) + '</div>' : '');
 }
+/* ============ CRM: firmy, kontakty, aktivity, úkoly, obchodní plán (crm.gs) ============ */
+Object.assign(V, { firm: '', ftab: 'prehled', fq: '', fmine: false, pmine: false, ff: null, cedit: '', cdel: '', pendingFirm: '', fsave: null });
+const CRM_PROB = { ready: 5, sent: 10, opened: 20, engaged: 30, filled: 50, meeting: 60, won: 100, lost: 0, paused: 0 };
+const KIND = { note: ['Poznámka', 'pencil'], call: ['Hovor', 'phone'], meeting: ['Schůzka', 'cal'], email: ['E-mail', 'mail'] };
+const REASONS = ['Cena', 'Konkurence', 'Načasování', 'Rozpočet', 'Bez rozhodnutí', 'Řeší to sami', 'Řešení na míru', 'Rychlost', 'Reference', 'Vztah', 'Jiný důvod'];
+const OPEN_ST = ['ready', 'sent', 'opened', 'engaged', 'filled', 'meeting'];
+const crmNorm = s => String(s || '').toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
+
+// indexy pro obrazovky: firma s nabídkami, kontakty, aktivitami a úkoly (data ze serveru v D.crm zůstávají čistá)
+function crmPrep(Dd) {
+  const C = Dd.M.crm || (Dd.M.crm = { firms: [], contacts: [], acts: [], todos: [], people: [] });
+  const F = {}, P = {};
+  C.firms.forEach(f => { F[f.id] = Object.assign({}, f, { offers: [], contacts: [], acts: [], todos: [] }); });
+  C.people.forEach(p => { P[p.id] = p; });
+  C.contacts.forEach(c => { if (F[c.firm]) F[c.firm].contacts.push(c); });
+  C.acts.forEach(a => { if (F[a.firm]) F[a.firm].acts.push(a); });
+  C.todos.forEach(t => { if (F[t.firm]) F[t.firm].todos.push(t); });
+  Dd.list.forEach(o => { crmDerive(o); if (F[o.manual.firm]) F[o.manual.firm].offers.push(o); });
+  return Object.assign(Dd, { crm: C, F: F, P: P });
+}
+function crmDerive(o) {
+  o.manual.prob = o.manual.prob === undefined ? null : o.manual.prob;
+  o.prob = o.manual.prob != null ? o.manual.prob : CRM_PROB[o.stage[0]] || 0;
+  o.weighted = Math.round((o.value || 0) * o.prob / 100);
+}
+// změna CRM dat v prohlížeči hned (vrátí funkci pro vrácení zpět, když server změnu odmítne)
+function crmLocal(fn) {
+  const was = JSON.stringify(D.crm);
+  fn(D.crm);
+  crmPrep(D);
+  return () => { D.M.crm = JSON.parse(was); crmPrep(D); };
+}
+const meId = () => D.me.owner ? 'owner' : D.me.id || '';
+const isMine = id => D.me.owner ? !id || id === 'owner' : id === D.me.id;
+const person = id => D.P[id] ? D.P[id].name : '';
+// kdo zapsal: server píše „vlastník“, ukáže se jméno z Nastavení
+const whoName = w => w === 'vlastník' ? person('owner') || 'vlastník' : w;
+const initialsOf = n => String(n || '?').split(/\s+/).filter(x => x && !/^(Ing|Mgr|Bc|MUDr|JUDr|PhDr|RNDr|doc|prof)\.?$/i.test(x)).slice(0, 2).map(x => x.charAt(0).toUpperCase()).join('') || '?';
+const ownerAv = id => id && D.P[id] ? '<span class="av sm" title="' + esc('Odpovědný: ' + person(id)) + '">' + esc(initialsOf(person(id))) + '</span>' : '';
+const peopleOpts = (sel, none) => (none ? '<option value="">' + none + '</option>' : '') + D.crm.people.map(p => '<option value="' + esc(p.id) + '"' + (p.id === sel ? ' selected' : '') + '>' + esc(p.name + (p.id === meId() ? ' (vy)' : '')) + '</option>').join('');
+const firmOpts = sel => '<option value="">— bez firmy —</option>' + Object.keys(D.F).map(k => D.F[k]).filter(f => !f.archived || f.id === sel).sort((a, b) => a.name.localeCompare(b.name, 'cs'))
+  .map(f => '<option value="' + esc(f.id) + '"' + (f.id === sel ? ' selected' : '') + '>' + esc(f.name) + '</option>').join('');
+const dueChip = t => { if (!t.due) return ''; const x = dayDiff(NOW, t.due); return t.done ? chip('line', dm(t.due)) : x < 0 ? chip('bad', 'po termínu ' + dm(t.due)) : x === 0 ? chip('warm', 'dnes') : x === 1 ? chip('line', 'zítra') : chip('line', dm(t.due)); };
+const firmLink = id => D.F[id] ? '<button class="lnk" type="button" data-firm="' + esc(id) + '">' + icon('building') + esc(D.F[id].name) + '</button>' : '';
+
+// souhrn firmy: otevřené nabídky, hodnota, nejlepší zájem, poslední kontakt, příští schůzka, další úkol
+function firmStats(f) {
+  const open = f.offers.filter(o => OPEN_ST.indexOf(o.stage[0]) >= 0);
+  const scored = open.filter(o => o.band && o.band[0] !== 'none').sort((a, b) => b.score.total - a.score.total);
+  const last = Math.max.apply(null, [0].concat(f.acts.filter(a => a.at <= NOW).map(a => a.at), f.offers.map(o => o.last || 0)));
+  const meets = f.acts.filter(a => a.kind === 'meeting' && a.at > NOW).map(a => a.at).concat(f.offers.map(o => o.manual.meeting).filter(t => t > NOW)).sort((a, b) => a - b);
+  const todo = f.todos.filter(t => !t.done).sort((a, b) => (a.due || 9e15) - (b.due || 9e15));
+  return { open: open, value: sum(open.map(o => o.value || 0)), weighted: sum(open.map(o => o.weighted)), best: scored[0] || null, last: last, meet: meets[0] || 0, todo: todo,
+    late: todo.filter(t => t.due && dayDiff(NOW, t.due) < 0).length };
+}
+
+/* ---------- Firmy ---------- */
+function vFirms() {
+  const q = crmNorm(V.fq).trim();
+  let list = Object.keys(D.F).map(k => D.F[k]).filter(f => !f.archived);
+  const total = list.length;
+  if (q) list = list.filter(f => crmNorm([f.name, f.domain, f.ico].concat(f.contacts.map(c => c.name + ' ' + c.email)).join(' ')).indexOf(q) >= 0);
+  if (V.fmine) list = list.filter(f => isMine(f.owner));
+  const rows = list.map(f => [f, firmStats(f)]).sort((a, b) => (b[1].last - a[1].last) || a[0].name.localeCompare(b[0].name, 'cs'));
+  const right = '<div class="hrow"><input class="search" id="fq" type="search" placeholder="Hledat firmu, člověka, e-mail" aria-label="Hledat" value="' + esc(V.fq) + '" autocomplete="off">' +
+    '<div class="seg" role="group" aria-label="Které firmy">' + [[0, 'Všechny'], [1, 'Moje']].map(x => '<button type="button" data-fmine="' + x[0] + '" aria-pressed="' + (V.fmine === !!x[0]) + '">' + x[1] + '</button>').join('') + '</div>' +
+    (canEdit() ? '<button class="btn red" type="button" data-firm-new>' + icon('plus') + 'Nová firma</button>' : '') + '</div>';
+  const F = V.ff;
+  const form = F ? '<div class="panel mb"><div class="ph"><h4>Nová firma</h4><span>kontakty, nabídky a e-maily se k ní přiřadí</span></div><div class="form f4">' +
+    '<label class="fld" for="ff-n">Název<input id="ff-n" autocomplete="off" placeholder="např. VARS s.r.o." value="' + esc(F.name || '') + '"></label>' +
+    '<label class="fld" for="ff-d">Doména e-mailů<input id="ff-d" autocomplete="off" placeholder="firma.cz" value="' + esc(F.domain || '') + '"></label>' +
+    '<label class="fld" for="ff-o">Odpovědný<select id="ff-o">' + peopleOpts(F.owner || meId(), 'nikdo') + '</select></label>' +
+    '<div class="btnrow" style="margin:0"><button class="btn red" type="button" data-firm-create' + (V.busy ? ' disabled' : '') + '>' + icon('check') + 'Založit</button><button class="btn" type="button" data-firm-cancel>Zrušit</button></div></div>' +
+    (F.err ? '<p class="ferr" role="alert">' + esc(F.err) + '</p>' : '') + '<p class="fig-note">Doména: e-maily a schůzky s adresami @doména se k firmě přiřadí samy (Nastavení → Gmail a Kalendář).</p></div>' : '';
+  const tbl = rows.length ? '<div class="tw"><table class="t"><thead><tr><th>Firma</th><th>Odpovědný</th><th>Nabídky</th><th>Zájem</th><th class="r">Otevřená hodnota</th><th>Poslední kontakt</th><th>Další krok</th></tr></thead><tbody>' + rows.map(x => {
+    const f = x[0], s = x[1], next = s.todo[0], meet = s.meet;
+    return '<tr class="click" tabindex="0" data-firm="' + esc(f.id) + '"><td class="cl"><b>' + esc(f.name) + '</b><span>' + esc([f.domain, f.contacts.length ? f.contacts.length + ' ' + plural(f.contacts.length, 'kontakt', 'kontakty', 'kontaktů') : ''].filter(Boolean).join(' · ') || '—') + '</span></td>' +
+      '<td>' + (f.owner ? esc(person(f.owner)) : '<span style="color:var(--muted)">—</span>') + '</td>' +
+      '<td class="nw">' + (f.offers.length ? s.open.length + ' / ' + f.offers.length + (s.open[0] ? ' ' + stageChip(s.open.slice().sort((a, b) => OPEN_ST.indexOf(b.stage[0]) - OPEN_ST.indexOf(a.stage[0]))[0]) : '') : '<span style="color:var(--muted)">—</span>') + '</td>' +
+      '<td class="nw">' + (s.best ? chip(bandCls(s.best.band), s.best.score.total + ' · ' + s.best.band[1].replace(' zájem', '')) : '<span style="color:var(--muted)">—</span>') + '</td><td class="r">' + (s.value ? money(s.value) : '—') + '</td>' +
+      '<td class="nw">' + (s.last ? ago(s.last) : '<span style="color:var(--muted)">—</span>') + '</td>' +
+      '<td>' + (next ? '<span class="nx">' + esc(next.title) + '</span> ' + dueChip(next) : meet ? chip('dark', 'schůzka ' + DOW[new Date(meet).getDay()] + ' ' + dm(meet), 'cal') : '<span style="color:var(--muted)">—</span>') + '</td></tr>';
+  }).join('') + '</tbody></table></div>' : '<div class="empty">' + (q || V.fmine ? 'Nic neodpovídá hledání.' : 'Zatím žádná firma. Firmy vznikají samy z nabídek, další založte tlačítkem Nová firma.') + '</div>';
+  const arch = Object.keys(D.F).filter(k => D.F[k].archived).length;
+  return vh('Firmy', total + ' ' + plural(total, 'firma', 'firmy', 'firem') + (arch ? ' · ' + arch + ' v archivu' : ''), right) + form +
+    '<div class="panel">' + tbl + '<p class="fig-note">Firmy a kontakty vznikají samy z nabídek a osobních odkazů. Poslední kontakt = poslední návštěva nabídky, e-mail, schůzka nebo zapsaný hovor.</p></div>';
+}
+
+/* ---------- detail firmy ---------- */
+function vFirm() {
+  const f = D.F[V.firm];
+  if (!f) { if (V.pendingFirm && V.pendingFirm === V.firm) return '<div class="center"><p>Zakládám firmu…</p></div>'; V.view = 'firmy'; return vFirms(); }
+  const s = firmStats(f), tabs = [['prehled', 'Přehled'], ['osa', 'Časová osa', f.acts.length || null], ['kontakty', 'Kontakty', f.contacts.length || null], ['udaje', 'Údaje']];
+  if (!tabs.some(t => t[0] === V.ftab)) V.ftab = 'prehled';
+  const web = f.web || (f.domain ? 'https://' + f.domain : '');
+  const head = '<button class="back" type="button" data-nav="firmy">' + icon('back') + 'Všechny firmy</button>' +
+    '<div class="oh"><div><h3 tabindex="-1" data-vh>' + esc(f.name) + '</h3><div class="meta">' +
+    (web ? '<a href="' + esc(/^https?:/.test(web) ? web : 'https://' + web) + '" target="_blank" rel="noopener noreferrer">' + esc(f.domain || web.replace(/^https?:\/\//, '')) + '</a>' : '<span>bez domény</span>') +
+    (f.ico ? '<span>IČO ' + esc(f.ico) + '</span>' : '') + (f.owner ? chip('line', 'odpovědný: ' + person(f.owner), 'user') : chip('line', 'bez odpovědného')) + (f.archived ? chip('bad', 'v archivu') : '') + '</div></div>' +
+    (canEdit() ? '<div class="bb"><button class="btn" type="button" data-ftab="osa" data-focus="ac-t">' + icon('pencil') + 'Zapsat hovor nebo poznámku</button><button class="btn red" type="button" data-ftab="prehled" data-focus="td-t-f">' + icon('plus') + 'Úkol</button></div>' : '') + '</div>';
+  const tiles = '<div class="kpis">' +
+    kpi('Otevřené nabídky', s.open.length, s.value ? money(s.value) + ' celkem' : f.offers.length ? f.offers.length + ' celkem' : 'zatím žádná') +
+    kpi('Vážená hodnota', s.weighted ? money(s.weighted) : '—', 'hodnota × pravděpodobnost') +
+    kpi('Poslední kontakt', s.last ? ago(s.last) : '—', s.last ? when(s.last) : 'zatím nic') +
+    kpi('Příští schůzka', s.meet ? DOW[new Date(s.meet).getDay()] + ' ' + dm(s.meet) : '—', s.meet ? hm(s.meet) : 'nic naplánováno') +
+    kpi('Úkoly', s.todo.length, s.late ? '<span style="color:var(--red-ink)">' + s.late + ' po termínu</span>' : s.todo.length ? 'otevřené' : 'nic nečeká') + '</div>';
+  const bar = '<div class="tabs" role="tablist" aria-label="Detail firmy">' + tabs.map(t => '<button type="button" role="tab" data-ftab="' + t[0] + '" aria-selected="' + (V.ftab === t[0]) + '" tabindex="' + (V.ftab === t[0] ? 0 : -1) + '">' + t[1] + (t[2] ? ' <span class="n">' + t[2] + '</span>' : '') + '</button>').join('') + '</div>';
+  const body = { prehled: fOverview, osa: fTimeline, kontakty: fContacts, udaje: fDetails }[V.ftab](f, s);
+  return head + tiles + bar + '<div role="tabpanel">' + body + '</div>';
+}
+function fOverview(f, s) {
+  const offers = f.offers.slice().sort((a, b) => OPEN_ST.indexOf(b.stage[0]) - OPEN_ST.indexOf(a.stage[0]));
+  const offP = '<div class="panel"><div class="ph"><h4>Nabídky</h4><span>' + (f.offers.length ? f.offers.length + ' ' + plural(f.offers.length, 'nabídka', 'nabídky', 'nabídek') : 'žádná') + '</span></div>' + (offers.length ? table(['Nabídka', 'Fáze', 'Hodnota', 'Pravděp.', 'Uzavření', 'Zájem'],
+    offers.map(o => ['<button class="lnk" type="button" data-offer="' + esc(o.slug) + '">' + esc(o.short) + '</button>', stageChip(o), money(o.value), o.prob + ' %', o.manual.close ? dm(o.manual.close) : '—', o.band && o.band[0] !== 'none' ? chip(bandCls(o.band), o.score.total + ' · ' + o.band[1].replace(' zájem', '')) : o.band ? chip('line', 'neotevřeno') : '—']), [2, 3]) :
+    '<p class="muted-p">K firmě zatím není žádná nabídka. Nabídku přiřadíte v jejím detailu (Souhrn → Obchod → Firma).</p>') + '</div>';
+  const cons = '<div class="panel"><div class="ph"><h4>Kontakty</h4><button class="lnk" type="button" data-ftab="kontakty">Všechny' + icon('arrow') + '</button></div>' + (f.contacts.length ? '<ul class="links">' + f.contacts.slice(0, 6).map(c =>
+    '<li><div><b>' + esc(c.name) + '</b><small>' + esc([c.role, c.email, c.phone].filter(Boolean).join(' · ') || 'bez kontaktních údajů') + '</small></div>' + (c.email ? '<a class="btn" href="mailto:' + esc(c.email) + '" aria-label="Napsat ' + esc(c.name) + '">' + icon('mail') + '</a>' : '<span></span>') + '</li>').join('') + '</ul>' :
+    '<p class="muted-p">Zatím žádný kontakt.</p>') + '</div>';
+  const recent = actItems(f).slice(0, 5);
+  const act = '<div class="panel"><div class="ph"><h4>Poslední aktivita</h4><button class="lnk" type="button" data-ftab="osa">Časová osa' + icon('arrow') + '</button></div>' + (recent.length ? '<div class="feed">' + recent.map(i => '<div class="fi"><span class="av">' + icon(i.ic) + '</span><div><b>' + esc(i.label) + '</b>' + (i.who ? ' · ' + esc(i.who) : '') + ' · ' + esc(i.text) + '<small>' + when(i.at) + (i.o ? ' · ' + esc(i.o.short) : '') + '</small></div></div>').join('') + '</div>' : '<p class="muted-p">Zatím nic. Zapište hovor nebo poznámku, e-maily přibudou z Gmailu.</p>') + '</div>';
+  const note = f.note ? '<div class="panel"><div class="ph"><h4>Poznámka</h4><button class="lnk" type="button" data-ftab="udaje">Upravit' + icon('arrow') + '</button></div><p style="font-size:14px;white-space:pre-line">' + esc(f.note) + '</p></div>' : '';
+  return '<div class="grid g2"><div class="stack">' + todoPanel(f.todos, { firm: f.id, key: 'f', title: 'Úkoly' }) + offP + '</div><div class="stack">' + act + cons + note + '</div></div>';
+}
+// položky časové osy firmy: zapsané aktivity, e-maily a schůzky + odeslané formuláře a první otevření nabídek
+function actItems(f) {
+  const out = f.acts.map(a => ({ at: a.at, ic: (KIND[a.kind] || KIND.note)[1], label: (KIND[a.kind] || KIND.note)[0] + (a.dir === 'future' ? ' (naplánováno)' : ''), who: whoName(a.who), text: a.text, a: a, o: D.O[a.slug] || null }));
+  f.offers.forEach(o => {
+    const seen = {};
+    o.sess.forEach(x => { if (!seen[x.who.key]) { seen[x.who.key] = 1; out.push({ at: x.start, ic: 'eye', label: 'Poprvé otevřeno', who: x.who.name, text: 'nabídka ' + o.short, o: o }); } });
+    o.hist.forEach(h => out.push({ at: h.at, ic: 'send', label: 'Odeslaný formulář', who: h.who ? h.who.name : '', text: (h.diff || []).slice(0, 2).join('; ') || 'beze změn', o: o }));
+  });
+  return out.sort((a, b) => b.at - a.at);
+}
+function fTimeline(f) {
+  const items = actItems(f), fut = items.filter(i => i.at > NOW).reverse(), past = items.filter(i => i.at <= NOW);
+  const k = V.cmp || { kind: 'note' };
+  const cmp = canEdit() ? '<div class="panel mb"><div class="ph"><h4>Nový záznam</h4><span>hovor, schůzka nebo poznámka</span></div><div class="cmp">' +
+    '<label class="fld" for="ac-k">Druh<select id="ac-k">' + ['note', 'call', 'meeting'].map(x => '<option value="' + x + '"' + (k.kind === x ? ' selected' : '') + '>' + KIND[x][0] + '</option>').join('') + '</select></label>' +
+    '<label class="fld" for="ac-c">S kým<select id="ac-c"><option value="">—</option>' + f.contacts.map(c => '<option value="' + esc(c.id) + '">' + esc(c.name) + '</option>').join('') + '</select></label>' +
+    '<label class="fld" for="ac-o">Nabídka<select id="ac-o"><option value="">—</option>' + f.offers.map(o => '<option value="' + esc(o.slug) + '">' + esc(o.short) + '</option>').join('') + '</select></label>' +
+    '<label class="fld" for="ac-d">Kdy<input id="ac-d" type="datetime-local" value="' + isoLocal(NOW) + '"></label>' +
+    '<label class="fld txt" for="ac-t">Co se stalo<textarea id="ac-t" rows="3" placeholder="Např. Volal jsem s CFO, rozpočet schvalují do konce měsíce. Chtějí vidět výpočet pro výrobu."></textarea></label>' +
+    '<div class="btnrow"><button class="btn red" type="button" data-act-save="' + esc(f.id) + '">' + icon('check') + 'Zapsat</button></div></div></div>' : '';
+  const row = i => '<div class="tl-it' + (i.a && i.a.src !== 'velin' ? '' : '') + '"><time>' + hm(i.at) + '</time><span class="av">' + icon(i.ic) + '</span><div><b>' + esc(i.label) + '</b>' + (i.who ? ' · ' + esc(i.who) : '') +
+    (i.a && i.a.kind === 'email' ? ' <span class="dir ' + (i.a.dir === 'in' ? 'in' : '') + '">' + (i.a.dir === 'in' ? 'od klienta' : 'od nás') + '</span>' : '') + (i.o ? ' · <button class="lnk" type="button" data-offer="' + esc(i.o.slug) + '">' + esc(i.o.short) + '</button>' : '') +
+    '<div class="sub" style="white-space:pre-line">' + esc(i.text) + '</div>' +
+    (i.a && i.a.contact && D.crm.contacts.some(c => c.id === i.a.contact) ? '<div class="sub">' + icon('user') + ' ' + esc(D.crm.contacts.filter(c => c.id === i.a.contact)[0].name) + '</div>' : '') +
+    (i.a && i.a.src === 'gmail' && isOwner() && i.a.ext ? '<a class="lnk" href="https://mail.google.com/mail/u/0/#all/' + esc(i.a.ext) + '" target="_blank" rel="noopener noreferrer">Otevřít v Gmailu' + icon('arrow') + '</a>' : '') +
+    (i.a && i.a.src === 'velin' && canEdit() ? ' <button class="lnk dim" type="button" data-act-del="' + esc(i.a.id) + '">' + icon('trash') + 'Smazat</button>' : '') + '</div></div>';
+  const days = list => { let out = '', day = 0; list.forEach(i => { const d = sod(i.at); if (d !== day) { day = d; out += '<div class="tl-day">' + new Date(d).toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' }) + '</div>'; } out += row(i); }); return out; };
+  return cmp + (fut.length ? '<div class="panel mb"><div class="ph"><h4>Naplánováno</h4><span>z Kalendáře a zapsané</span></div>' + days(fut) + '</div>' : '') +
+    '<div class="panel"><div class="ph"><h4>Časová osa</h4><span>' + past.length + ' ' + plural(past.length, 'záznam', 'záznamy', 'záznamů') + '</span></div>' + (past.length ? days(past) : '<p class="muted-p">Zatím nic.</p>') +
+    '<p class="fig-note">E-maily a schůzky doplňuje synchronizace s Gmailem a Kalendářem vlastníka (jen předmět, datum a kdo; obsah e-mailů Velín nečte). Smazat jdou jen ručně zapsané záznamy.</p></div>';
+}
+function fContacts(f) {
+  const lastOf = c => Math.max.apply(null, [0].concat(f.acts.filter(a => a.contact === c.id && a.at <= NOW).map(a => a.at)));
+  const reads = c => c.token ? f.offers.filter(o => o.links.some(l => l.token === c.token)).map(o => o.short) : [];
+  const SRC = { odkaz: 'z osobního odkazu', gmail: 'z Gmailu', velin: 'zapsaný ručně' };
+  const form = c => '<tr class="edit"><td colspan="5"><div class="form f4">' +
+    '<label class="fld" for="cn-n">Jméno<input id="cn-n" autocomplete="off" value="' + esc(c.name || '') + '"></label>' +
+    '<label class="fld" for="cn-r">Role<input id="cn-r" autocomplete="off" placeholder="např. finanční ředitelka" value="' + esc(c.role || '') + '"></label>' +
+    '<label class="fld" for="cn-e">E-mail<input id="cn-e" type="email" autocomplete="off" value="' + esc(c.email || '') + '"></label>' +
+    '<label class="fld" for="cn-p">Telefon<input id="cn-p" type="tel" autocomplete="off" value="' + esc(c.phone || '') + '"></label></div>' +
+    '<div class="btnrow"><button class="btn red" type="button" data-con-save="' + esc(f.id) + '">' + icon('check') + 'Uložit</button><button class="btn" type="button" data-con-cancel>Zrušit</button></div></td></tr>';
+  const rows = f.contacts.map(c => V.cedit === c.id ? form(c) : V.cdel === c.id ?
+    '<tr><td colspan="5"><div class="callout"><span>' + icon('trash') + '</span><div><b id="cd-h" tabindex="-1">Smazat ' + esc(c.name) + '?</b> Smaže jméno, e-mail, telefon a jeho e-maily a schůzky ve Velínu. Jeho e-mail se pak už nesynchronizuje. Nedá se vrátit.' +
+    '<div class="btnrow"><button class="btn red" type="button" data-con-delgo="' + esc(c.id) + '">' + icon('trash') + 'Smazat údaje</button><button class="btn" type="button" data-con-cancel>Ponechat</button></div></div></div></td></tr>' :
+    '<tr><td class="cl"><b>' + esc(c.name) + '</b><span>' + esc(c.role || SRC[c.src] || '') + '</span></td><td>' + (c.email ? '<a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a>' : '—') + '</td><td class="nw">' + (c.phone ? '<a href="tel:' + esc(c.phone.replace(/\s/g, '')) + '">' + esc(c.phone) + '</a>' : '—') + '</td>' +
+    '<td class="nw">' + (lastOf(c) ? ago(lastOf(c)) : '—') + (reads(c).length ? '<br><small class="muted-s">čte ' + esc(reads(c).join(', ')) + '</small>' : '') + '</td>' +
+    '<td class="r nw">' + (canEdit() ? '<button class="btn" type="button" data-con-edit="' + esc(c.id) + '" aria-label="Upravit ' + esc(c.name) + '">' + icon('pencil') + '</button>' : '') + (isOwner() ? ' <button class="btn" type="button" data-con-del="' + esc(c.id) + '" aria-label="Smazat ' + esc(c.name) + '">' + icon('trash') + '</button>' : '') + '</td></tr>').join('');
+  return '<div class="panel"><div class="ph"><h4>Kontakty</h4>' + (canEdit() && V.cedit !== 'new' ? '<button class="btn red" type="button" data-con-new>' + icon('plus') + 'Nový kontakt</button>' : '') + '</div>' +
+    '<div class="tw"><table class="t ct"><thead><tr><th>Jméno</th><th>E-mail</th><th>Telefon</th><th>Poslední kontakt</th><th></th></tr></thead><tbody>' + (V.cedit === 'new' ? form({}) : '') + rows + '</tbody></table></div>' +
+    (!f.contacts.length && V.cedit !== 'new' ? '<p class="muted-p">Zatím žádný kontakt. Kontakty vznikají z osobních odkazů a z e-mailů, kterým jste psali na doménu firmy.</p>' : '') +
+    '<p class="fig-note">Smazání na žádost má jen vlastník Velínu. Čtenáře nabídky smažete v detailu nabídky → Čtenáři, kontakt z jeho odkazu se smaže s ním.</p></div>';
+}
+function fDetails(f) {
+  const ro = !canEdit(), dis = ro ? ' disabled' : '';
+  return '<div class="panel"><div class="ph"><h4>Údaje firmy</h4><span>' + (ro ? 'máte přístup jen ke čtení' : 'změny se zapisují do listu Firmy') + '</span></div><div class="form f4">' +
+    '<label class="fld" for="fd-n">Název<input id="fd-n"' + dis + ' value="' + esc(f.name) + '"></label>' +
+    '<label class="fld" for="fd-d">Doména e-mailů<input id="fd-d"' + dis + ' placeholder="firma.cz" value="' + esc(f.domain) + '"></label>' +
+    '<label class="fld" for="fd-w">Web<input id="fd-w"' + dis + ' placeholder="https://" value="' + esc(f.web) + '"></label>' +
+    '<label class="fld" for="fd-i">IČO<input id="fd-i"' + dis + ' inputmode="numeric" value="' + esc(f.ico) + '"></label>' +
+    '<label class="fld" for="fd-o">Odpovědný<select id="fd-o"' + dis + '>' + peopleOpts(f.owner, 'nikdo') + '</select></label>' +
+    '<label class="fld txt" for="fd-t">Poznámka<textarea id="fd-t"' + dis + ' rows="4" placeholder="Co je dobré o firmě vědět">' + esc(f.note) + '</textarea></label></div>' +
+    (ro ? '' : '<div class="btnrow"><button class="btn red" type="button" data-firm-save="' + esc(f.id) + '">' + icon('check') + 'Uložit</button>' +
+    '<button class="btn" type="button" data-firm-arch="' + esc(f.id) + '" data-on="' + (f.archived ? '0' : '1') + '">' + (f.archived ? 'Vrátit z archivu' : 'Archivovat') + '</button></div>') +
+    '<p class="fig-note">Doména: e-maily a schůzky s adresami @doména se přiřadí k firmě. Domény jako gmail.com nebo seznam.cz firmě nepatří, takové adresy patří ke kontaktům. Archivovaná firma zmizí ze seznamu, data zůstanou.</p></div>';
+}
+
+/* ---------- úkoly ---------- */
+// ctx: { firm, slug, key (jedinečná část id polí), title }
+function todoPanel(list, ctx) {
+  const open = list.filter(t => !t.done).sort((a, b) => (a.due || 9e15) - (b.due || 9e15)), done = list.filter(t => t.done).sort((a, b) => b.done - a.done).slice(0, 3);
+  const k = ctx.key;
+  const add = canEdit() ? '<div class="tadd"><label class="fld" for="td-t-' + k + '">Nový úkol<input id="td-t-' + k + '" autocomplete="off" placeholder="Co je potřeba udělat"></label>' +
+    '<label class="fld" for="td-d-' + k + '">Termín<input id="td-d-' + k + '" type="date"></label>' +
+    '<label class="fld" for="td-o-' + k + '">Kdo<select id="td-o-' + k + '">' + peopleOpts(meId()) + '</select></label>' +
+    (ctx.pick ? '<label class="fld" for="td-f-' + k + '">Firma<select id="td-f-' + k + '">' + firmOpts('') + '</select></label>' : '') +
+    '<button class="btn red" type="button" data-todo-add="' + k + '" data-todo-firm="' + esc(ctx.firm || '') + '" data-todo-slug="' + esc(ctx.slug || '') + '" style="height:38px">' + icon('plus') + 'Přidat</button></div>' : '';
+  return '<div class="panel"><div class="ph"><h4>' + ctx.title + '</h4><span>' + (open.length ? open.length + ' ' + plural(open.length, 'otevřený', 'otevřené', 'otevřených') : 'nic nečeká') + '</span></div>' +
+    (open.length || done.length ? '<div class="todos">' + open.concat(done).map(t => todoRow(t, ctx)).join('') + '</div>' : '<p class="muted-p">' + (ctx.empty || 'Žádný úkol.') + '</p>') + add + '</div>';
+}
+function todoRow(t, ctx) {
+  const ro = !canEdit();
+  return '<div class="todo' + (t.done ? ' done' : '') + '"><button class="tk" type="button"' + (ro ? ' disabled' : '') + ' data-todo-done="' + esc(t.id) + '" data-on="' + (t.done ? '0' : '1') + '" aria-label="' + (t.done ? 'Vrátit mezi otevřené: ' : 'Hotovo: ') + esc(t.title) + '">' + icon('check') + '</button>' +
+    '<div><span class="tt">' + esc(t.title) + '</span><div class="tm">' + dueChip(t) + (!ctx.firm && t.firm ? firmLink(t.firm) : '') + (t.slug && D.O[t.slug] && !ctx.slug ? '<span>' + esc(D.O[t.slug].short) + '</span>' : '') +
+    (t.owner && !isMine(t.owner) ? '<span>' + icon('user') + ' ' + esc(person(t.owner) || 'bývalý kolega') + '</span>' : '') + (t.by && t.by !== D.me.name && !(D.me.owner && t.by === 'vlastník') ? '<span>zadal(a) ' + esc(whoName(t.by)) + '</span>' : '') + '</div></div>' +
+    (ro ? '<span></span>' : '<button class="x" type="button" data-todo-del="' + esc(t.id) + '" aria-label="Smazat úkol ' + esc(t.title) + '">' + icon('x') + '</button>') + '</div>';
+}
+// Přehled: moje úkoly (vlastník: jeho a nepřidělené; kolega: jeho)
+function myTodos() {
+  const mine = D.crm.todos.filter(t => isMine(t.owner));
+  if (!mine.length && !canEdit()) return '';
+  return todoPanel(mine, { key: 'm', title: 'Moje úkoly', pick: true, empty: 'Žádný úkol. Úkoly k firmě přidáte i v jejím detailu.' });
+}
+
+/* ---------- obchodní plán ---------- */
+const PIPE = [['Odesláno', ['ready', 'sent']], ['Čtou', ['opened', 'engaged']], ['Vyplněno', ['filled']], ['Schůzka', ['meeting']], ['Vyhráno', ['won']], ['Prohráno', ['lost']]];
+function vPipeline() {
+  let list = D.list.filter(o => o.meta.personal !== false);
+  if (V.pmine) list = list.filter(o => isMine(o.manual.owner || (D.F[o.manual.firm] || {}).owner));
+  const open = list.filter(o => OPEN_ST.indexOf(o.stage[0]) >= 0), won = list.filter(o => o.stage[0] === 'won'), lost = list.filter(o => o.stage[0] === 'lost');
+  const mEnd = new Date(NOW); mEnd.setMonth(mEnd.getMonth() + 1, 1); mEnd.setHours(0, 0, 0, 0);
+  const thisM = open.filter(o => o.manual.close && o.manual.close < mEnd.getTime());
+  const right = '<div class="seg" role="group" aria-label="Které nabídky">' + [[0, 'Všechny'], [1, 'Moje']].map(x => '<button type="button" data-pmine="' + x[0] + '" aria-pressed="' + (V.pmine === !!x[0]) + '">' + x[1] + '</button>').join('') + '</div>';
+  const tiles = '<div class="kpis">' + kpi('Otevřená hodnota', money(sum(open.map(o => o.value || 0))), open.length + ' ' + plural(open.length, 'nabídka', 'nabídky', 'nabídek')) +
+    kpi('Vážená hodnota', money(sum(open.map(o => o.weighted))), 'hodnota × pravděpodobnost') +
+    kpi('Uzavřít tento měsíc', money(sum(thisM.map(o => o.weighted))), thisM.length ? thisM.length + ' ' + plural(thisM.length, 'nabídka', 'nabídky', 'nabídek') + ', vážená hodnota' : 'nic s termínem') +
+    kpi('Vyhráno', money(sum(won.map(o => o.value || 0))), won.length + '× vyhráno, ' + lost.length + '× prohráno') +
+    kpi('Úspěšnost', won.length + lost.length ? Math.round(won.length / (won.length + lost.length) * 100) + ' %' : '—', 'z uzavřených nabídek') + '</div>';
+  const card = o => {
+    const f = D.F[o.manual.firm], late = o.manual.close && OPEN_ST.indexOf(o.stage[0]) >= 0 && dayDiff(NOW, o.manual.close) < 0, own = o.manual.owner || (f && f.owner);
+    return '<div class="kd" role="button" tabindex="0" data-offer="' + esc(o.slug) + '"><b>' + esc(o.short) + '</b><span class="kf">' + esc(f ? f.name : o.client || '') + '</span>' +
+      '<span class="kv"><span>' + money(o.value) + '</span><span>' + o.prob + ' %</span></span><span class="km">' + (o.manual.close ? chip(late ? 'bad' : 'line', (late ? 'po termínu ' : '') + dm(o.manual.close), 'cal') : '') +
+      (o.band && o.band[0] !== 'none' ? chip(bandCls(o.band), o.score.total) : '') + (o.stage[0] === 'lost' && o.manual.reason ? chip('line', o.manual.reason) : '') + ownerAv(own) + '</span></div>';
+  };
+  const kb = '<div class="kb">' + PIPE.map(c => {
+    const xs = list.filter(o => c[1].indexOf(o.stage[0]) >= 0).sort((a, b) => (a.manual.close || 9e15) - (b.manual.close || 9e15));
+    const closed = c[1][0] === 'won' || c[1][0] === 'lost';
+    return '<section class="kc" aria-label="' + c[0] + '"><h5><span>' + c[0] + '</span><span>' + xs.length + '</span></h5><div class="ks">' + (xs.length ? (closed ? money(sum(xs.map(o => o.value || 0))) : money(sum(xs.map(o => o.weighted))) + ' vážená') : '&nbsp;') + '</div>' + xs.map(card).join('') + '</section>';
+  }).join('') + '</div>';
+  const paused = list.filter(o => o.stage[0] === 'paused');
+  // výhled: vážená hodnota podle měsíce uzavření (6 měsíců dopředu + po termínu + bez termínu)
+  const M = [], base = new Date(NOW); base.setDate(1); base.setHours(0, 0, 0, 0);
+  for (let i = 0; i < 6; i++) { const a = new Date(base); a.setMonth(base.getMonth() + i); const b = new Date(a); b.setMonth(a.getMonth() + 1); M.push([a.toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' }), a.getTime(), b.getTime()]); }
+  const rows = [['po termínu', open.filter(o => o.manual.close && o.manual.close < base.getTime())]].concat(M.map(m => [m[0], open.filter(o => o.manual.close >= m[1] && o.manual.close < m[2])]), [['bez termínu', open.filter(o => !o.manual.close)]])
+    .filter((r, i) => i > 0 && i < 7 || r[1].length).map(r => [r[0], sum(r[1].map(o => o.weighted)), r[1].length + ' ' + plural(r[1].length, 'nabídka', 'nabídky', 'nabídek') + ': ' + (r[1].map(o => o.short).join(', ') || 'žádná')]);
+  const fc = fig('Výhled', 'vážená hodnota podle očekávaného uzavření', hbars(rows.map(r => [r[0], r[1], money(r[1])])), table(['Měsíc', 'Vážená hodnota', 'Nabídky'], rows.map(r => [esc(r[0]), money(r[1]), esc(r[2])]), [1]),
+    'Pravděpodobnost bez ručního zadání podle fáze: odesláno 10 %, otevřeno 20 %, zapojeno 30 %, vyplněno 50 %, schůzka 60 %. Termín uzavření a pravděpodobnost nastavíte v detailu nabídky → Souhrn → Obchod.');
+  return vh('Obchod', 'osobní nabídky podle fáze', right) + tiles + kb +
+    (paused.length ? '<p class="fig-note">Pozastaveno: ' + paused.map(o => '<button class="lnk" type="button" data-offer="' + esc(o.slug) + '">' + esc(o.short) + '</button>').join(', ') + '</p>' : '') + '<div class="grid g2e mt">' + fc + winLoss(list) + '</div>';
+}
+function winLoss(list) {
+  const won = list.filter(o => o.stage[0] === 'won'), lost = list.filter(o => o.stage[0] === 'lost');
+  if (!won.length && !lost.length) return '<div class="panel"><div class="ph"><h4>Výhry a prohry</h4></div><p class="muted-p">Zatím žádná uzavřená nabídka. U výhry i prohry zapište důvod (detail nabídky → Souhrn), časem tu uvidíte, proč vyhráváte a proč ne.</p></div>';
+  const by = (xs, f) => { const m = {}; xs.forEach(o => { const k = f(o) || 'bez důvodu'; m[k] = (m[k] || 0) + 1; }); return Object.keys(m).sort((a, b) => m[b] - m[a]).map(k => [k, m[k]]); };
+  const rows = by(lost, o => o.manual.reason), wr = by(won, o => o.manual.reason), riv = by(lost.filter(o => o.manual.rival), o => o.manual.rival);
+  const bars = (xs, n) => hbars(xs.map(r => [r[0], r[1], r[1] + '× z ' + n]), { em: 'max' });
+  return fig('Výhry a prohry', won.length + '× vyhráno, ' + lost.length + '× prohráno',
+    (lost.length ? '<h5 class="sh">Proč prohráváme</h5>' + bars(rows, lost.length) : '') + (won.length ? '<h5 class="sh">Proč vyhráváme</h5>' + bars(wr, won.length) : '') + (riv.length ? '<h5 class="sh">Konkurence</h5>' + bars(riv, lost.length) : ''),
+    table(['', 'Důvod', 'Počet'], rows.map(r => ['prohra', esc(r[0]), r[1]]).concat(wr.map(r => ['výhra', esc(r[0]), r[1]]), riv.map(r => ['konkurent', esc(r[0]), r[1]])), [2]));
+}
+
+/* ---------- obchod u nabídky (Souhrn → Obchod) ---------- */
+function crmBizFields(o, dis) {
+  const m = o.manual, closed = ['won', 'lost'].indexOf(m.stage) >= 0;
+  return '<label class="fld" for="f-firm">Firma<select id="f-firm"' + dis + '>' + firmOpts(m.firm) + '</select></label>' +
+    '<label class="fld" for="f-owner">Odpovědný<select id="f-owner"' + dis + '>' + peopleOpts(m.owner, (D.F[m.firm] && D.F[m.firm].owner ? 'jako u firmy: ' + person(D.F[m.firm].owner) : 'nikdo')) + '</select></label>' +
+    '<label class="fld" for="f-prob">Pravděpodobnost (%)<input id="f-prob"' + dis + ' type="number" min="0" max="100" step="5" placeholder="podle fáze: ' + (CRM_PROB[o.stage[0]] || 0) + '" value="' + (m.prob != null ? m.prob : '') + '"></label>' +
+    '<label class="fld" for="f-close">Očekávané uzavření<input id="f-close"' + dis + ' type="date" value="' + (m.close ? isoDate(m.close) : '') + '"></label>' +
+    '<label class="fld f-closed" for="f-reason"' + (closed ? '' : ' hidden') + '>Důvod výhry nebo prohry<select id="f-reason"' + dis + '><option value="">—</option>' + REASONS.concat(m.reason && REASONS.indexOf(m.reason) < 0 ? [m.reason] : []).map(r => '<option' + (r === m.reason ? ' selected' : '') + '>' + esc(r) + '</option>').join('') + '</select></label>' +
+    '<label class="fld f-closed" for="f-rival"' + (closed ? '' : ' hidden') + '>Konkurent<input id="f-rival"' + dis + ' placeholder="kdo vyhrál místo nás" value="' + esc(m.rival || '') + '"></label>';
+}
+// hodnoty z formuláře Obchod pro uložení (velinSetOffer) a pro změnu v prohlížeči
+function crmBizRead() {
+  const v = id => { const el = $('#' + id); return el ? el.value : null; }, out = {};
+  if (v('f-firm') != null) out.firm = v('f-firm');
+  if (v('f-owner') != null) out.owner = v('f-owner');
+  if (v('f-prob') != null) out.prob = v('f-prob') === '' ? '' : +v('f-prob');
+  if (v('f-close') != null) out.close = v('f-close') ? new Date(v('f-close') + 'T12:00').toISOString() : '';
+  if (v('f-reason') != null) out.reason = v('f-reason');
+  if (v('f-rival') != null) out.rival = v('f-rival').trim();
+  return out;
+}
+function crmBizLocal(m, p) {
+  if ('firm' in p) m.firm = p.firm; if ('owner' in p) m.owner = p.owner; if ('prob' in p) m.prob = p.prob === '' ? null : p.prob;
+  if ('close' in p) m.close = p.close ? new Date(p.close).getTime() : 0; if ('reason' in p) m.reason = p.reason; if ('rival' in p) m.rival = p.rival;
+}
+
+/* ---------- Nastavení: Gmail a Kalendář, jméno vlastníka ---------- */
+function crmSettings(st) {
+  const S = st.sync || {}, I = S.info;
+  const status = !I ? 'Zatím neproběhla.' : 'Naposledy ' + when(I.at) + ': ' + I.mails + ' ' + plural(I.mails, 'nový e-mail', 'nové e-maily', 'nových e-mailů') + ', ' + I.meetings + ' ' + plural(I.meetings, 'nová schůzka', 'nové schůzky', 'nových schůzek') +
+    (I.contacts ? ', ' + I.contacts + ' ' + plural(I.contacts, 'nový kontakt', 'nové kontakty', 'nových kontaktů') : '') + (I.more ? ', zbytek dodělá další běh' : '') + '.';
+  const errs = I && I.errors && I.errors.length ? '<div class="callout"><span>' + icon('shield') + '</span><div>' + I.errors.map(esc).join('<br>') + '</div></div>' : '';
+  return '<div class="panel"><div class="ph"><h4>Gmail a Kalendář</h4><span>' + esc(S.me || 'účet vlastníka') + '</span></div>' +
+    '<div class="rule"><div><b id="sy-l">Synchronizovat každých 30 minut</b><p>E-maily s doménami firem a s e-maily kontaktů a schůzky, kde je mezi hosty někdo z firmy, se zapíšou k firmě. Komu z domény firmy napíšete, přibude jako kontakt.</p></div>' +
+    '<button class="sw" type="button" role="switch" aria-checked="' + !!S.on + '" aria-labelledby="sy-l" data-sync="' + (S.on ? '0' : '1') + '"></button></div>' +
+    '<div class="rule"><div><b>Stav</b><p>' + status + '</p></div><button class="btn" type="button" data-sync-now>' + icon('refresh') + 'Synchronizovat teď</button></div>' + errs +
+    '<p class="fig-note">Velín čte jen hlavičky (od, komu, předmět, datum) a u schůzek název, čas a hosty. Obsah e-mailů ani popis schůzek nečte a nic neposílá ani nemaže. ' +
+    'Poprvé se stahuje půl roku zpět, e-maily a schůzky starší než rok noční údržba ve Velínu smaže (v Gmailu zůstávají). Přístup ke Gmailu a Kalendáři jste povolili v editoru skriptu, odebrat ho jde v účtu Google → Zabezpečení → Aplikace třetích stran.</p></div>' +
+    '<div class="panel"><div class="ph"><h4>Vaše jméno</h4><span>v seznamu odpovědných</span></div><div class="form f2"><label class="fld" for="own-n">Jméno<input id="own-n" autocomplete="name" placeholder="Vlastník Velínu" value="' + esc(st.ownerName || '') + '"></label>' +
+    '<div class="btnrow" style="margin:0"><button class="btn red" type="button" data-owner-name style="height:38px">' + icon('check') + 'Uložit</button></div></div></div>';
+}
+
+/* ---------- ovládání ---------- */
+document.addEventListener('click', async e => {
+  const t = e.target.closest('[data-firm],[data-ftab],[data-fmine],[data-pmine],[data-firm-new],[data-firm-cancel],[data-firm-create],[data-firm-save],[data-firm-arch],[data-con-new],[data-con-edit],[data-con-cancel],[data-con-save],[data-con-del],[data-con-delgo],[data-act-save],[data-act-del],[data-todo-add],[data-todo-done],[data-todo-del],[data-sync],[data-sync-now],[data-owner-name]');
+  if (!t || !D) return;
+  const d = t.dataset;
+  const focus = id => setTimeout(() => { const el = $('#' + id); if (el) { el.scrollIntoView({ block: 'center' }); el.focus({ preventScroll: true }); } }, 30);
+  if (d.firm) return go('firma', { firm: d.firm, ftab: 'prehled', cedit: '', cdel: '' });
+  if (d.ftab) { V.ftab = d.ftab; V.cedit = ''; V.cdel = ''; render(false, true); if (d.focus) focus(d.focus); else { const b = $('[role="tab"][aria-selected="true"]', main); if (b) b.focus({ preventScroll: true }); } return; }
+  if (d.fmine != null) { V.fmine = d.fmine === '1'; return render(false, true); }
+  if (d.pmine != null) { V.pmine = d.pmine === '1'; return render(false, true); }
+  if (d.firmNew != null) { V.ff = { owner: meId() }; render(false, true); return focus('ff-n'); }
+  if (d.firmCancel != null) { V.ff = null; return render(false, true); }
+  if (d.firmCreate != null) {
+    const p = { name: $('#ff-n').value.trim(), domain: $('#ff-d').value.trim(), owner: $('#ff-o').value };
+    V.ff = Object.assign({}, p);
+    if (!p.name) { V.ff.err = 'Doplňte název firmy.'; render(false, true); return focus('ff-n'); }
+    V.busy = true; render(false, true);
+    const r = await api('velinFirm', '', p).catch(err => ({ ok: false, error: errText(err) }));
+    V.busy = false;
+    if (!r || !r.ok) { V.ff.err = (r && r.error) || 'Firmu se nepodařilo založit.'; return render(false, true); }
+    V.ff = null; V.pendingFirm = r.id; toast('Firma založena.');
+    go('firma', { firm: r.id, ftab: 'kontakty' });
+    return load(true);
+  }
+  if (d.firmSave) {
+    const p = { name: $('#fd-n').value.trim(), domain: $('#fd-d').value.trim(), web: $('#fd-w').value.trim(), ico: $('#fd-i').value.trim(), owner: $('#fd-o').value, note: $('#fd-t').value };
+    if (!p.name) return toast('Doplňte název firmy.', true);
+    return call('velinFirm', [d.firmSave, p], 'Uloženo.', () => crmLocal(C => { const f = C.firms.find(x => x.id === d.firmSave); if (f) Object.assign(f, p, { domain: p.domain.toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '') }); }));
+  }
+  if (d.firmArch) return call('velinFirm', [d.firmArch, { archived: d.on === '1' }], d.on === '1' ? 'Firma archivována.' : 'Firma vrácena z archivu.', () => crmLocal(C => { const f = C.firms.find(x => x.id === d.firmArch); if (f) f.archived = d.on === '1' ? Date.now() : 0; }));
+  if (d.conNew != null) { V.cedit = 'new'; V.cdel = ''; render(false, true); return focus('cn-n'); }
+  if (d.conEdit) { V.cedit = d.conEdit; V.cdel = ''; render(false, true); return focus('cn-n'); }
+  if (d.conCancel != null) { V.cedit = ''; V.cdel = ''; return render(false, true); }
+  if (d.conDel) { V.cdel = d.conDel; V.cedit = ''; render(false, true); return focus('cd-h'); }
+  if (d.conSave) {
+    const p = { firm: d.conSave, name: $('#cn-n').value.trim(), role: $('#cn-r').value.trim(), email: $('#cn-e').value.trim(), phone: $('#cn-p').value.trim() }, id = V.cedit === 'new' ? '' : V.cedit;
+    if (!p.name) { toast('Doplňte jméno.', true); return focus('cn-n'); }
+    const r = await call('velinContact', [id, p], id ? 'Kontakt uložen.' : 'Kontakt přidán.', () => crmLocal(C => {
+      if (id) { const c = C.contacts.find(x => x.id === id); if (c) Object.assign(c, p, { email: p.email.toLowerCase() }); }
+      else C.contacts.push(Object.assign({ id: 'tmp' + Date.now(), token: '', note: '', created: Date.now(), src: 'velin' }, p, { email: p.email.toLowerCase() }));
+    }));
+    if (r && r.ok !== false) { V.cedit = ''; render(false, true); }
+    return;
+  }
+  if (d.conDelgo) { V.cdel = ''; return call('velinContact', [d.conDelgo, { deleted: true }], 'Údaje kontaktu smazány.', () => crmLocal(C => { C.contacts = C.contacts.filter(x => x.id !== d.conDelgo); C.acts = C.acts.filter(a => a.contact !== d.conDelgo); })); }
+  if (d.actSave) {
+    const at = $('#ac-d').value, p = { firm: d.actSave, kind: $('#ac-k').value, contact: $('#ac-c').value, slug: $('#ac-o').value, text: $('#ac-t').value.trim(), at: at ? new Date(at).toISOString() : '' };
+    if (!p.text) { toast('Napište, co se stalo.', true); return focus('ac-t'); }
+    V.cmp = { kind: p.kind };
+    const r = await call('velinActivity', [p], 'Zapsáno.', () => crmLocal(C => C.acts.unshift({ id: 'tmp' + Date.now(), at: at ? new Date(at).getTime() : Date.now(), firm: p.firm, contact: p.contact, slug: p.slug, kind: p.kind, text: p.text, who: D.me.owner ? 'vlastník' : D.me.name, src: 'velin', ext: '', dir: '' })));
+    if (r && r.ok !== false) { const ta = $('#ac-t'); if (ta) ta.value = ''; }
+    return;
+  }
+  if (d.actDel) return call('velinActivity', [{ del: d.actDel }], 'Smazáno.', () => crmLocal(C => { C.acts = C.acts.filter(a => a.id !== d.actDel); }));
+  if (d.todoAdd) {
+    const k = d.todoAdd, title = $('#td-t-' + k).value.trim(), due = $('#td-d-' + k).value, owner = $('#td-o-' + k).value, fsel = $('#td-f-' + k);
+    const firm = fsel ? fsel.value : d.todoFirm || '', slug = d.todoSlug || '';
+    if (!title) { toast('Napište, co je potřeba udělat.', true); return focus('td-t-' + k); }
+    const p = { firm: firm, slug: slug, title: title, due: due ? new Date(due + 'T09:00').toISOString() : '', owner: owner };
+    const r = await call('velinTodo', ['', p], owner && owner !== meId() ? 'Úkol přidán pro ' + person(owner) + '.' : 'Úkol přidán.', () => crmLocal(C => C.todos.push({ id: 'tmp' + Date.now(), firm: firm, slug: slug, title: title, due: due ? new Date(due + 'T09:00').getTime() : 0, owner: owner, done: 0, by: D.me.owner ? 'vlastník' : D.me.name, created: Date.now() })));
+    if (r && r.ok !== false) { const el = $('#td-t-' + k); if (el) el.value = ''; const dd = $('#td-d-' + k); if (dd) dd.value = ''; if (r.sent) toast('Úkol přidán, ' + person(owner) + ' dostane e-mail.'); }
+    return;
+  }
+  if (d.todoDone) return call('velinTodo', [d.todoDone, { done: d.on === '1' }], d.on === '1' ? 'Hotovo.' : 'Vráceno mezi otevřené.', () => crmLocal(C => { const x = C.todos.find(y => y.id === d.todoDone); if (x) x.done = d.on === '1' ? Date.now() : 0; }));
+  if (d.todoDel) return call('velinTodo', [d.todoDel, { deleted: true }], 'Úkol smazán.', () => crmLocal(C => { C.todos = C.todos.filter(x => x.id !== d.todoDel); }));
+  if (d.sync) return call('velinSync', [d.sync === '1'], d.sync === '1' ? 'Synchronizace zapnuta, poběží každých 30 minut.' : 'Synchronizace vypnuta.', () => {
+    const S = D.settings.sync = D.settings.sync || {}, was = S.on; S.on = d.sync === '1';
+    return () => { S.on = was; };
+  });
+  if (d.syncNow != null) {
+    toast('Synchronizuji…');
+    const r = await call('velinSyncNow', [], null);
+    if (r && r.ok) toast(r.errors && r.errors.length ? r.errors[0] : 'Hotovo: ' + r.mails + ' ' + plural(r.mails, 'e-mail', 'e-maily', 'e-mailů') + ', ' + r.meetings + ' ' + plural(r.meetings, 'schůzka', 'schůzky', 'schůzek') + (r.more ? ', zbytek dodělá další běh.' : '.'), !!(r.errors && r.errors.length));
+    return;
+  }
+  if (d.ownerName != null) { const n = $('#own-n').value.trim(); return call('velinOwnerName', [n], 'Uloženo.', () => { const was = D.settings.ownerName; D.settings.ownerName = n; return () => { D.settings.ownerName = was; }; }); }
+});
+document.addEventListener('input', e => { if (e.target.id === 'fq') { V.fq = e.target.value; render(false, true); } });
+document.addEventListener('change', e => { if (e.target.id === 'f-stage') $$('.f-closed', main).forEach(el => { el.hidden = ['won', 'lost'].indexOf(e.target.value) < 0; }); });
+document.addEventListener('keydown', e => {
+  const t = e.target;
+  if (e.key === 'Enter' && t.matches && (t.matches('tr[data-firm]') || t.matches('.kd[data-offer]'))) { e.preventDefault(); t.click(); }
+  if (e.key === 'Enter' && t.id && /^td-t-/.test(t.id)) { e.preventDefault(); const b = $('[data-todo-add="' + t.id.slice(5) + '"]'); if (b) b.click(); }
+});
 
 /* ============ Detail nabídky ============ */
 function vDetail() {
@@ -737,7 +1183,7 @@ function vDetail() {
   if (!tabs.some(t => t[0] === V.tab)) V.tab = 'souhrn';
   const url = OFFERS_URL + o.slug + '/';
   const head = '<button class="back" type="button" data-nav="nabidky">' + icon('back') + 'Všechny nabídky</button>' +
-    '<div class="oh"><div><h3 tabindex="-1" data-vh>' + esc(o.short) + '</h3><div class="meta">' + esc(o.client || '') + (o.vendor && o.vendor !== 'XpertDigital' ? ' · ' + esc(o.vendor) : '') + ' · <span class="mono">' + esc(url.replace('https://', '')) + '</span>' + stageChip(o) +
+    '<div class="oh"><div><h3 tabindex="-1" data-vh>' + esc(o.short) + '</h3><div class="meta">' + (D.F[o.manual.firm] ? firmLink(o.manual.firm) : esc(o.client || '')) + (o.vendor && o.vendor !== 'XpertDigital' ? ' · ' + esc(o.vendor) : '') + ' · <span class="mono">' + esc(url.replace('https://', '')) + '</span>' + stageChip(o) +
     (o.band ? scoreCell(o).replace('class="score"', 'class="score" style="min-width:0"') : '') + (o.meta.encrypt ? chip('line', 'šifrovaná') : '') + (o.live ? chip('hot', 'právě čte') : '') + (o.valid !== 'ok' ? chip('bad', o.valid === 'ended' ? 'platnost ukončena' : 'po platnosti') : '') + '</div></div>' +
     '<div class="bb"><a class="btn" href="' + esc(url) + '?nahled" target="_blank" rel="noopener">' + icon('eye') + 'Náhled</a><button class="btn red" type="button" data-tab="ctenari">' + icon('link') + 'Osobní odkaz</button></div></div>';
   const base = o.sentAt || o.registeredAt, firstS = o.firstView;
@@ -762,6 +1208,7 @@ function tSummary(o) {
     '<label class="fld" for="f-value">Hodnota (Kč)<input id="f-value"' + dis + ' inputmode="numeric" placeholder="' + (o.valueAuto ? fmt(o.valueAuto) : 'např. 1 039 500') + '" value="' + (m.value != null && m.value !== '' ? esc(fmt(m.value)) : '') + '"></label>' +
     '<label class="fld" for="f-meeting">Schůzka<input id="f-meeting"' + dis + ' type="datetime-local" value="' + (m.meeting ? isoLocal(m.meeting) : '') + '"></label>' +
     '<label class="fld" for="f-until">Platnost do<input id="f-until"' + dis + ' type="date" value="' + (m.until ? isoDate(m.until) : '') + '"></label>' +
+    crmBizFields(o, dis) +
     (ro ? '' : '<button class="btn red" type="button" data-save-offer="' + esc(o.slug) + '" style="height:38px"' + (V.busy ? ' disabled' : '') + '>' + icon('check') + 'Uložit</button>') +
     '<label class="fld note" for="f-note">Poznámka<textarea id="f-note"' + dis + ' rows="2" placeholder="Co je potřeba vědět před dalším kontaktem">' + esc(m.note || '') + '</textarea></label></div>' +
     '<div class="valid">' + (m.ended ? chip('bad', 'Platnost ukončena ' + dm(m.ended)) : m.until ? chip(o.valid === 'expired' ? 'bad' : dayDiff(NOW, m.until) <= 5 ? 'warm' : 'line', (o.valid === 'expired' ? 'Po platnosti od ' : 'Platí do ') + dm(m.until), 'cal') : chip('line', 'Bez omezení platnosti')) +
@@ -1009,8 +1456,8 @@ function vSettings() {
     ], [2]) + '<p class="fig-note">Stupně zájmu: vysoký 70+, střední 45–69, nízký 20–44, minimální pod 20. Nabídka, kterou nikdo neotevřel, má štítek Neotevřeno. Po 2 dnech bez aktivity se skóre každých 7 dní půlí.</p></div>';
   if (!isOwner()) {
     const mine = '<div class="panel"><div class="ph"><h4>Váš přístup</h4><span>' + esc(D.me.name || '') + '</span></div><p style="font-size:14px">' +
-      (D.me.role === 'edit' ? 'Můžete měnit údaje nabídek (fáze, hodnota, schůzka, platnost, poznámka), vytvářet a rušit osobní odkazy a odškrtávat kroky Na tah.' : 'Máte přístup jen ke čtení: vidíte všechno, ale nic neměníte.') +
-      ' Ranní přehled, přístupy kolegů a mazání údajů čtenářů má vlastník Velínu. Každá změna se zapisuje do záznamu změn.</p><p class="fig-note">Odkaz, kterým jste Velín otevřeli, je jen pro vás, neposílejte ho dál. Když se ztratí, požádejte vlastníka Velínu o nový.</p></div>';
+      (D.me.role === 'edit' ? 'Můžete měnit údaje nabídek (fáze, hodnota, schůzka, platnost, poznámka, firma, pravděpodobnost), vytvářet a rušit osobní odkazy, zakládat a upravovat firmy a kontakty, zapisovat hovory a poznámky, zadávat úkoly a odškrtávat kroky Na tah.' : 'Máte přístup jen ke čtení: vidíte všechno, ale nic neměníte.') +
+      ' Ranní přehled, přístupy kolegů, synchronizaci s Gmailem a mazání údajů čtenářů a kontaktů má vlastník Velínu. Každá změna se zapisuje do záznamu změn.</p><p class="fig-note">Odkaz, kterým jste Velín otevřeli, je jen pro vás, neposílejte ho dál. Když se ztratí, požádejte vlastníka Velínu o nový.</p></div>';
     return vh('Nastavení', 'váš přístup a pravidla skóre') + '<div class="grid g2e">' + mine + score + '</div>';
   }
   const digest = '<div class="panel"><div class="ph"><h4>Ranní přehled</h4><span>e-mail kolem 7:30</span></div>' +
@@ -1023,8 +1470,8 @@ function vSettings() {
     '<p class="fig-note">' + (R.last ? 'Poslední údržba ' + when(R.last) + (R.moved ? ', shrnuto ' + R.moved + ' ' + plural(R.moved, 'záznam', 'záznamy', 'záznamů') + '.' : ', nebylo co shrnout.') : 'Údržba běží každou noc kolem 3:15, zatím neproběhla.') +
     (R.archived ? ' V archivu ' + plural(R.archived, 'je', 'jsou', 'je') + ' ' + R.archived + ' ' + plural(R.archived, 'měsíční souhrn', 'měsíční souhrny', 'měsíčních souhrnů') + '.' : '') + '</p>' +
     '<p style="font-size:14px">Když čtenář požádá o smazání: detail nabídky → Čtenáři → Smazat údaje. Smaže jeho návštěvy a jméno u odeslaných formulářů a osobní odkaz zneplatní. E-maily z Velínu ve schránce smažte ručně.</p></div>';
-  return vh('Nastavení', 'přístupy kolegů, ranní přehled, ochrana dat a pravidla') +
-    '<div class="grid g2e"><div class="stack">' + teamPanel(st) + '</div><div class="stack">' + digest + data + score + '</div></div>' + logPanel(st);
+  return vh('Nastavení', 'přístupy kolegů, Gmail a Kalendář, ranní přehled, ochrana dat a pravidla') +
+    '<div class="grid g2e"><div class="stack">' + teamPanel(st) + crmSettings(st) + '</div><div class="stack">' + digest + data + score + '</div></div>' + logPanel(st);
 }
 function teamPanel(st) {
   const T = V.team || {}, list = (st.team || []).filter(x => !x.revoked), gone = (st.team || []).filter(x => x.revoked);
@@ -1074,9 +1521,9 @@ function vError() { return '<div class="center"><div class="card"><h2>' + (/pozv
 
 /* ============ vykreslení a ovládání ============ */
 function renderRail() {
-  const cur = V.view === 'detail' ? 'nabidky' : V.view;
+  const cur = V.view === 'detail' ? 'nabidky' : V.view === 'firma' ? 'firmy' : V.view;
   const open = D ? D.actions.filter(a => !a.done).length : 0;
-  patch($('#rnav'), [['prehled', 'grid', 'Přehled', open, true], ['nabidky', 'file', 'Nabídky', D ? D.list.filter(o => o.meta.personal !== false).length : 0], ['analytika', 'chart', 'Analytika'], ['nastaveni', 'gear', 'Nastavení']].map(i => '<button type="button" data-nav="' + i[0] + '"' + (cur === i[0] ? ' aria-current="page"' : '') + '>' + icon(i[1]) + '<span>' + i[2] + '</span>' + (i[3] ? '<span class="cnt' + (i[4] ? ' hot' : '') + '"' + (i[4] ? ' title="kroky Na tah"' : '') + '>' + i[3] + '</span>' : '') + '</button>').join(''));
+  patch($('#rnav'), [['prehled', 'grid', 'Přehled', open, true], ['firmy', 'building', 'Firmy', D && D.F ? Object.keys(D.F).filter(k => !D.F[k].archived).length : 0], ['nabidky', 'file', 'Nabídky', D ? D.list.filter(o => o.meta.personal !== false).length : 0], ['obchod', 'columns', 'Obchod'], ['analytika', 'chart', 'Analytika'], ['nastaveni', 'gear', 'Nastavení']].map(i => '<button type="button" data-nav="' + i[0] + '"' + (cur === i[0] ? ' aria-current="page"' : '') + '>' + icon(i[1]) + '<span>' + i[2] + '</span>' + (i[3] ? '<span class="cnt' + (i[4] ? ' hot' : '') + '"' + (i[4] ? ' title="kroky Na tah"' : '') + '>' + i[3] + '</span>' : '') + '</button>').join(''));
   patch($('#rshort'), D && D.list.length ? '<div class="rail-h">Podle zájmu</div>' + D.list.filter(o => o.meta.personal !== false).slice().sort((a, b) => (b.live - a.live) || ((b.band ? b.score.total : -1) - (a.band ? a.score.total : -1))).slice(0, 12).map(o => '<button type="button" data-offer="' + esc(o.slug) + '"' + (V.view === 'detail' && V.slug === o.slug ? ' aria-current="page"' : '') + '><i class="dot ' + (o.live ? 'live' : o.stage[0] === 'won' ? 'ok' : o.band && o.score.total >= 45 ? 'act' : '') + '"></i><span>' + esc(o.short) + '</span><em>' + (o.live ? 'teď' : o.band ? (o.band[0] === 'none' ? '–' : o.score.total) : o.stage[1]) + '</em></button>').join('') : '');
   if (V.signin) { patch($('#rfoot'), '<span class="note">Nepřihlášeno</span>'); return; }
   patch($('#rfoot'), (D && !D.me.owner ? '<span class="note who-me">' + esc(D.me.name) + ' · ' + (D.me.role === 'edit' ? 'může upravovat' : 'jen čtení') + '</span>' : '') + '<span class="note"><i class="sync' + (V.loading ? ' on' : '') + '" aria-hidden="true"></i>' + (V.loading ? (V.savedAt ? 'Uloženo ' + hm(V.savedAt) + ', načítám změny…' : 'Načítám změny…') : !D ? '' : V.pollFail ? 'Spojení vypadlo, zkouším to znovu…' : 'Aktuální k ' + (V.checkedAt ? hm(V.checkedAt) : '…') + ', změny se hlídají každých 12 s.') + '</span><button type="button" data-reload>' + icon('refresh') + 'Obnovit</button>' + (D && D.M.sheetUrl ? '<a href="' + esc(D.M.sheetUrl) + '" target="_blank" rel="noopener">' + icon('sheet') + 'Tabulka</a>' : '') +
@@ -1087,11 +1534,11 @@ let SCREEN = '';
 function render(focus, soft) {
   soft = soft && !V.signin;   // přihlašovací tlačítko Google kreslí knihovna Googlu, to se nepřepisuje
   // jiná obrazovka nebo záložka: nic rozbaleného ani bublina z předchozí se nepřenáší
-  const screen = V.view + '/' + (V.view === 'detail' ? V.slug + '/' + V.tab : '');
+  const screen = V.view + '/' + (V.view === 'detail' ? V.slug + '/' + V.tab : V.view === 'firma' ? V.firm + '/' + V.ftab : '');
   const moved = screen !== SCREEN; SCREEN = screen;
   if (!soft) hideTip();
   const html = V.signin ? vSignIn() : V.err && !D ? vError() : V.setup ? vSetup() : !D ? '<div class="center"><p>Načítám data z tabulky…</p></div>'
-    : ({ prehled: vOverview, nabidky: vOffers, detail: vDetail, analytika: vAnalytics, nastaveni: vSettings }[V.view] || vOverview)();
+    : ({ prehled: vOverview, firmy: vFirms, firma: vFirm, nabidky: vOffers, obchod: vPipeline, detail: vDetail, analytika: vAnalytics, nastaveni: vSettings }[V.view] || vOverview)();
   if (soft) patch(main, html); else main.innerHTML = html;
   if (soft && moved) { 152('details[open]', main).forEach(d => { d.open = false; }); hideTip(); }
   else if (soft) syncTip();
@@ -1282,9 +1729,10 @@ document.addEventListener('click', async e => {
   if (d.saveOffer) {
     const val = $('#f-value').value.replace(/[\s ]/g, '').replace(',', '.'), mt = $('#f-meeting').value, un = $('#f-until').value;
     if (val && !isFinite(+val)) return toast('Hodnota musí být číslo v korunách.', true);
-    const stage = $('#f-stage').value, note = $('#f-note').value;
-    return call('velinSetOffer', [d.saveOffer, { stage: stage, value: val === '' ? '' : +val, meeting: mt ? new Date(mt).toISOString() : '', until: un ? new Date(un + 'T12:00').toISOString() : '', note: note }], 'Uloženo.',
-      () => editOffer(d.saveOffer, m => { m.stage = stage; m.value = val === '' ? null : Math.round(+val); m.meeting = mt ? new Date(mt).getTime() : 0; m.until = un ? new Date(un + 'T12:00').getTime() : 0; m.note = note; }));
+    const stage = $('#f-stage').value, note = $('#f-note').value, biz = crmBizRead();
+    if (biz.prob !== undefined && biz.prob !== '' && !(biz.prob >= 0 && biz.prob <= 100)) return toast('Pravděpodobnost je 0 až 100 %.', true);
+    return call('velinSetOffer', [d.saveOffer, Object.assign({ stage: stage, value: val === '' ? '' : +val, meeting: mt ? new Date(mt).toISOString() : '', until: un ? new Date(un + 'T12:00').toISOString() : '', note: note }, biz)], 'Uloženo.',
+      () => editOffer(d.saveOffer, m => { m.stage = stage; m.value = val === '' ? null : Math.round(+val); m.meeting = mt ? new Date(mt).getTime() : 0; m.until = un ? new Date(un + 'T12:00').getTime() : 0; m.note = note; crmBizLocal(m, biz); }));
   }
   if (d.extend) {
     const o = D.O[d.extend], b = Math.max(o.manual.until || 0, sod(NOW)), u = b + 14 * 864e5 + 12 * 36e5;
