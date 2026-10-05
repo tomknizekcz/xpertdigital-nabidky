@@ -453,6 +453,23 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 .lead-m{margin:4px 0 0;color:var(--text);white-space:pre-line}
 .lead-row small{display:block;font-size:12px;color:var(--muted);margin-top:3px}
 .leads{border-color:var(--red-100)}
+.dup{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line-2);font-size:13.5px}
+.dup:last-of-type{border-bottom:0}
+.dup b{color:var(--ink)}
+.dup small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.dup .bb{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.dups{border-color:var(--amber)}
+.dups > .lnk{margin-top:8px}
+.facts{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 14px;margin:0;font-size:13.5px}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0;color:var(--ink);overflow-wrap:anywhere}
+.mcard.keep{border-color:var(--green)}
+.mlist{margin-top:14px;padding-top:10px;border-top:1px solid var(--line-2);font-size:13px}
+.mlist > b{display:block;color:var(--ink);margin-bottom:4px}
+.mrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line-2)}
+.mrow:last-child{border-bottom:0}
+.mrow small{display:block;font-size:12px;color:var(--muted)}
+@media (max-width:640px){.dup{grid-template-columns:30px minmax(0,1fr)}.dup .bb{grid-column:1/-1;justify-content:flex-start}}
 </style>
 </head>
 <body>
@@ -801,12 +818,22 @@ function vOffers() {
     (pub.length ? '<div class="panel mt"><div class="ph"><h4>Veřejné stránky</h4><span>jen anonymní měření</span></div>' + table(['Stránka', 'Zobrazení', 'Kontakt', 'Odkud přišli', ''], pub.map(o => ['<b style="color:var(--ink)">' + esc(o.short) + '</b> <span class="mono" style="color:var(--muted)">/' + esc(o.slug) + '/</span>', o.anon.views.length, o.anon.cta.length, esc(Object.keys(o.anon.refs).sort((a, b) => o.anon.refs[b] - o.anon.refs[a]).slice(0, 3).map(k => k + ' ' + o.anon.refs[k]).join(', ') || '—'), '<button class="btn" type="button" data-offer="' + esc(o.slug) + '" aria-label="Detail">' + icon('arrow') + '</button>']), [1, 2]) + '</div>' : '');
 }
 /* ============ CRM: firmy, kontakty, aktivity, úkoly, obchodní plán (crm.gs) ============ */
-Object.assign(V, { msLogin: null, msEdit: false, msf: {}, firm: '', ftab: 'prehled', fq: '', fmine: false, pmine: false, ff: null, cedit: '', cdel: '', pendingFirm: '', fsave: null });
+Object.assign(V, { msLogin: null, msEdit: false, msf: {}, firm: '', ftab: 'prehled', fq: '', fmine: false, pmine: false, ff: null, cedit: '', cdel: '', pendingFirm: '', fsave: null,
+  mk: '', ma: '', mb: '', mback: null, dupAll: false });
 const CRM_PROB = { ready: 5, sent: 10, opened: 20, engaged: 30, filled: 50, meeting: 60, won: 100, lost: 0, paused: 0 };
 const KIND = { note: ['Poznámka', 'pencil'], call: ['Hovor', 'phone'], meeting: ['Schůzka', 'cal'], email: ['E-mail', 'mail'], lead: ['Poptávka z webu', 'bell'] };
 const REASONS = ['Cena', 'Konkurence', 'Načasování', 'Rozpočet', 'Bez rozhodnutí', 'Řeší to sami', 'Řešení na míru', 'Rychlost', 'Reference', 'Vztah', 'Jiný důvod'];
 const OPEN_ST = ['ready', 'sent', 'opened', 'engaged', 'filled', 'meeting'];
 const crmNorm = s => String(s || '').toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
+// porovnání pro možné duplicity jako na serveru (crm.gs): název firmy bez právní formy, jméno bez titulů a pořadí,
+// telefon podle posledních 9 číslic; domény, které nepatří jedné firmě
+const firmKey = s => crmNorm(s).replace(/[,.&]/g, ' ').replace(/\s+/g, ' ').replace(/\b(s ?r ?o|spol|a ?s|k ?s|v ?o ?s|z ?s|o ?p ?s|z ?u|se|gmbh|ag|ltd|inc|sro|as)\b/g, ' ').replace(/\s+/g, ' ').trim();
+const personKey = n => crmNorm(n).replace(/[,.()]/g, ' ').split(/\s+/).filter(w => w && !/^(ing|mgr|bc|mudr|judr|phdr|rndr|doc|prof|phd|mba|csc|dis|dr)$/.test(w)).sort().join(' ');
+const phoneKey = p => { const x = String(p || '').replace(/\D/g, ''); return x.length >= 9 ? x.slice(-9) : ''; };
+const CRM_GENERIC = ['gmail.com', 'googlemail.com', 'seznam.cz', 'email.cz', 'post.cz', 'centrum.cz', 'atlas.cz', 'volny.cz', 'tiscali.cz', 'quick.cz',
+  'outlook.com', 'outlook.cz', 'hotmail.com', 'live.com', 'msn.com', 'yahoo.com', 'icloud.com', 'me.com', 'proton.me', 'protonmail.com', 'xpertdigital.com'];
+const CON_SRC = { odkaz: 'z osobního odkazu', gmail: 'z Gmailu', m365: 'z Microsoft 365', poptavka: 'z poptávky na webu', velin: 'zapsaný ručně' };
+const crmContact = id => D.crm.contacts.filter(c => c.id === id)[0] || null;
 
 // indexy pro obrazovky: firma s nabídkami, kontakty, aktivitami a úkoly (data ze serveru v D.crm zůstávají čistá)
 function crmPrep(Dd) {
@@ -818,7 +845,8 @@ function crmPrep(Dd) {
   C.acts.forEach(a => { if (F[a.firm]) F[a.firm].acts.push(a); });
   C.todos.forEach(t => { if (F[t.firm]) F[t.firm].todos.push(t); });
   Dd.list.forEach(o => { crmDerive(o); if (F[o.manual.firm]) F[o.manual.firm].offers.push(o); });
-  return Object.assign(Dd, { crm: C, F: F, P: P });
+  // (možné duplicity se počítají až při kreslení, crmDups, a drží do další změny dat)
+  return Object.assign(Dd, { crm: C, F: F, P: P, dups: null });
 }
 function crmDerive(o) {
   o.manual.prob = o.manual.prob === undefined ? null : o.manual.prob;
@@ -861,7 +889,9 @@ function vFirms() {
   const q = crmNorm(V.fq).trim();
   let list = Object.keys(D.F).map(k => D.F[k]).filter(f => !f.archived);
   const total = list.length;
-  if (q) list = list.filter(f => crmNorm([f.name, f.domain, f.ico].concat(f.contacts.map(c => c.name + ' ' + c.email)).join(' ')).indexOf(q) >= 0);
+  // hledá i v názvech a doménách sloučených firem a v e-mailech sloučených kontaktů
+  if (q) list = list.filter(f => crmNorm([f.name, f.domain, f.ico].concat((f.merged || []).map(m => m.name + ' ' + m.domain),
+    f.contacts.map(c => c.name + ' ' + c.email + ' ' + (c.merged || []).map(m => m.name + ' ' + m.email).join(' '))).join(' ')).indexOf(q) >= 0);
   if (V.fmine) list = list.filter(f => isMine(f.owner));
   const rows = list.map(f => [f, firmStats(f)]).sort((a, b) => (b[1].last - a[1].last) || a[0].name.localeCompare(b[0].name, 'cs'));
   const right = '<div class="hrow"><input class="search" id="fq" type="search" placeholder="Hledat firmu, člověka, e-mail" aria-label="Hledat" value="' + esc(V.fq) + '" autocomplete="off">' +
@@ -884,8 +914,116 @@ function vFirms() {
       '<td>' + (next ? '<span class="nx">' + esc(next.title) + '</span> ' + dueChip(next) : meet ? chip('dark', 'schůzka ' + DOW[new Date(meet).getDay()] + ' ' + dm(meet), 'cal') : '<span style="color:var(--muted)">—</span>') + '</td></tr>';
   }).join('') + '</tbody></table></div>' : '<div class="empty">' + (q || V.fmine ? 'Nic neodpovídá hledání.' : 'Zatím žádná firma. Firmy vznikají samy z nabídek, další založte tlačítkem Nová firma.') + '</div>';
   const arch = Object.keys(D.F).filter(k => D.F[k].archived).length;
-  return vh('Firmy', total + ' ' + plural(total, 'firma', 'firmy', 'firem') + (arch ? ' · ' + arch + ' v archivu' : ''), right) + form +
+  // možné duplicity: prvních 5, zbytek na tlačítko
+  const dd = crmDups(), dl = dd.firms.concat(dd.contacts), shown = V.dupAll ? dl : dl.slice(0, 5);
+  const dups = dl.length ? '<div class="panel mb dups"><div class="ph"><h4>Možné duplicity</h4><span>' + dl.length + ' ' + plural(dl.length, 'dvojice', 'dvojice', 'dvojic') + '</span></div>' + dupRows(shown) +
+    (dl.length > shown.length ? '<button class="lnk" type="button" data-dup-all>Ukázat všechny (' + dl.length + ')' + icon('arrow') + '</button>' : '') +
+    '<p class="fig-note">Sloučená firma nebo kontakt se schová a vše jejich se ukáže u druhého. V tabulce se nic nepřepisuje, sloučení jde kdykoli vrátit.</p></div>' : '';
+  return vh('Firmy', total + ' ' + plural(total, 'firma', 'firmy', 'firem') + (arch ? ' · ' + arch + ' v archivu' : ''), right) + form + dups +
     '<div class="panel">' + tbl + '<p class="fig-note">Firmy a kontakty vznikají samy z nabídek a osobních odkazů. Poslední kontakt = poslední návštěva nabídky, e-mail, schůzka nebo zapsaný hovor.</p></div>';
+}
+
+/* ---------- možné duplicity a slučování ---------- */
+// Počítá prohlížeč z dat Velínu (výsledek drží do další změny dat). Firmy: stejná doména, IČO nebo název bez právní
+// formy, název jedné celý v názvu druhé („VARS“ a „VARS BRNO“), kontakt jedné firmy s e-mailem na doméně druhé.
+// Kontakty ve firmě: stejný e-mail, telefon nebo jméno (bez titulů a pořadí). Počítají se i údaje už sloučených firem
+// a kontaktů. Dvojice označené „Nejde o duplicitu“ (velinNoDup) se neukazují. Archivované firmy se nenabízejí.
+function crmDups() {
+  if (D.dups) return D.dups;
+  const no = {}, seen = {}, out = { firms: [], contacts: [] };
+  (D.crm.nodup || []).forEach(k => { no[k] = 1; });
+  const add = (list, kind, a, b, why) => {
+    const k = (kind === 'firm' ? 'f:' : 'c:') + [a.id, b.id].sort().join('|');
+    if (no[k] || a.id === b.id) return;
+    if (seen[k]) { if (seen[k].why.indexOf(why) < 0) seen[k].why.push(why); return; }
+    list.push(seen[k] = { kind: kind, a: a, b: b, why: [why] });
+  };
+  // skupiny podle klíče: každá dvojice ve skupině je možná duplicita
+  const groups = (items, keys, cb) => {
+    const m = {};
+    items.forEach(x => keys(x).forEach(v => { if (!v) return; const g = m[v] || (m[v] = []); if (g.indexOf(x) < 0) g.push(x); }));
+    Object.keys(m).forEach(v => { const g = m[v]; for (let i = 0; i < g.length; i++) for (let j = i + 1; j < g.length; j++) cb(g[i], g[j], v); });
+  };
+  const F = Object.keys(D.F).map(k => D.F[k]).filter(f => !f.archived), mf = f => [f].concat(f.merged || []);
+  groups(F, f => mf(f).map(x => x.domain), (a, b, v) => add(out.firms, 'firm', a, b, 'stejná doména ' + v));
+  groups(F, f => mf(f).map(x => x.ico), (a, b, v) => add(out.firms, 'firm', a, b, 'stejné IČO ' + v));
+  groups(F, f => mf(f).map(x => firmKey(x.name)), (a, b) => add(out.firms, 'firm', a, b, 'stejný název'));
+  const words = F.map(f => [f, firmKey(f.name).split(' ').filter(Boolean)]);
+  words.forEach(x => {
+    if (!x[1].some(w => w.length >= 3)) return;
+    words.forEach(y => { if (x[0] !== y[0] && x[1].length < y[1].length && x[1].every(w => y[1].indexOf(w) >= 0)) add(out.firms, 'firm', x[0], y[0], 'název ' + x[0].name + ' je v názvu ' + y[0].name); });
+  });
+  const dom = {};
+  F.forEach(f => mf(f).forEach(x => { if (x.domain) dom[x.domain] = f; }));
+  F.forEach(f => f.contacts.forEach(c => [c].concat(c.merged || []).forEach(x => {
+    const d = String(x.email || '').split('@')[1] || '', g = dom[d];
+    if (g && g !== f && CRM_GENERIC.indexOf(d) < 0) add(out.firms, 'firm', f, g, x.name + ' z firmy ' + f.name + ' má e-mail @' + d);
+  })));
+  Object.keys(D.F).forEach(k => {
+    const cs = D.F[k].contacts, mc = c => [c].concat(c.merged || []);
+    groups(cs, c => mc(c).map(x => String(x.email || '').toLowerCase()), (a, b) => add(out.contacts, 'contact', a, b, 'stejný e-mail'));
+    groups(cs, c => mc(c).map(x => phoneKey(x.phone)), (a, b) => add(out.contacts, 'contact', a, b, 'stejný telefon'));
+    groups(cs, c => mc(c).map(x => personKey(x.name)), (a, b) => add(out.contacts, 'contact', a, b, 'stejné jméno'));
+  });
+  return (D.dups = out);
+}
+// řádky možných duplicit (inFirm: v detailu firmy se název firmy u kontaktů neopakuje)
+function dupRows(list, inFirm) {
+  return list.map(x => {
+    const f = x.kind === 'firm', firm = !f && !inFirm ? D.F[x.a.firm] : null, ids = esc(x.kind + '|' + x.a.id + '|' + x.b.id);
+    return '<div class="dup"><span class="av">' + icon(f ? 'building' : 'user') + '</span><div><b>' + esc(x.a.name) + '</b> a <b>' + esc(x.b.name) + '</b>' + (firm ? ' · ' + esc(firm.name) : '') +
+      '<small>' + esc(x.why.join(' · ')) + '</small></div>' +
+      (canEdit() ? '<div class="bb"><button class="btn" type="button" data-merge="' + ids + '">' + icon('link') + 'Porovnat a sloučit</button><button class="lnk dim" type="button" data-nodup="' + ids + '">Nejde o duplicitu</button></div>' : '<span></span>') + '</div>';
+  }).join('');
+}
+// co při sloučení zůstane: firma s více nabídkami, pak s více záznamy a kontakty, pak starší;
+// kontakt s e-mailem, pak s více záznamy, pak starší (v porovnání jde prohodit)
+function mergeKeep(kind, a, b) {
+  const firm = kind === 'firm', A = firm ? D.F[a] : crmContact(a), B = firm ? D.F[b] : crmContact(b);
+  if (!A || !B) return b;
+  const score = firm ? x => [x.offers.length, x.acts.length + x.contacts.length, -(x.created || 0)]
+    : x => { const F = D.F[x.firm]; return [x.email ? 1 : 0, F ? F.acts.filter(y => y.contact === x.id).length : 0, -(x.created || 0)]; };
+  const sa = score(A), sb = score(B);
+  for (let i = 0; i < sa.length; i++) if (sa[i] !== sb[i]) return sa[i] > sb[i] ? a : b;
+  return b;
+}
+// sloučení hned v prohlížeči (server pak pošle čerstvá data); vrátí funkci pro vrácení, když server odmítne
+function crmMergeLocal(kind, a, b) {
+  const was = JSON.stringify(D.crm), moved = [], C = D.crm, by = D.me.owner ? 'vlastník' : D.me.name, now = Date.now();
+  if (kind === 'firm') {
+    const A = C.firms.filter(x => x.id === a)[0], B = C.firms.filter(x => x.id === b)[0];
+    if (A && B) { B.merged = (B.merged || []).concat([{ id: A.id, name: A.name, domain: A.domain, ico: A.ico, at: now, by: by }], A.merged || []); C.firms = C.firms.filter(x => x.id !== a); }
+    [C.contacts, C.acts, C.todos, C.leads || []].forEach(L => L.forEach(x => { if (x.firm === a) x.firm = b; }));
+    D.list.forEach(o => { if (o.manual.firm === a) { o.manual.firm = b; moved.push(o); } });
+  } else {
+    const A = C.contacts.filter(x => x.id === a)[0], B = C.contacts.filter(x => x.id === b)[0];
+    if (A && B) { B.merged = (B.merged || []).concat([{ id: A.id, name: A.name, role: A.role, email: A.email, phone: A.phone, token: A.token, src: A.src, at: now, by: by }], A.merged || []); C.contacts = C.contacts.filter(x => x.id !== a); }
+    [C.acts, C.leads || []].forEach(L => L.forEach(x => { if (x.contact === a) x.contact = b; }));
+  }
+  crmPrep(D);
+  return () => { D.M.crm = JSON.parse(was); moved.forEach(o => { o.manual.firm = a; }); crmPrep(D); };
+}
+// porovnání dvou firem nebo kontaktů před sloučením (V.mk 'firm' nebo 'contact', V.ma se schová, V.mb zůstane)
+function vMerge() {
+  const firm = V.mk === 'firm', A = firm ? D.F[V.ma] : crmContact(V.ma), B = firm ? D.F[V.mb] : crmContact(V.mb);
+  if (!A || !B) { V.view = 'firmy'; return vFirms(); }
+  const facts = rows => '<dl class="facts">' + rows.map(r => '<dt>' + r[0] + '</dt><dd>' + r[1] + '</dd>').join('') + '</dl>';
+  const list = a => a.filter(Boolean).length ? esc(a.filter(Boolean).join(', ')) : '<span class="muted-s">—</span>';
+  const ffacts = x => { const s = firmStats(x), mg = x.merged || []; return facts([
+    ['Doména', list([x.domain].concat(mg.map(m => m.domain)))], ['IČO', list([x.ico])], ['Odpovědný', list([x.owner ? person(x.owner) : ''])],
+    ['Nabídky', list(x.offers.map(o => o.short))], ['Kontakty', list(x.contacts.map(c => c.name))], ['Záznamy', x.acts.length || '—'],
+    ['Otevřené úkoly', s.todo.length || '—'], ['Poslední kontakt', s.last ? ago(s.last) : '—'], ['Sloučené', list(mg.map(m => m.name))]]); };
+  const cfacts = x => { const F = D.F[x.firm], mg = [x].concat(x.merged || []), toks = mg.map(m => m.token).filter(Boolean); return facts([
+    ['Role', list(mg.map(m => m.role))], ['E-mail', list(mg.map(m => m.email))], ['Telefon', list(mg.map(m => m.phone))], ['Odkud', list(mg.map(m => CON_SRC[m.src] || ''))],
+    ['Záznamy', F ? F.acts.filter(a => a.contact === x.id).length || '—' : '—'], ['Čte', list(F ? F.offers.filter(o => o.links.some(l => toks.indexOf(l.token) >= 0)).map(o => o.short) : [])]]); };
+  const card = (x, keep) => '<div class="panel mcard' + (keep ? ' keep' : '') + '"><div class="ph"><h4>' + esc(x.name) + '</h4>' + (keep ? chip('ok', 'zůstane', 'check') : chip('line', 'schová se')) + '</div>' + (firm ? ffacts(x) : cfacts(x)) + '</div>';
+  const what = firm ? 'Firma <b>' + esc(A.name) + '</b> se ve Velínu schová. Její kontakty, nabídky, záznamy a úkoly se ukážou u firmy <b>' + esc(B.name) + '</b>' +
+      ([A.domain].concat((A.merged || []).map(m => m.domain)).filter(Boolean).length ? ' a e-maily a schůzky z její domény se budou přiřazovat sem' : '') + '. Název, doména a odpovědný firmy ' + esc(B.name) + ' zůstanou.'
+    : 'Kontakt <b>' + esc(A.name) + '</b> se schová. Jeho e-maily, schůzky a záznamy se ukážou u kontaktu <b>' + esc(B.name) + '</b>, jeho e-mail a telefon tam zůstanou jako další údaje. Kdo jednoho z nich později smaže na žádost, smaže oba.';
+  return '<button class="back" type="button" data-merge-back>' + icon('back') + 'Zpět</button>' + vh(firm ? 'Sloučit firmy' : 'Sloučit kontakty', firm ? 'stejná firma vedená dvakrát' : esc((D.F[B.firm] || {}).name || ''), '') +
+    '<div class="grid g2 mb">' + card(A, false) + card(B, true) + '</div>' +
+    '<div class="panel"><p style="font-size:14px;margin:0 0 6px">' + what + '</p><p class="fig-note">V tabulce se nic nepřepisuje, přibude jen poznámka, kam se sloučilo. Vrátit to jde kdykoli: ' + (firm ? 'detail firmy → Údaje → Sloučené firmy' : 'detail firmy → Kontakty → úprava kontaktu') + '.</p>' +
+    (canEdit() ? '<div class="btnrow"><button class="btn red" type="button" data-merge-go>' + icon('link') + (firm ? 'Sloučit firmy' : 'Sloučit kontakty') + '</button><button class="btn" type="button" data-merge-swap>' + icon('refresh') + 'Prohodit, ať zůstane ' + esc(A.name) + '</button><button class="btn" type="button" data-merge-back>Zrušit</button></div>' : '') + '</div>';
 }
 
 /* ---------- detail firmy ---------- */
@@ -908,7 +1046,9 @@ function vFirm() {
     kpi('Úkoly', s.todo.length, s.late ? '<span style="color:var(--red-ink)">' + s.late + ' po termínu</span>' : s.todo.length ? 'otevřené' : 'nic nečeká') + '</div>';
   const bar = '<div class="tabs" role="tablist" aria-label="Detail firmy">' + tabs.map(t => '<button type="button" role="tab" data-ftab="' + t[0] + '" aria-selected="' + (V.ftab === t[0]) + '" tabindex="' + (V.ftab === t[0] ? 0 : -1) + '">' + t[1] + (t[2] ? ' <span class="n">' + t[2] + '</span>' : '') + '</button>').join('') + '</div>';
   const body = { prehled: fOverview, osa: fTimeline, kontakty: fContacts, udaje: fDetails }[V.ftab](f, s);
-  return head + tiles + bar + '<div role="tabpanel">' + body + '</div>';
+  const fd = crmDups().firms.filter(x => x.a.id === f.id || x.b.id === f.id);
+  const dup = fd.length ? '<div class="panel mb dups"><div class="ph"><h4>Možná duplicita</h4><span>stejná firma vedená dvakrát?</span></div>' + dupRows(fd) + '</div>' : '';
+  return head + dup + tiles + bar + '<div role="tabpanel">' + body + '</div>';
 }
 function fOverview(f, s) {
   const offers = f.offers.slice().sort((a, b) => OPEN_ST.indexOf(b.stage[0]) - OPEN_ST.indexOf(a.stage[0]));
@@ -957,21 +1097,35 @@ function fTimeline(f) {
 }
 function fContacts(f) {
   const lastOf = c => Math.max.apply(null, [0].concat(f.acts.filter(a => a.contact === c.id && a.at <= NOW).map(a => a.at)));
-  const reads = c => c.token ? f.offers.filter(o => o.links.some(l => l.token === c.token)).map(o => o.short) : [];
-  const SRC = { odkaz: 'z osobního odkazu', gmail: 'z Gmailu', m365: 'z Microsoft 365', poptavka: 'z poptávky na webu', velin: 'zapsaný ručně' };
+  // kontakt se sloučenými: všechny e-maily, telefony a osobní odkazy
+  const all = (c, k) => [c[k]].concat((c.merged || []).map(m => m[k])).filter((x, i, a) => x && a.indexOf(x) === i);
+  const reads = c => { const t = all(c, 'token'); return t.length ? f.offers.filter(o => o.links.some(l => t.indexOf(l.token) >= 0)).map(o => o.short) : []; };
+  const SRC = CON_SRC;
+  const mg = c => (c.merged || []).length ? '<div class="mlist"><b>Sloučené kontakty</b>' + c.merged.map(m => '<div class="mrow"><span>' + esc(m.name) + (m.email ? ' · ' + esc(m.email) : '') +
+    '<small>' + esc(['sloučeno ' + (m.at ? when(m.at) : ''), m.by ? whoName(m.by) : ''].filter(Boolean).join(' · ')) + '</small></span>' +
+    '<button class="btn sm" type="button" data-unmerge="contact|' + esc(m.id) + '">Vrátit</button></div>').join('') + '</div>' : '';
+  const others = c => f.contacts.filter(x => x.id !== c.id);
+  const mpick = c => c.id && others(c).length ? '<div class="tadd"><label class="fld" for="mg-c">Stejný člověk jako<select id="mg-c"><option value="">— vyberte kontakt —</option>' +
+    others(c).map(x => '<option value="' + esc(x.id) + '">' + esc(x.name + (x.email ? ' · ' + x.email : '')) + '</option>').join('') + '</select></label>' +
+    '<button class="btn" type="button" data-merge-pick="contact|' + esc(c.id) + '|mg-c" style="height:38px">' + icon('link') + 'Porovnat a sloučit</button></div>' : '';
   const form = c => '<tr class="edit"><td colspan="5"><div class="form f4">' +
     '<label class="fld" for="cn-n">Jméno<input id="cn-n" autocomplete="off" value="' + esc(c.name || '') + '"></label>' +
     '<label class="fld" for="cn-r">Role<input id="cn-r" autocomplete="off" placeholder="např. finanční ředitelka" value="' + esc(c.role || '') + '"></label>' +
     '<label class="fld" for="cn-e">E-mail<input id="cn-e" type="email" autocomplete="off" value="' + esc(c.email || '') + '"></label>' +
     '<label class="fld" for="cn-p">Telefon<input id="cn-p" type="tel" autocomplete="off" value="' + esc(c.phone || '') + '"></label></div>' +
-    '<div class="btnrow"><button class="btn red" type="button" data-con-save="' + esc(f.id) + '">' + icon('check') + 'Uložit</button><button class="btn" type="button" data-con-cancel>Zrušit</button></div></td></tr>';
+    '<div class="btnrow"><button class="btn red" type="button" data-con-save="' + esc(f.id) + '">' + icon('check') + 'Uložit</button><button class="btn" type="button" data-con-cancel>Zrušit</button></div>' +
+    (canEdit() ? mg(c) + mpick(c) : '') + '</td></tr>';
   const rows = f.contacts.map(c => V.cedit === c.id ? form(c) : V.cdel === c.id ?
-    '<tr><td colspan="5"><div class="callout"><span>' + icon('trash') + '</span><div><b id="cd-h" tabindex="-1">Smazat ' + esc(c.name) + '?</b> Smaže jméno, e-mail, telefon a jeho e-maily a schůzky ve Velínu. Jeho e-mail se pak už nesynchronizuje. Nedá se vrátit.' +
+    '<tr><td colspan="5"><div class="callout"><span>' + icon('trash') + '</span><div><b id="cd-h" tabindex="-1">Smazat ' + esc(c.name) + '?</b> Smaže jméno, e-mail, telefon a jeho e-maily a schůzky ve Velínu' + ((c.merged || []).length ? ', i u sloučených kontaktů (' + esc(c.merged.map(m => m.name).join(', ')) + ')' : '') + '. Jeho e-mail se pak už nesynchronizuje. Nedá se vrátit.' +
     '<div class="btnrow"><button class="btn red" type="button" data-con-delgo="' + esc(c.id) + '">' + icon('trash') + 'Smazat údaje</button><button class="btn" type="button" data-con-cancel>Ponechat</button></div></div></div></td></tr>' :
-    '<tr><td class="cl"><b>' + esc(c.name) + '</b><span>' + esc(c.role || SRC[c.src] || '') + '</span></td><td>' + (c.email ? '<a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a>' : '—') + '</td><td class="nw">' + (c.phone ? '<a href="tel:' + esc(c.phone.replace(/\s/g, '')) + '">' + esc(c.phone) + '</a>' : '—') + '</td>' +
+    '<tr><td class="cl"><b>' + esc(c.name) + '</b><span>' + esc([c.role || all(c, 'role')[0] || SRC[c.src] || '', (c.merged || []).length ? 'sloučeno z ' + c.merged.length : ''].filter(Boolean).join(' · ')) + '</span></td>' +
+    '<td>' + (all(c, 'email').length ? all(c, 'email').map(e => '<a href="mailto:' + esc(e) + '">' + esc(e) + '</a>').join('<br>') : '—') + '</td>' +
+    '<td class="nw">' + (all(c, 'phone').length ? all(c, 'phone').map(p => '<a href="tel:' + esc(p.replace(/\s/g, '')) + '">' + esc(p) + '</a>').join('<br>') : '—') + '</td>' +
     '<td class="nw">' + (lastOf(c) ? ago(lastOf(c)) : '—') + (reads(c).length ? '<br><small class="muted-s">čte ' + esc(reads(c).join(', ')) + '</small>' : '') + '</td>' +
     '<td class="r nw">' + (canEdit() ? '<button class="btn" type="button" data-con-edit="' + esc(c.id) + '" aria-label="Upravit ' + esc(c.name) + '">' + icon('pencil') + '</button>' : '') + (isOwner() ? ' <button class="btn" type="button" data-con-del="' + esc(c.id) + '" aria-label="Smazat ' + esc(c.name) + '">' + icon('trash') + '</button>' : '') + '</td></tr>').join('');
-  return '<div class="panel"><div class="ph"><h4>Kontakty</h4>' + (canEdit() && V.cedit !== 'new' ? '<button class="btn red" type="button" data-con-new>' + icon('plus') + 'Nový kontakt</button>' : '') + '</div>' +
+  const cd = crmDups().contacts.filter(x => x.a.firm === f.id);
+  return (cd.length ? '<div class="panel mb dups"><div class="ph"><h4>Možné duplicity</h4><span>stejný člověk vedený dvakrát?</span></div>' + dupRows(cd, true) + '</div>' : '') +
+    '<div class="panel"><div class="ph"><h4>Kontakty</h4>' + (canEdit() && V.cedit !== 'new' ? '<button class="btn red" type="button" data-con-new>' + icon('plus') + 'Nový kontakt</button>' : '') + '</div>' +
     '<div class="tw"><table class="t ct"><thead><tr><th>Jméno</th><th>E-mail</th><th>Telefon</th><th>Poslední kontakt</th><th></th></tr></thead><tbody>' + (V.cedit === 'new' ? form({}) : '') + rows + '</tbody></table></div>' +
     (!f.contacts.length && V.cedit !== 'new' ? '<p class="muted-p">Zatím žádný kontakt. Kontakty vznikají z osobních odkazů a z e-mailů, kterým jste psali na doménu firmy.</p>' : '') +
     '<p class="fig-note">Smazání na žádost má jen vlastník Velínu. Čtenáře nabídky smažete v detailu nabídky → Čtenáři, kontakt z jeho odkazu se smaže s ním.</p></div>';
@@ -987,7 +1141,20 @@ function fDetails(f) {
     '<label class="fld txt" for="fd-t">Poznámka<textarea id="fd-t"' + dis + ' rows="4" placeholder="Co je dobré o firmě vědět">' + esc(f.note) + '</textarea></label></div>' +
     (ro ? '' : '<div class="btnrow"><button class="btn red" type="button" data-firm-save="' + esc(f.id) + '">' + icon('check') + 'Uložit</button>' +
     '<button class="btn" type="button" data-firm-arch="' + esc(f.id) + '" data-on="' + (f.archived ? '0' : '1') + '">' + (f.archived ? 'Vrátit z archivu' : 'Archivovat') + '</button></div>') +
-    '<p class="fig-note">Doména: e-maily a schůzky s adresami @doména se přiřadí k firmě. Domény jako gmail.com nebo seznam.cz firmě nepatří, takové adresy patří ke kontaktům. Archivovaná firma zmizí ze seznamu, data zůstanou.</p></div>';
+    '<p class="fig-note">Doména: e-maily a schůzky s adresami @doména se přiřadí k firmě. Domény jako gmail.com nebo seznam.cz firmě nepatří, takové adresy patří ke kontaktům. Archivovaná firma zmizí ze seznamu, data zůstanou.</p></div>' +
+    fMerged(f, ro);
+}
+// Údaje firmy: co je do ní sloučené (s vrácením) a sloučení s jinou firmou, když je to stejná firma pod jiným názvem
+function fMerged(f, ro) {
+  const mg = f.merged || [], others = Object.keys(D.F).map(k => D.F[k]).filter(x => x.id !== f.id && !x.archived).sort((a, b) => a.name.localeCompare(b.name, 'cs'));
+  const done = mg.length ? '<div class="panel"><div class="ph"><h4>Sloučené firmy</h4><span>ukazují se tady</span></div><ul class="links">' + mg.map(m => '<li><div><b>' + esc(m.name) + '</b><small>' +
+    esc([m.domain, m.ico ? 'IČO ' + m.ico : '', 'sloučeno ' + (m.at ? when(m.at) : ''), m.by ? whoName(m.by) : ''].filter(Boolean).join(' · ')) + '</small></div>' +
+    (ro ? '<span></span>' : '<button class="btn" type="button" data-unmerge="firm|' + esc(m.id) + '">Vrátit</button>') + '</li>').join('') + '</ul>' +
+    '<p class="fig-note">Vrácená firma se zase ukáže se svými kontakty, nabídkami, záznamy a úkoly. Doména sloučené firmy dál přiřazuje e-maily, Velín je ukazuje tady.</p></div>' : '';
+  const pick = !ro && others.length ? '<div class="panel"><div class="ph"><h4>Sloučit s jinou firmou</h4><span>stejná firma vedená dvakrát</span></div><div class="tadd" style="border-top:0;margin-top:0;padding-top:0">' +
+    '<label class="fld" for="mg-f">Stejná firma jako<select id="mg-f"><option value="">— vyberte firmu —</option>' + others.map(x => '<option value="' + esc(x.id) + '">' + esc(x.name) + '</option>').join('') + '</select></label>' +
+    '<button class="btn" type="button" data-merge-pick="firm|' + esc(f.id) + '|mg-f" style="height:38px">' + icon('link') + 'Porovnat a sloučit</button></div></div>' : '';
+  return done || pick ? '<div class="stack" style="margin-top:14px">' + done + pick + '</div>' : '';
 }
 
 /* ---------- úkoly ---------- */
@@ -1178,7 +1345,8 @@ function msPollLoop(gen) {
 
 /* ---------- ovládání ---------- */
 document.addEventListener('click', async e => {
-  const t = e.target.closest('[data-ms-save],[data-ms-edit],[data-ms-editoff],[data-ms-start],[data-ms-cancel],[data-ms-off],[data-firm],[data-ftab],[data-fmine],[data-pmine],[data-firm-new],[data-firm-cancel],[data-firm-create],[data-firm-save],[data-firm-arch],[data-con-new],[data-con-edit],[data-con-cancel],[data-con-save],[data-con-del],[data-con-delgo],[data-act-save],[data-act-del],[data-todo-add],[data-todo-done],[data-todo-del],[data-sync],[data-sync-now],[data-owner-name]');
+  const t = e.target.closest('[data-ms-save],[data-ms-edit],[data-ms-editoff],[data-ms-start],[data-ms-cancel],[data-ms-off],[data-firm],[data-ftab],[data-fmine],[data-pmine],[data-firm-new],[data-firm-cancel],[data-firm-create],[data-firm-save],[data-firm-arch],[data-con-new],[data-con-edit],[data-con-cancel],[data-con-save],[data-con-del],[data-con-delgo],[data-act-save],[data-act-del],[data-todo-add],[data-todo-done],[data-todo-del],[data-sync],[data-sync-now],[data-owner-name],' +
+    '[data-merge],[data-merge-pick],[data-merge-swap],[data-merge-back],[data-merge-go],[data-unmerge],[data-nodup],[data-dup-all]');
   if (!t || !D) return;
   const d = t.dataset;
   const focus = id => setTimeout(() => { const el = $('#' + id); if (el) { el.scrollIntoView({ block: 'center' }); el.focus({ preventScroll: true }); } }, 30);
@@ -1209,6 +1377,33 @@ document.addEventListener('click', async e => {
     const S = D.settings.ms = D.settings.ms || {}, was = Object.assign({}, S); S.connected = false;
     return () => { D.settings.ms = was; };
   });
+  // slučování duplicit: porovnání (vMerge), sloučení, vrácení, „Nejde o duplicitu“
+  const toMerge = (kind, a, b) => { const keep = mergeKeep(kind, a, b); go('slouceni', { mk: kind, ma: keep === a ? b : a, mb: keep, mback: { view: V.view, firm: V.firm, ftab: V.ftab } }); };
+  if (d.merge) { const p = d.merge.split('|'); return toMerge(p[0], p[1], p[2]); }
+  if (d.mergePick) {
+    const p = d.mergePick.split('|'), sel = $('#' + p[2]);
+    if (!sel || !sel.value) { toast(p[0] === 'firm' ? 'Vyberte firmu, se kterou sloučit.' : 'Vyberte kontakt, se kterým sloučit.', true); return sel && sel.focus(); }
+    V.cedit = ''; return toMerge(p[0], p[1], sel.value);
+  }
+  if (d.mergeSwap != null) { const x = V.ma; V.ma = V.mb; V.mb = x; return render(false, true); }
+  if (d.mergeBack != null) { const b = V.mback || {}; return go(b.view && b.view !== 'slouceni' ? b.view : 'firmy', { firm: b.firm || V.firm, ftab: b.ftab || 'prehled' }); }
+  if (d.mergeGo != null) {
+    const kind = V.mk, a = V.ma, b = V.mb, B = kind === 'firm' ? D.F[b] : crmContact(b);
+    if (!B) return;
+    go('firma', { firm: kind === 'firm' ? b : B.firm, ftab: kind === 'firm' ? 'prehled' : 'kontakty', cedit: '', cdel: '' });
+    return call('velinMerge', [kind, a, b], kind === 'firm' ? 'Firmy sloučeny. Vrátit jde v Údajích firmy.' : 'Kontakty sloučeny. Vrátit jde v úpravě kontaktu.', () => crmMergeLocal(kind, a, b));
+  }
+  // (úprava kontaktu se zavře, ať se vrácený kontakt hned ukáže v seznamu)
+  if (d.unmerge) {
+    const p = d.unmerge.split('|');
+    if (V.cedit) { V.cedit = ''; if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); render(false, true); }
+    return call('velinUnmerge', [p[0], p[1]], p[0] === 'firm' ? 'Sloučení vráceno, firma je zpět.' : 'Sloučení vráceno, kontakt je zpět.');
+  }
+  if (d.nodup) {
+    const p = d.nodup.split('|'), k = (p[0] === 'firm' ? 'f:' : 'c:') + [p[1], p[2]].sort().join('|');
+    return call('velinNoDup', [p[0], p[1], p[2]], 'Dvojici už Velín nenabídne.', () => { D.crm.nodup = (D.crm.nodup || []).concat([k]); D.dups = null; return () => { D.crm.nodup = D.crm.nodup.filter(x => x !== k); D.dups = null; }; });
+  }
+  if (d.dupAll != null) { V.dupAll = true; return render(false, true); }
   if (d.firm) return go('firma', { firm: d.firm, ftab: 'prehled', cedit: '', cdel: '' });
   if (d.ftab) { V.ftab = d.ftab; V.cedit = ''; V.cdel = ''; render(false, true); if (d.focus) focus(d.focus); else { const b = $('[role="tab"][aria-selected="true"]', main); if (b) b.focus({ preventScroll: true }); } return; }
   if (d.fmine != null) { V.fmine = d.fmine === '1'; return render(false, true); }
@@ -1635,7 +1830,7 @@ function vError() { return '<div class="center"><div class="card"><h2>' + (/pozv
 
 /* ============ vykreslení a ovládání ============ */
 function renderRail() {
-  const cur = V.view === 'detail' ? 'nabidky' : V.view === 'firma' ? 'firmy' : V.view;
+  const cur = V.view === 'detail' ? 'nabidky' : V.view === 'firma' || V.view === 'slouceni' ? 'firmy' : V.view;
   const open = D ? D.actions.filter(a => !a.done).length : 0;
   patch($('#rnav'), [['prehled', 'grid', 'Přehled', open, true], ['firmy', 'building', 'Firmy', D && D.F ? Object.keys(D.F).filter(k => !D.F[k].archived).length : 0], ['nabidky', 'file', 'Nabídky', D ? D.list.filter(o => o.meta.personal !== false).length : 0], ['obchod', 'columns', 'Obchod'], ['analytika', 'chart', 'Analytika'], ['nastaveni', 'gear', 'Nastavení']].map(i => '<button type="button" data-nav="' + i[0] + '"' + (cur === i[0] ? ' aria-current="page"' : '') + '>' + icon(i[1]) + '<span>' + i[2] + '</span>' + (i[3] ? '<span class="cnt' + (i[4] ? ' hot' : '') + '"' + (i[4] ? ' title="kroky Na tah"' : '') + '>' + i[3] + '</span>' : '') + '</button>').join(''));
   patch($('#rshort'), D && D.list.length ? '<div class="rail-h">Podle zájmu</div>' + D.list.filter(o => o.meta.personal !== false).slice().sort((a, b) => (b.live - a.live) || ((b.band ? b.score.total : -1) - (a.band ? a.score.total : -1))).slice(0, 12).map(o => '<button type="button" data-offer="' + esc(o.slug) + '"' + (V.view === 'detail' && V.slug === o.slug ? ' aria-current="page"' : '') + '><i class="dot ' + (o.live ? 'live' : o.stage[0] === 'won' ? 'ok' : o.band && o.score.total >= 45 ? 'act' : '') + '"></i><span>' + esc(o.short) + '</span><em>' + (o.live ? 'teď' : o.band ? (o.band[0] === 'none' ? '–' : o.score.total) : o.stage[1]) + '</em></button>').join('') : '');
@@ -1652,9 +1847,9 @@ function render(focus, soft) {
   const moved = screen !== SCREEN; SCREEN = screen;
   if (!soft) hideTip();
   const html = V.signin ? vSignIn() : V.err && !D ? vError() : V.setup ? vSetup() : !D ? '<div class="center"><p>Načítám data z tabulky…</p></div>'
-    : ({ prehled: vOverview, firmy: vFirms, firma: vFirm, nabidky: vOffers, obchod: vPipeline, detail: vDetail, analytika: vAnalytics, nastaveni: vSettings }[V.view] || vOverview)();
+    : ({ prehled: vOverview, firmy: vFirms, firma: vFirm, slouceni: vMerge, nabidky: vOffers, obchod: vPipeline, detail: vDetail, analytika: vAnalytics, nastaveni: vSettings }[V.view] || vOverview)();
   if (soft) patch(main, html); else main.innerHTML = html;
-  if (soft && moved) { 152('details[open]', main).forEach(d => { d.open = false; }); hideTip(); }
+  if (soft && moved) { $$('details[open]', main).forEach(d => { d.open = false; }); hideTip(); }
   else if (soft) syncTip();
   renderRail();
   if (V.signin) gisButton();
