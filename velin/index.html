@@ -1108,7 +1108,11 @@ function msPanel(st) {
     '<div class="msc"><b class="mono" id="ms-code">' + esc(L.code) + '</b><button class="btn" type="button" data-copytext="' + esc(L.code) + '">' + icon('copy') + 'Kopírovat kód</button></div>' +
     '<p class="fig-note"><i class="sync on" aria-hidden="true"></i> Čekám na přihlášení, kód platí do ' + hm(L.expires) + '. Po přihlášení Microsoft ukáže, co Velín smí číst (hlavičky pošty a kalendáře), a požádá o souhlas.</p>' +
     '<div class="btnrow"><button class="btn" type="button" data-ms-cancel>Zrušit</button></div></div></div>';
-  if (M.connected) return head + '<div class="rule"><div><b>Připojeno</b><p>' + esc(M.me || 'firemní účet') + '. E-maily a schůzky s doménami firem se zapisují k firmám.</p></div><button class="btn" type="button" data-ms-off>Odpojit</button></div>' + what + '</div>';
+  // soukromý účet Microsoft jako host (#ext#) v osobním adresáři: firemní schránku nemá, synchronizace by jen hlásila chybu
+  const ext = /#ext#/i.test(M.me || ''), plain = ext ? String(M.me).replace(/#ext#.*$/i, '').replace(/_([^_]+)$/, '@$1') : '';
+  if (M.connected) return head + (ext ? '<div class="callout"><span>' + icon('shield') + '</span><div><b>Připojený je soukromý účet ' + esc(plain) + ', ne firemní.</b> ' +
+    'Aplikace je zaregistrovaná v osobním adresáři Microsoftu, kde firemní pošta není. Klikněte na Odpojit, aplikaci zaregistrujte znovu v Microsoft Entra přihlášení firemním účtem (…@xpertdigital.com) a vložte její nová ID.</div></div>' : '') +
+    '<div class="rule"><div><b>Připojeno</b><p>' + esc(ext ? plain + ' (soukromý účet)' : M.me || 'firemní účet') + (ext ? '.' : '. E-maily a schůzky s doménami firem se zapisují k firmám.') + '</p></div><button class="btn' + (ext ? ' red' : '') + '" type="button" data-ms-off>Odpojit</button></div>' + what + '</div>';
   if (M.clientId && !V.msEdit) return head + (M.lost ? '<div class="callout"><span>' + icon('shield') + '</span><div><b>Přihlášení vypršelo ' + when(M.lost) + '.</b> Připojte Microsoft 365 znovu, zapsané e-maily zůstaly.</div></div>' : '') +
     '<div class="rule"><div><b>Aplikace je nastavená</b><p>ID ' + esc(M.clientId.slice(0, 8)) + '…' + (M.tenant ? ', adresář ' + esc(M.tenant.slice(0, 8)) + '…' : '') + '. Připojte firemní účet, ze kterého píšete klientům.</p></div>' +
     '<button class="btn red" type="button" data-ms-start' + (V.busy ? ' disabled' : '') + '>' + icon('link') + 'Připojit Microsoft 365</button></div>' +
