@@ -814,7 +814,7 @@ function offersTable(list, compact) {
 }
 function vOffers() {
   const pers = D.list.filter(o => o.meta.personal !== false), pub = D.list.filter(o => o.meta.personal === false);
-  const exp = '<div class="btnrow" style="margin:0"><button class="btn" type="button" data-export="nabidky">' + icon('table') + 'Nabídky do CSV</button><button class="btn" type="button" data-export="kontakty">' + icon('user') + 'Kontakty do CSV</button></div>';
+  const exp = '<div class="btnrow" style="margin:0"><button class="btn" type="button" data-export="nabidky">' + icon('table') + 'Nabídky do CSV</button><button class="btn" type="button" data-export="kontakty">' + icon('link') + 'Osobní odkazy do CSV</button></div>';
   return vh('Nabídky', pers.length + ' ' + plural(pers.length, 'osobní nabídka', 'osobní nabídky', 'osobních nabídek'), exp) + offersTable(pers, false) +
     (pub.length ? '<div class="panel mt"><div class="ph"><h4>Veřejné stránky</h4><span>jen anonymní měření</span></div>' + table(['Stránka', 'Zobrazení', 'Kontakt', 'Odkud přišli', ''], pub.map(o => ['<b style="color:var(--ink)">' + esc(o.short) + '</b> <span class="mono" style="color:var(--muted)">/' + esc(o.slug) + '/</span>', o.anon.views.length, o.anon.cta.length, esc(Object.keys(o.anon.refs).sort((a, b) => o.anon.refs[b] - o.anon.refs[a]).slice(0, 3).map(k => k + ' ' + o.anon.refs[k]).join(', ') || '—'), '<button class="btn" type="button" data-offer="' + esc(o.slug) + '" aria-label="Detail">' + icon('arrow') + '</button>']), [1, 2]) + '</div>' : '');
 }
@@ -920,8 +920,48 @@ function vFirms() {
   const dups = dl.length ? '<div class="panel mb dups"><div class="ph"><h4>Možné duplicity</h4><span>' + dl.length + ' ' + plural(dl.length, 'dvojice', 'dvojice', 'dvojic') + '</span></div>' + dupRows(shown) +
     (dl.length > shown.length ? '<button class="lnk" type="button" data-dup-all>Ukázat všechny (' + dl.length + ')' + icon('arrow') + '</button>' : '') +
     '<p class="fig-note">Sloučená firma nebo kontakt se schová a vše jejich se ukáže u druhého. V tabulce se nic nepřepisuje, sloučení jde kdykoli vrátit.</p></div>' : '';
+  const exp = '<div class="panel mt"><div class="ph"><h4>Export do CSV</h4><span>pro Excel v češtině</span></div><div class="btnrow" style="margin:0">' +
+    [['firmy', 'building', 'Firmy'], ['lide', 'user', 'Kontakty firem'], ['ukoly', 'check', 'Úkoly'], ['zaznamy', 'clock', 'Záznamy']].map(x => '<button class="btn" type="button" data-export="' + x[0] + '">' + icon(x[1]) + x[2] + '</button>').join('') +
+    '</div><p class="fig-note">Firmy i archivované, kontakty i s e-maily a telefony sloučených kontaktů, úkoly otevřené a hotové za posledních 30 dní, záznamy za rok (hovory, poznámky, e-maily, schůzky a poptávky). Soubory obsahují jména a kontakty, nikam je nezveřejňujte.</p></div>';
   return vh('Firmy', total + ' ' + plural(total, 'firma', 'firmy', 'firem') + (arch ? ' · ' + arch + ' v archivu' : ''), right) + form + dups +
-    '<div class="panel">' + tbl + '<p class="fig-note">Firmy a kontakty vznikají samy z nabídek a osobních odkazů. Poslední kontakt = poslední návštěva nabídky, e-mail, schůzka nebo zapsaný hovor.</p></div>';
+    '<div class="panel">' + tbl + '<p class="fig-note">Firmy a kontakty vznikají samy z nabídek a osobních odkazů. Poslední kontakt = poslední návštěva nabídky, e-mail, schůzka nebo zapsaný hovor.</p></div>' + exp;
+}
+
+/* ---------- export CRM do CSV (Firmy → Export do CSV; soubor složí a stáhne exportCsv) ---------- */
+const csvMoney = v => v ? Math.round(v) : '';
+const byFirmName = () => Object.keys(D.F).map(k => D.F[k]).sort((a, b) => a.name.localeCompare(b.name, 'cs'));
+function csvFirms() {
+  return [['Firma', 'Doména', 'Další domény', 'Web', 'IČO', 'Odpovědný', 'Kontakty', 'Nabídky', 'Otevřené nabídky', 'Otevřená hodnota (Kč)', 'Vážená hodnota (Kč)', 'Nejvyšší zájem',
+    'Poslední kontakt', 'Příští schůzka', 'Otevřené úkoly', 'Další úkol', 'Termín dalšího úkolu', 'Sloučené firmy', 'V archivu od', 'Založeno', 'Poznámka']].concat(byFirmName().map(f => {
+    const s = firmStats(f), mg = f.merged || [], next = s.todo[0];
+    return [f.name, f.domain, mg.map(m => m.domain).filter(Boolean).join(', '), f.web, f.ico, f.owner ? person(f.owner) || 'bývalý kolega' : '', f.contacts.length,
+      f.offers.map(o => o.short).join(', '), s.open.length, csvMoney(s.value), csvMoney(s.weighted), s.best ? s.best.score.total + ' (' + s.best.band[1] + ')' : '',
+      csvDate(s.last), csvDate(s.meet), s.todo.length, next ? next.title : '', next ? csvDay(next.due) : '', mg.map(m => m.name).join(', '), csvDay(f.archived), csvDay(f.created), f.note];
+  }));
+}
+function csvPeople() {
+  const rows = [];
+  byFirmName().forEach(f => f.contacts.forEach(c => {
+    const mg = c.merged || [], all = k => [c[k]].concat(mg.map(m => m[k])).filter((x, i, a) => x && a.indexOf(x) === i);
+    const acts = f.acts.filter(a => a.contact === c.id), last = Math.max.apply(null, [0].concat(acts.filter(a => a.at <= NOW).map(a => a.at)));
+    const toks = all('token'), mails = all('email'), phones = all('phone');
+    rows.push([f.name, c.name, c.role || all('role')[0] || '', mails[0] || '', mails.slice(1).join(', '), phones[0] || '', phones.slice(1).join(', '), CON_SRC[c.src] || '',
+      csvDate(last), acts.length || '', f.offers.filter(o => o.links.some(l => toks.indexOf(l.token) >= 0)).map(o => o.short).join(', '), mg.map(m => m.name).join(', '), csvDay(c.created), c.note]);
+  }));
+  return [['Firma', 'Jméno', 'Role', 'E-mail', 'Další e-maily', 'Telefon', 'Další telefony', 'Odkud', 'Poslední kontakt', 'Záznamy', 'Čte nabídky', 'Sloučené kontakty', 'Založeno', 'Poznámka']].concat(rows);
+}
+function csvTodos() {
+  const st = t => t.done ? 'hotovo' : t.due && dayDiff(NOW, t.due) < 0 ? 'po termínu' : 'otevřený';
+  const L = D.crm.todos.slice().sort((a, b) => (!!a.done - !!b.done) || ((a.due || 9e15) - (b.due || 9e15)));
+  return [['Úkol', 'Firma', 'Nabídka', 'Termín', 'Odpovědný', 'Stav', 'Hotovo', 'Kdo zadal', 'Zadáno']].concat(L.map(t => [t.title, D.F[t.firm] ? D.F[t.firm].name : '',
+    t.slug && D.O[t.slug] ? D.O[t.slug].short : '', csvDay(t.due), t.owner ? person(t.owner) || 'bývalý kolega' : '', st(t), csvDate(t.done), whoName(t.by), csvDate(t.created)]));
+}
+function csvActs() {
+  const SRC = { velin: 'zapsáno ve Velínu', gmail: 'Gmail', kalendar: 'Google Kalendář', m365: 'Microsoft 365', m365kal: 'Outlook', web: 'poptávka z webu' };
+  const DIR = { in: 'od klienta', out: 'od nás', future: 'naplánováno' }, con = {};
+  D.crm.contacts.forEach(c => { con[c.id] = c.name; });
+  return [['Kdy', 'Firma', 'Druh', 'Kontakt', 'Nabídka', 'Text nebo předmět', 'Kdo', 'Zdroj', 'Směr']].concat(D.crm.acts.slice().sort((a, b) => b.at - a.at).map(a => [csvDate(a.at),
+    D.F[a.firm] ? D.F[a.firm].name : '', (KIND[a.kind] || KIND.note)[0], con[a.contact] || '', a.slug && D.O[a.slug] ? D.O[a.slug].short : '', a.text, whoName(a.who), SRC[a.src] || a.src, DIR[a.dir] || '']));
 }
 
 /* ---------- možné duplicity a slučování ---------- */
@@ -1998,10 +2038,14 @@ function csvContacts() {
     'Poprvé', 'Naposledy', 'Odeslání formulářů', 'Naposledy odesláno']].concat(rows);
 }
 function csvText(table) { return '﻿' + table.map(r => r.map(csvCell).join(';')).join('\r\n') + '\r\n'; }
+// druh → [tabulka, název souboru, co říct, když je prázdná]; firmy, kontakty firem, úkoly a záznamy skládá velin-d.js
+const CSV_KINDS = { nabidky: [() => csvOffers(), 'nabidky', 'Zatím žádná nabídka.'], kontakty: [() => csvContacts(), 'odkazy', 'Zatím žádné osobní odkazy.'],
+  firmy: [() => csvFirms(), 'firmy', 'Zatím žádná firma.'], lide: [() => csvPeople(), 'kontakty-firem', 'Zatím žádný kontakt.'],
+  ukoly: [() => csvTodos(), 'ukoly', 'Zatím žádný úkol.'], zaznamy: [() => csvActs(), 'zaznamy', 'Zatím žádný záznam.'] };
 function exportCsv(kind) {
-  const table = kind === 'kontakty' ? csvContacts() : csvOffers();
-  if (table.length < 2) return toast(kind === 'kontakty' ? 'Zatím žádné osobní odkazy.' : 'Zatím žádná nabídka.', true);
-  const name = 'velin-' + (kind === 'kontakty' ? 'kontakty' : 'nabidky') + '-' + isoDate(NOW) + '.csv';
+  const K = CSV_KINDS[kind] || CSV_KINDS.nabidky, table = K[0]();
+  if (table.length < 2) return toast(K[2], true);
+  const name = 'velin-' + K[1] + '-' + isoDate(NOW) + '.csv';
   try {
     const url = URL.createObjectURL(new Blob([csvText(table)], { type: 'text/csv;charset=utf-8' }));
     const a = document.createElement('a');
