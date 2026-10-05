@@ -736,7 +736,8 @@ function fdots(o) {
   const n = FORMS.filter(f => st[f[0]] === 'sent').length;
   return '<span class="fd" tabindex="0" data-tip="' + esc(n + ' z 5 odesláno\n' + lines.join('\n')) + '">' + FORMS.map(f => '<i class="' + (st[f[0]] || 'none') + '"></i>').join('') + '<span class="sr">' + n + ' z 5 odesláno</span></span>';
 }
-const RULE_IC = { meeting: 'cal', price: 'flame', sent: 'send', first: 'user', newreader: 'user', device: 'mob', draft: 'pencil', unopened: 'mail', silent: 'clock', no: 'x', expiry: 'cal' };
+const RULE_IC = { meeting: 'cal', price: 'flame', sent: 'send', first: 'user', newreader: 'user', device: 'mob', draft: 'pencil', unopened: 'mail', silent: 'clock', no: 'x', expiry: 'cal',
+  nostep: 'target', nocontact: 'phone', stale: 'clock' };
 function actionCard(a) {
   const o = D.O[a.slug];
   return '<article class="act' + (a.done ? ' done' : '') + '"><span class="pri ' + a.pri + '">' + icon(RULE_IC[a.rule] || 'target') + '</span>' +
@@ -1802,7 +1803,13 @@ function teamPanel(st) {
   const rows = list.length ? '<ul class="links mt">' + list.map(x => '<li><span><b>' + esc(x.name) + '</b> ' + chip(x.role === 'edit' ? 'warm' : 'line', x.role === 'edit' ? 'může upravovat' : 'jen čtení') +
     '<small>' + (x.email ? esc(x.email) + ' · ' : '') + 'přístup od ' + dm(x.created) + ' · ' + (x.last ? 'naposledy ' + when(x.last) : 'zatím neotevřeno') + '</small></span>' +
     '<span style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">' + acts(x) + '</span></li>').join('') + '</ul>' : '<p class="fig-note">Zatím nemá přístup nikdo další.</p>';
-  return '<div class="panel"><div class="ph"><h4>Přístup kolegů</h4><span>vlastní odkaz pro každého</span></div>' + form + fresh + rows +
+  // ranní připomínka úkolů kolegům s e-mailem (spouštěč kolem 7:45, jen když na ně něco čeká)
+  const R = st.remind || {}, rl = R.last;
+  const remind = list.length ? '<div class="rule mt"><div><b id="rm-l">Ranní připomínka úkolů</b><p>Kolegové s e-mailem dostanou kolem 7:45 seznam svých úkolů na dnes a po termínu. Kdo nic nemá, nic nedostane.' +
+      (rl ? ' Naposledy ' + when(rl.at) + ': ' + (rl.sent ? esc((rl.people || []).join(', ')) : 'nikdo neměl úkol') + '.' : '') + '</p></div>' +
+      '<button class="sw" type="button" role="switch" aria-checked="' + !!R.on + '" aria-labelledby="rm-l" data-remind="' + (R.on ? '0' : '1') + '"></button></div>' +
+    (R.on ? '<div class="rule"><div><b>Poslat připomínky teď</b><p>E-mail hned, jen kolegům, na které dnes něco čeká.</p></div><button class="btn" type="button" data-remind-now>' + icon('send') + 'Poslat teď</button></div>' : '') : '';
+  return '<div class="panel"><div class="ph"><h4>Přístup kolegů</h4><span>vlastní odkaz pro každého</span></div>' + form + fresh + rows + remind +
     (gone.length ? '<p class="fig-note">Odebraný přístup: ' + gone.map(x => esc(x.name) + ' (' + dm(x.revoked) + ')').join(', ') + '.</p>' : '') +
     '<p class="fig-note">Kolega otevře Velín svým odkazem v libovolném prohlížeči, na počítači i v mobilu, účet Google nepotřebuje. Odkaz je klíč: kdo ho má, dostane se dovnitř. Posílejte ho proto jen dotyčnému a když se ztratí nebo ho uvidí někdo další, dejte Nový odkaz. Jen čtení: vidí všechno, nic nemění. Může upravovat: fáze, hodnoty, schůzky, platnost, poznámky, osobní odkazy a kroky Na tah. Ranní přehled, přístupy a mazání údajů čtenářů zůstávají vám, každou změnu najdete v záznamu změn.</p>' +
     (st.teamUrl ? '<p class="fig-note">Odkazy vedou na <span style="overflow-wrap:anywhere">' + esc(st.teamUrl.replace('https://', '')) + '</span>. Na zařízení, kde nejste přihlášeni k Googlu, si můžete stejně vytvořit přístup i pro sebe.</p>'
@@ -2019,7 +2026,7 @@ function copy(btn) {
   try { navigator.clipboard.writeText(text).then(ok, legacy); } catch (e) { legacy(); }
 }
 document.addEventListener('click', async e => {
-  const t = e.target.closest('[data-nav],[data-offer],[data-tab],[data-range],[data-tv],[data-copytext],[data-mklink],[data-reload],[data-setup],[data-task],[data-save-offer],[data-extend],[data-end],[data-revoke],[data-digest],[data-digest-test],[data-export],[data-forget],[data-forget-go],[data-forget-cancel],[data-team-add],[data-team-role],[data-team-ask],[data-team-keep],[data-team-off],[data-team-rot],[data-team-rotgo],[data-signout]');
+  const t = e.target.closest('[data-nav],[data-offer],[data-tab],[data-range],[data-tv],[data-copytext],[data-mklink],[data-reload],[data-setup],[data-task],[data-save-offer],[data-extend],[data-end],[data-revoke],[data-digest],[data-digest-test],[data-export],[data-forget],[data-forget-go],[data-forget-cancel],[data-team-add],[data-team-role],[data-team-ask],[data-team-keep],[data-team-off],[data-team-rot],[data-team-rotgo],[data-signout],[data-remind],[data-remind-now]');
   if (!t) return;
   const d = t.dataset;
   if (d.copytext != null) return copy(t);
@@ -2059,6 +2066,16 @@ document.addEventListener('click', async e => {
     return () => { D.settings.digest = was; };
   });
   if (d.digestTest != null) { toast('Posílám…'); const r = await call('velinDigestTest', [], null); if (r && r.ok) toast('Odesláno: ' + (r.subject || 'ranní přehled')); return; }
+  if (d.remind) return call('velinRemind', [d.remind === '1'], d.remind === '1' ? 'Připomínky zapnuty, kolegům přijdou kolem 7:45.' : 'Připomínky vypnuty.', () => {
+    const R = D.settings.remind = D.settings.remind || {}, was = R.on; R.on = d.remind === '1';
+    return () => { R.on = was; };
+  });
+  if (d.remindNow != null) {
+    toast('Posílám…');
+    const r = await call('velinRemindNow', [], null);
+    if (r && r.ok) toast(r.sent ? 'Připomínka odešla: ' + r.people.join(', ') + '.' : 'Dnes na nikoho nic nečeká, nic neodešlo.');
+    return;
+  }
   if (d.export) return exportCsv(d.export);
   if (d.forget) { V.forget = { slug: d.forgetSlug, key: d.forget }; render(false); const h = $('#fg-h'); if (h) { h.scrollIntoView({ block: 'center' }); h.focus({ preventScroll: true }); } return; }
   if (d.forgetCancel != null) { V.forget = null; return render(false); }
