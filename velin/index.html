@@ -444,6 +444,15 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 .msc b{font-size:26px;letter-spacing:.12em;color:var(--ink);background:var(--sunk);border-radius:10px;padding:6px 14px}
 .steps-ol{margin:0;padding:4px 14px 12px 32px;display:grid;gap:7px;font-size:13.5px}
 .steps-ol b{color:var(--ink)}
+.lead-row{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line-2);font-size:13.5px;align-items:start}
+.lead-row:last-of-type{border-bottom:0}
+.lead-row b{color:var(--ink)}
+.lead-row .av.hot{background:var(--red-50);color:var(--red-ink)}
+.lead-c{margin-top:3px;font-size:13px}
+.lead-c a{color:var(--text)}
+.lead-m{margin:4px 0 0;color:var(--text);white-space:pre-line}
+.lead-row small{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+.leads{border-color:var(--red-100)}
 </style>
 </head>
 <body>
@@ -756,7 +765,7 @@ function vOverview() {
   const seg = '<div class="seg" role="group" aria-label="Období">' + [[7, '7 dní'], [30, '30 dní']].map(x => '<button type="button" data-range="' + x[0] + '" aria-pressed="' + (R === x[0]) + '">' + x[1] + '</button>').join('') + '</div>';
   const byScore = D.list.filter(o => o.meta.personal !== false).slice().sort((a, b) => (b.live - a.live) || ((b.band ? b.score.total : -1) - (a.band ? a.score.total : -1)) || (b.last - a.last));
   return vh('Přehled', new Date(NOW).toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' }) + ' · ' + hm(NOW), seg) + kp +
-    '<div class="grid g2"><div class="stack">' + myTodos() + acts + offersTable(byScore.slice(0, 8), true) + '</div><div class="stack">' + liveHTML + feedHTML + '</div></div>';
+    '<div class="grid g2"><div class="stack">' + leadsPanel() + myTodos() + acts + offersTable(byScore.slice(0, 8), true) + '</div><div class="stack">' + liveHTML + feedHTML + '</div></div>';
 }
 function feedItems(slug) {
   const it = [];
@@ -794,7 +803,7 @@ function vOffers() {
 /* ============ CRM: firmy, kontakty, aktivity, úkoly, obchodní plán (crm.gs) ============ */
 Object.assign(V, { msLogin: null, msEdit: false, msf: {}, firm: '', ftab: 'prehled', fq: '', fmine: false, pmine: false, ff: null, cedit: '', cdel: '', pendingFirm: '', fsave: null });
 const CRM_PROB = { ready: 5, sent: 10, opened: 20, engaged: 30, filled: 50, meeting: 60, won: 100, lost: 0, paused: 0 };
-const KIND = { note: ['Poznámka', 'pencil'], call: ['Hovor', 'phone'], meeting: ['Schůzka', 'cal'], email: ['E-mail', 'mail'] };
+const KIND = { note: ['Poznámka', 'pencil'], call: ['Hovor', 'phone'], meeting: ['Schůzka', 'cal'], email: ['E-mail', 'mail'], lead: ['Poptávka z webu', 'bell'] };
 const REASONS = ['Cena', 'Konkurence', 'Načasování', 'Rozpočet', 'Bez rozhodnutí', 'Řeší to sami', 'Řešení na míru', 'Rychlost', 'Reference', 'Vztah', 'Jiný důvod'];
 const OPEN_ST = ['ready', 'sent', 'opened', 'engaged', 'filled', 'meeting'];
 const crmNorm = s => String(s || '').toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
@@ -949,7 +958,7 @@ function fTimeline(f) {
 function fContacts(f) {
   const lastOf = c => Math.max.apply(null, [0].concat(f.acts.filter(a => a.contact === c.id && a.at <= NOW).map(a => a.at)));
   const reads = c => c.token ? f.offers.filter(o => o.links.some(l => l.token === c.token)).map(o => o.short) : [];
-  const SRC = { odkaz: 'z osobního odkazu', gmail: 'z Gmailu', velin: 'zapsaný ručně' };
+  const SRC = { odkaz: 'z osobního odkazu', gmail: 'z Gmailu', m365: 'z Microsoft 365', poptavka: 'z poptávky na webu', velin: 'zapsaný ručně' };
   const form = c => '<tr class="edit"><td colspan="5"><div class="form f4">' +
     '<label class="fld" for="cn-n">Jméno<input id="cn-n" autocomplete="off" value="' + esc(c.name || '') + '"></label>' +
     '<label class="fld" for="cn-r">Role<input id="cn-r" autocomplete="off" placeholder="např. finanční ředitelka" value="' + esc(c.role || '') + '"></label>' +
@@ -1002,6 +1011,23 @@ function todoRow(t, ctx) {
     (ro ? '<span></span>' : '<button class="x" type="button" data-todo-del="' + esc(t.id) + '" aria-label="Smazat úkol ' + esc(t.title) + '">' + icon('x') + '</button>') + '</div>';
 }
 // Přehled: moje úkoly (vlastník: jeho a nepřidělené; kolega: jeho)
+// Přehled: poptávky z webu za 30 dní; „čeká“, dokud u firmy visí nehotový úkol Ozvat se na poptávku
+function leadsPanel() {
+  const L = (D.crm.leads || []).filter(l => l.at >= NOW - 30 * 864e5 && l.name !== 'Smazaný kontakt');
+  if (!L.length) return '';
+  const waiting = l => D.crm.todos.some(t => t.firm === l.firm && /^Ozvat se na poptávku/.test(t.title) && !t.done);
+  const open = L.filter(waiting).length;
+  return '<div class="panel leads"><div class="ph"><h4>Poptávky z webu</h4><span>' + (open ? open + ' ' + plural(open, 'čeká', 'čekají', 'čeká') + ' na odpověď' : 'vše vyřízeno') + '</span></div>' +
+    L.slice(0, 6).map(l => {
+      const w = waiting(l), f = D.F[l.firm];
+      return '<div class="lead-row"><span class="av' + (w ? ' hot' : '') + '">' + icon('bell') + '</span><div><b>' + esc(l.company || l.name) + '</b>' + (l.company ? ' · ' + esc(l.name) : '') +
+        ' ' + (w ? chip('hot', 'čeká na odpověď') : chip('ok', 'vyřízeno', 'check')) +
+        '<div class="lead-c"><a href="mailto:' + esc(l.email) + '">' + esc(l.email) + '</a>' + (l.phone ? ' · <a href="tel:' + esc(l.phone.replace(/\s/g, '')) + '">' + esc(l.phone) + '</a>' : '') + '</div>' +
+        (l.msg ? '<p class="lead-m">' + esc(l.msg.length > 220 ? l.msg.slice(0, 220) + '…' : l.msg) + '</p>' : '') +
+        '<small>' + when(l.at) + (l.ref ? ' · přišel z ' + esc(l.ref) : '') + (D.O[l.slug] ? ' · ' + esc(D.O[l.slug].short) : '') + '</small></div>' +
+        (f ? '<button class="btn" type="button" data-firm="' + esc(l.firm) + '" aria-label="Firma ' + esc(f.name) + '">' + icon('arrow') + '</button>' : '<span></span>') + '</div>';
+    }).join('') + '<p class="fig-note">Poptávky přicházejí z formuláře ve veřejné ukázce. Velín z nich sám založí firmu, kontakt a úkol Ozvat se; když úkol odškrtnete, poptávka je vyřízená.</p></div>';
+}
 function myTodos() {
   const mine = D.crm.todos.filter(t => isMine(t.owner));
   if (!mine.length && !canEdit()) return '';

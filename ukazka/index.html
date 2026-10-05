@@ -43,6 +43,8 @@ a{color:inherit}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .display{font-stretch:72%;font-weight:800;text-transform:uppercase;letter-spacing:-.005em;line-height:.9;color:var(--ink)}
+/* nadpisy a velká úzká čísla: vlastní písmo z design.displayFont, jinak stejné jako text */
+.display,.pain-val,.fact b,.story-val,.res-val,.target-v,.area-row .lift,.dcol-num,.pills span,.prod-num,.wk-n,.wk-i b,.lane-num,.lane-impact b,.lane-title,.kpi-v,.score-row b,.q-no,.q-compact .q-sum b,.wcalc-out b,.pr-slider b,.pr-tiles b{font-family:var(--font-display,var(--font))}
 
 /* ---------- Top bar ---------- */
 .topbar{position:fixed;z-index:40;top:calc(12px + var(--sat));left:12px;right:12px;height:60px;display:flex;align-items:center;gap:20px;padding:0 10px 0 20px;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:18px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
@@ -88,6 +90,7 @@ body.linear #world{position:static;transform:none!important;width:auto;max-width
 .row>.conn{align-self:stretch}
 .row-2{display:block;margin-top:220px}
 body.linear .row{flex-direction:column}
+body.linear .row>.sec{align-self:stretch;min-width:0}   /* široký obsah (tabulka v sekci) nesmí roztáhnout stránku */
 body.linear .row-2{margin-top:40px}
 .sec{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-xl);padding:64px 68px 60px;box-shadow:var(--shadow);scroll-margin-top:90px}
 body:not(.linear) .sec-a{width:1700px}
@@ -114,6 +117,14 @@ body.linear .lead{font-size:18px}
 /* ---------- A · hero ---------- */
 .hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px;align-items:start}
 body:not(.linear) .hero-grid{grid-template-columns:980px 1fr;gap:60px}
+/* další části úvodu (hero.after) */
+.a-part{margin-top:64px;padding-top:44px;border-top:1px solid var(--line)}
+.a-part .kicker{margin-bottom:10px}
+.a-blocks{margin-top:26px;display:grid;gap:20px}
+.a-blocks.cols{grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));align-items:start}
+.g-months .g-hours span,.g-months .g-hours span:last-child{transform:none;padding-left:4px}
+@media (max-width:820px){.g-months .g-hours span:nth-child(even){display:none}}
+@media (max-width:420px){.g-months .g-hours span{display:none}.g-months .g-hours span:nth-child(3n+1){display:inline}}
 .hero-title{font-size:156px;margin:0}
 .hero-title span{display:block}
 .hero-title .accent{color:var(--red)}
@@ -148,6 +159,13 @@ body.linear .hero-lead{font-size:18px}
 .story-val{font-stretch:72%;font-weight:800;font-size:64px;line-height:1;color:var(--accent-dark,var(--red))}
 .story p{font-size:18px;line-height:1.45;margin:10px 0 16px;color:#fff}
 .story-tag{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--on-dark-muted);border-top:1px solid var(--dark-line);padding-top:12px}
+/* příběh s portrétem (story.photo): fotka vlevo, text vpravo */
+.story-ph{display:flex;gap:18px;align-items:flex-start}
+.story-ph img{width:104px;height:130px;object-fit:cover;border-radius:14px;flex:none;border:1px solid var(--dark-line)}
+.story-ph>div{min-width:0}
+@media (max-width:420px){.story-ph{gap:12px}.story-ph img{width:76px;height:95px;border-radius:10px}}
+/* do 500 px je sloupec vedle fotky na velký nadpis úzký (např. „designed by“ přetékal): fotka nad textem */
+@media (max-width:500px){.story-ph{flex-direction:column;gap:12px}}
 .feed{background:var(--dark-3);color:#fff;border-radius:24px;padding:20px 22px 12px}
 .feed-head{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark-muted)}
 .live-dot{width:9px;height:9px;border-radius:50%;background:var(--accent-dark,var(--red));box-shadow:0 0 0 0 rgba(250,43,43,.6);animation:pulse 2s infinite}
@@ -626,6 +644,27 @@ body.linear .guide-card{display:none}
 .ct-note{font-size:13px;color:var(--muted);line-height:1.45;flex:1;min-width:200px}
 .ct-addr{font-size:13px;color:var(--muted);margin-top:16px}
 @media (max-width:480px){.ct-row{grid-template-columns:minmax(0,1fr) auto}.ct-k{grid-column:1/-1}.ct-in{padding:24px 18px}.ct-title{font-size:25px}}
+/* poptávka z veřejné stránky (formulář v kontaktním okně) */
+.lead{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:grid;gap:12px}
+.lead-h b{display:block;font-size:17px;color:var(--ink)}
+.lead-h span{font-size:14px;color:var(--muted)}
+.lead-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lead-g label{font-size:12px;font-weight:700;color:var(--muted);display:grid;gap:5px}
+.lead-g input,.lead-g textarea{font:inherit;font-size:15px;font-weight:500;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;width:100%;box-sizing:border-box}
+.lead-g textarea{resize:vertical;min-height:76px}
+.lead-g input:focus,.lead-g textarea:focus{outline:2px solid var(--red);outline-offset:0;border-color:transparent}
+.lead-full{grid-column:1/-1}
+.lead-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.lead-ok{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--text);cursor:pointer}
+.lead-ok input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--red);flex:none}
+.lead-act{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.lead-msg{font-size:13px;color:var(--muted)}
+.lead-msg.bad{color:var(--red-ink);font-weight:700}
+.lead-done{background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;gap:4px}
+.lead-done b{color:var(--ink);font-size:16px}
+.lead-done span{font-size:14px;color:var(--text)}
+.lead-again{justify-self:start;border:0;background:none;color:var(--red-ink);font-weight:700;padding:0;font-size:13px;cursor:pointer}
+@media (max-width:480px){.lead-g{grid-template-columns:1fr}}
 .err{max-width:640px;margin:120px auto;background:#fff;border-radius:22px;padding:32px;border:1px solid var(--line);font-size:16px;line-height:1.5}
 
 /* ---------- Vstupy klienta, výběr boosterů, cena ---------- */
@@ -804,6 +843,7 @@ body.gone-on .topbar,body.gone-on .fab,body.gone-on #viewport,body.gone-on .zoom
 .sh-url{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px 10px 10px 14px;background:var(--panel-2);margin:0 0 14px}
 .sh-url span{font-size:15px;font-weight:700;color:var(--ink);overflow-wrap:anywhere;user-select:all;-webkit-user-select:all}
 .sh-url .ct-copy{padding:10px 12px}
+body.d-square .gone-card,body.d-square .sh-f input,body.d-square .sh-url{border-radius:4px}
 @media (max-width:480px){.sh-2{grid-template-columns:1fr}.save-ui .btn{white-space:normal}}   /* dlouhé „Uložit … a poslat XpertDigital“ nesmí na 375 px rozšířit stránku */
 @media print{.gone,.who-line{display:none!important}}
 .lock{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:20px;background:#ECECEC}
@@ -827,12 +867,12 @@ body.gone-on .topbar,body.gone-on .fab,body.gone-on #viewport,body.gone-on .zoom
 .art-t{font-size:11px;font-weight:700;fill:#6B6B6B;font-family:var(--font)}
 /* ---------- Design klienta: rovné nadpisy (d-plain), hranaté rohy (d-square) ---------- */
 body.d-plain *{font-stretch:100%!important}
-body.d-plain .display{text-transform:none;font-weight:700;letter-spacing:-.015em;line-height:1.04}
+body.d-plain .display{text-transform:none;font-weight:var(--head-weight,700);letter-spacing:-.015em;line-height:1.04}
 body.d-plain .hero-title{font-size:88px}
 body.d-plain .h2{font-size:54px}
 body.d-plain:not(.linear) .weeks-head .h2{font-size:64px}
 body.d-plain .lane-num{font-size:104px}
-body.d-plain .lane-title{text-transform:none;font-size:30px;line-height:1.12}
+body.d-plain .lane-title{text-transform:none;font-size:30px;line-height:1.12;font-weight:var(--head-weight,800)}
 body.d-plain .story-val{font-size:40px;line-height:1.08}
 body.d-plain .res-val{font-size:62px}
 body.d-plain .pain-val{font-size:36px}
@@ -855,11 +895,40 @@ body.d-square .callout{border-radius:0}
   .tb-client{padding-left:12px;gap:6px}
   .tb-client img{height:22px;max-width:110px}
   .brand svg{height:24px}
+  .brand img{height:28px;max-width:130px}
   .topbar .btn-red{padding:10px 12px;font-size:13.5px}
 }
 .cta-short{display:none}
 @media (max-width:560px){.topbar .cta-long{display:none}.topbar .cta-short{display:inline}.tb-client span{display:none}}
+/* logo dodavatele a klienta vedle sebe se na úzký telefon nevejdou v plné šířce */
+@media (max-width:420px){.brand img{max-width:96px}.tb-client img{max-width:96px}}
 @media (max-width:380px){.tb-client{display:none}}
+/* ---------- Doménový režim: ukazatele domény, přehled domény, výsledek v kusech ---------- */
+.lane-kpis{display:grid;gap:6px;margin-top:18px}
+.lane-kpis div{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 14px;border-top:1px solid var(--dark-line);padding-top:7px;font-size:13.5px;line-height:1.4;color:var(--on-dark-muted)}
+.lane-kpis b{margin-left:auto;color:#fff;font-weight:800;font-variant-numeric:tabular-nums}
+.claim{margin:26px 0 0;max-width:820px;border-left:4px solid var(--red);background:var(--panel-2);padding:16px 20px 14px}
+.claim-l{display:block;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red-ink)}
+.claim p{margin:6px 0 0;font-size:20px;line-height:1.4;font-weight:700;color:var(--ink)}
+.claim-s{display:block;margin-top:6px;font-size:15px;line-height:1.45;color:var(--muted)}
+body.linear .claim p{font-size:18px}
+/* pruhový graf v úzké kartě a na telefonu: popisek a hodnota nahoře, pruh pod nimi */
+body.linear .c .bar-row,.lane-ov .bar-row{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}
+body.linear .c .bar-l,.lane-ov .bar-l{grid-column:1;grid-row:1}
+body.linear .c .bar-v,.lane-ov .bar-v{grid-column:2;grid-row:1}
+body.linear .c .bar-track,.lane-ov .bar-track{grid-column:1/-1;grid-row:2}
+@media (max-width:560px){
+  .bar-row{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}
+  .bar-l{grid-column:1;grid-row:1}
+  .bar-v{grid-column:2;grid-row:1}
+  .bar-track{grid-column:1/-1;grid-row:2}
+}
+.card.lane-ov{cursor:default}
+.card.lane-ov:hover{box-shadow:none}
+.lane-ov-b{margin-top:14px}
+.res-units{margin-top:8px;font-size:15px;line-height:1.5;color:var(--on-dark-muted)}
+.res-units[hidden]{display:none}
+.res-units b{color:#fff}
 /* ---------- Telefon: opravy rozložení (úzké obrazovky) ---------- */
 .area-head>div{min-width:0}
 .area-t{overflow-wrap:anywhere}
@@ -937,6 +1006,8 @@ body.d-square .callout{border-radius:0}
   body.linear .lane{padding:18px 12px}
   .lane-mod{flex-wrap:wrap;gap:8px 12px}
   .lane-mod>span{flex:1 1 100%}
+  .mod-row{flex-wrap:wrap;gap:8px 12px}
+  .mod-row>div{flex:1 1 100%;min-width:0}
   .c .tbl th:nth-child(2):not(:last-child),.c .tbl td:nth-child(2):not(:last-child){display:none}
   .fact{padding:10px 11px}
   .fact span{hyphens:auto;overflow-wrap:anywhere}
@@ -1048,7 +1119,7 @@ body.d-square .callout{border-radius:0}
   </div>
 </div>
 
-<script>window.XD_INPUTS = {"endpoint":"https://script.google.com/macros/s/AKfycby8F6FapZOSQ_6zbJIFMoWzX06q4kLJnk3DHAxojDa6_jO-k3cZ7z3ZW76rxc_js3Z1/exec","key":"81b1f859ea22b963b315dec7c0a05641","v":"2026-09-30 09:14 · 5df1db"};</script>
+<script>window.XD_INPUTS = {"endpoint":"https://script.google.com/macros/s/AKfycby8F6FapZOSQ_6zbJIFMoWzX06q4kLJnk3DHAxojDa6_jO-k3cZ7z3ZW76rxc_js3Z1/exec","key":"81b1f859ea22b963b315dec7c0a05641","v":"2026-10-05 21:09 · 5df1db"};</script>
 <script>
 /* =====================================================================
    Modelový klient: OCELIS Distribuce s.r.o. (FIKTIVNÍ FIRMA)
@@ -2222,7 +2293,7 @@ function boot(data) {
   $('#ctaText').textContent = C.vendor.cta.text;
   $('#ctaBtnTxt').textContent = C.vendor.cta.button;
   $('#ctaBtnShort').textContent = C.vendor.cta.buttonShort || C.vendor.cta.button;
-  if (C.meta.logo) { $('#tbClientLogo').src = C.meta.logo; $('#tbClientLogo').alt = C.meta.client; $('#tbClient').hidden = false; }
+  if (C.meta.logo) { $('#tbClientLogo').src = C.meta.logoBar || C.meta.logo; $('#tbClientLogo').alt = C.meta.client; $('#tbClient').hidden = false; }
   const badge = (preview && personal()) ? 'Náhled ' + vendorName() + ' · nic se neposílá' : C.meta.badge || (C.meta.model ? 'Modelová data · fiktivní firma' : '');
   $('#modelbadge').textContent = badge; $('#modelbadge').hidden = !badge;
 
@@ -2276,6 +2347,8 @@ function applyDesign() {
   const root = document.documentElement;
   if (D.vars) Object.keys(D.vars).forEach(k => root.style.setProperty('--' + k, D.vars[k]));
   if (D.font) root.style.setProperty('--font', D.font);
+  if (D.headWeight) root.style.setProperty('--head-weight', D.headWeight);   // tučnost nadpisů v režimu plain (např. 500 u ČEZ)
+  if (D.displayFont) root.style.setProperty('--font-display', D.displayFont);   // jiné písmo nadpisů a velkých čísel než textu (TEDOM: Archivo + Public Sans)
   if (D.fontCss && !document.querySelector('link[data-design-font]')) {
     document.head.appendChild(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: D.fontCss })).dataset.designFont = '1';
     // po načtení písma znovu zaměřit mapu (jen když uživatel ještě nehýbal)
@@ -2289,7 +2362,7 @@ const vendorName = () => (C && C.vendor && C.vendor.name) || 'XpertDigital';
 const cssVar = (n, d) => (getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim() || d);
 
 // výchozí pohled: #a–#d nebo #w1–#w7 v adrese, jinak úvod
-function startKey() { const h = location.hash.slice(1); return /^(a|b|c|d|w[1-9])$/.test(h) ? h : 'a'; }
+function startKey() { const h = location.hash.slice(1); return /^(a|b|c|d|w\d+)$/.test(h) ? h : 'a'; }
 
 /* ============ Harmonogram: délky fází a volitelné moduly ============ */
 // fáze = pruh s kartami; len = počet týdnů; optional = modul, který si klient může přidat (posune další fáze)
@@ -2301,9 +2374,12 @@ const byMonth = () => !!(C && C.schedule && C.schedule.unit === 'month');
 const unitN = n => byMonth() ? plural(n, 'měsíc', 'měsíce', 'měsíců') : plural(n, 'týden', 'týdny', 'týdnů');
 const rangeLabel = (a, b) => byMonth() ? (a === b ? 'Měsíc ' + a : 'Měsíce ' + a + '–' + b) : (a === b ? 'Týden ' + a : 'Týdny ' + a + '–' + b);
 const monthsOf = w => Math.round(w / 4.33 * 2) / 2;
+// doménový režim (C.schedule.mode = 'domains'): pruhy jsou domény, čas nesou vlny v C.schedule.phases, karta má c.wave
+const domainMode = () => !!(C && C.schedule && C.schedule.mode === 'domains');
+const phases = () => domainMode() ? (C.schedule.phases || []) : C.weeks;
 function computeSchedule() {
   let start = 1; sched = {};
-  C.weeks.forEach(w => {
+  phases().forEach(w => {
     const len = w.len || 1, on = !w.optional || !!modState[w.n];
     sched[w.n] = on ? { on, len, from: start, to: start + len - 1 } : { on, len };
     if (on) start += len;
@@ -2316,6 +2392,18 @@ function wkLabel(n, f = 'long') {
   const r = s.from === s.to ? String(s.from) : s.from + '–' + s.to;
   return f === 'big' ? r : rangeLabel(s.from, s.to);
 }
+// popisky pruhu a karty; v doménovém režimu se nepřepisují harmonogramem (bez data-wk)
+const wkAttr = (n, f) => domainMode() ? '' : ' data-wk="' + n + '"' + (f ? ' data-wkf="' + f + '"' : '');
+const laneNum = w => domainMode() ? String(w.num ?? w.n) : wkLabel(w.n, 'big');
+const laneWhen = w => domainMode() ? (w.kick || '') : wkLabel(w.n);
+function waveLabel(v) {
+  const ws = [].concat(v ?? []).map(Number).filter(isFinite); if (!ws.length) return '';
+  const p = phases().find(x => x.n === ws[0]);
+  const tw = (C.terms && C.terms.wave) || ['Vlna', 'Vlny'];   // název vlny lze v datech změnit, např. ['Fáze', 'Fáze']
+  return ws.length === 1 ? tw[0] + ' ' + ws[0] + (p && p.when ? ' · ' + p.when : '') : tw[1] + ' ' + ws[0] + '–' + ws[ws.length - 1];
+}
+const cardWhen = (c, w) => domainMode() ? (c.when || waveLabel(c.wave ?? w.wave)) : wkLabel(w.n);
+const agentOf = (c, w) => C.agents[c.agent || w.agent];
 function durLabel(w) {
   if (byMonth()) return w + ' ' + unitN(w);
   const m = monthsOf(w);
@@ -2340,13 +2428,13 @@ function applySchedule() {
     const len = ns.reduce((a, n) => a + (sched[n]?.len || 0), 0);
     el.textContent = on.length ? rangeLabel(Math.min(...on.map(x => x.from)), Math.max(...on.map(x => x.to))) : 'Volitelně · +' + len + ' ' + unitN(len);
   });
-  $$('.lane').forEach(l => l.classList.toggle('off', !sched[+l.dataset.n]?.on));
+  if (!domainMode()) $$('.lane').forEach(l => l.classList.toggle('off', !sched[+l.dataset.n]?.on));
   $$('[data-mod]').forEach(sw => { const on = !!modState[+sw.dataset.mod]; sw.setAttribute('aria-checked', String(on)); const t = sw.querySelector('.sw-t'); if (t) t.textContent = on ? 'V PROGRAMU' : 'PŘIDAT'; });
   renderTimeline();
 }
 function renderTimeline() {
   const tl = $('#tl'); if (!tl) return;
-  const D = C.needs, on = C.weeks.filter(w => sched[w.n]?.on), m = monthsOf(totalWeeks);
+  const D = C.needs, on = phases().filter(w => sched[w.n]?.on), m = monthsOf(totalWeeks);
   tl.style.gridTemplateColumns = on.map(w => (w.len || 1) + 'fr').join(' ');
   tl.innerHTML = on.map(w => '<div class="tl-seg' + (w.optional ? ' opt' : '') + '"><b>' + esc(wkLabel(w.n)) + '</b><span>' + esc(w.short) + '</span></div>').join('');
   $('#tlAfter').innerHTML = '<span><b>' + rangeLabel(1, totalWeeks) + '</b> · ' + esc(D.during || 'nasazení a ladění s konzultanty') + '</span><span><b>' + (byMonth() ? 'Od ' + (totalWeeks + 1) + '. měsíce' : 'Měsíce ' + (Math.floor(m) + 1) + '–12') + '</b> · ' + esc(D.after) + '</span>';
@@ -2366,14 +2454,16 @@ function renderA() {
       '<div class="kicker">' + esc(H.kicker) + '</div>' +
       '<h1 class="display hero-title" id="a-title">' + H.title.map(l => '<span>' + esc(l) + '</span>').join('') + '<span class="accent" data-dyn="' + esc(H.titleAccent) + '">' + esc(fillDyn(H.titleAccent)) + '</span></h1>' +
       '<p class="hero-lead">' + esc(H.lead) + ' <strong data-dyn="' + esc(H.leadStrong) + '">' + esc(fillDyn(H.leadStrong)) + '</strong></p>' +
+      (H.claim ? '<div class="claim"><span class="claim-l">' + esc(H.claim.label) + '</span><p>' + esc(H.claim.text) + '</p>' + (H.claim.sub ? '<span class="claim-s">' + esc(H.claim.sub) + '</span>' : '') + '</div>' : '') +
+      // dlaždice otevře kartu (open), nebo přejde na pruh či sekci (go, např. w2)
       '<div class="pains">' + H.pains.map(p =>
-        '<button class="pain" type="button" data-open="' + esc(p.open) + '">' +
+        '<button class="pain" type="button" ' + (p.go ? 'data-go="' + esc(p.go) + '"' : 'data-open="' + esc(p.open) + '"') + '>' +
           '<span class="pain-top"><span class="pain-ic">' + icon(p.icon) + '</span><span class="pain-val">' + esc(p.value) + '</span></span>' +
           '<span class="pain-label" style="display:block">' + esc(p.label) + '</span>' +
           '<span class="pain-agent">' + esc(p.agent) + icon('arrowR') + '</span>' +
         '</button>').join('') + '</div>' +
     '</div><aside class="hero-side">' +
-      '<div class="profile"><div class="profile-art">' + (P.art === 'steel' ? steelArt() : P.art === 'traffic' ? trafficArt() : P.art === 'energy' ? energyArt() : P.art === 'network' ? networkArt() : '') + '</div><div class="profile-body">' +
+      '<div class="profile"><div class="profile-art">' + (P.art === 'steel' ? steelArt() : P.art === 'traffic' ? trafficArt() : P.art === 'energy' ? energyArt() : P.art === 'network' ? networkArt() : P.art === 'coffee' ? coffeeArt() : P.art === 'dental' ? dentalArt() : P.art === 'rack' ? rackArt() : P.art === 'medical' ? medicalArt() : P.art === 'chp' ? chpArt() : '') + '</div><div class="profile-body">' +
         '<span class="tag">' + esc(P.tag) + '</span>' +
         (C.meta.logo ? '<img class="profile-logo" src="' + esc(C.meta.logo) + '" alt="' + esc(C.meta.client) + '">' : '') +
         '<div class="profile-name">' + esc(P.name) + '</div>' +
@@ -2381,9 +2471,15 @@ function renderA() {
         '<div class="facts">' + P.facts.map(f => '<div class="fact"><b>' + esc(f.v) + '</b><span>' + esc(f.k) + '</span></div>').join('') + '</div>' +
         '<div class="profile-note">' + rich(P.note) + '</div>' +
       '</div></div>' +
-      '<div class="story"><div class="story-val">' + esc(H.story.value) + '</div><p>' + esc(H.story.text) + '</p><div class="story-tag">' + esc(H.story.tag) + '</div></div>' +
+      '<div class="story">' + (H.story.photo ? '<div class="story-ph"><img src="' + esc(H.story.photo) + '" alt="' + esc(H.story.photoAlt || '') + '"><div>' : '') +
+        '<div class="story-val">' + esc(H.story.value) + '</div><p>' + esc(H.story.text) + '</p>' + (H.story.photo ? '</div></div>' : '') + '<div class="story-tag">' + esc(H.story.tag) + '</div></div>' +
       '<div class="feed"><div class="feed-head"><span class="live-dot"></span>' + esc(H.feedTitle) + '</div><ol class="feed-list" id="feedList" aria-live="off"></ol></div>' +
-    '</aside></div></section>';
+    '</aside></div>' +
+    // další části úvodu (např. Proč s námi, výchozí situace): H.after = [{ kicker, title, lead, blocks, cols }]
+    (H.after || []).map(s => '<div class="a-part">' + (s.kicker ? '<div class="kicker">' + esc(s.kicker) + '</div>' : '') +
+      '<h2 class="display h2">' + esc(s.title) + '</h2>' + (s.lead ? '<p class="lead">' + rich(s.lead) + '</p>' : '') +
+      '<div class="a-blocks' + (s.cols ? ' cols' : '') + '">' + blocks(s.blocks || []) + '</div></div>').join('') +
+    '</section>';
 }
 
 function steelArt() {
@@ -2419,10 +2515,77 @@ function networkArt() {
     t(70, 12, 'STRUKTURA') + t(214, 30, 'KLIENT') + t(325, 22, 'CENTRÁLA') + t(468, 32, 'VIRTUÁLNÍ TÝM') +
     '</svg>';
 }
+function coffeeArt() {
+  // šálek kávy, nápojový automat, dodávka na trase doplňování, kávovar v kanceláři, kávová zrna
+  const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
+  return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
+    '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
+    '<path class="art-s" d="M22 70h52v14a20 20 0 0 1-20 20H42a20 20 0 0 1-20-20z"/><path class="art-s" d="M74 76h6a8 8 0 0 1 0 16h-5"/><path class="art-s" d="M38 60c0-6 6-7 6-13M54 60c0-6 6-7 6-13"/>' +
+    '<rect class="art-s" x="130" y="22" width="62" height="90" rx="4"/><rect class="art-s" x="140" y="32" width="30" height="40" rx="2"/><path class="art-s" d="M180 36v8M180 52v8M146 88h24v14h-24z"/>' +
+    '<path class="art-s" d="M246 98V62h58v36M304 72h22l14 16v10h-18M284 98h-10"/><circle class="art-s" cx="264" cy="100" r="8"/><circle class="art-s" cx="322" cy="100" r="8"/>' +
+    '<rect class="art-s" x="392" y="42" width="54" height="66" rx="6"/><path class="art-s" d="M404 56h30M410 78h18v12h-18zM419 68v10"/>' +
+    '<ellipse class="art-s" cx="500" cy="84" rx="11" ry="16" transform="rotate(-25 500 84)"/><path class="art-s" d="M495 70c5 8 5 20 11 28"/><ellipse class="art-s" cx="532" cy="94" rx="9" ry="13" transform="rotate(20 532 94)"/>' +
+    t(48, 30, 'KÁVA') + t(161, 14, 'AUTOMAT') + t(290, 52, 'DOPLŇOVÁNÍ') + t(419, 32, 'KANCELÁŘ') + t(516, 56, 'ZRNA') +
+    '</svg>';
+}
+function dentalArt() {
+  // zub, zubařské křeslo, rozpis ordinace, telefon, zubní kartáček
+  const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
+  return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
+    '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
+    '<path class="art-s" d="M30 46c0-12 10-18 20-14 6 2 10 2 16 0 10-4 20 2 20 14 0 14-6 20-8 34-2 12-4 22-10 22-5 0-6-10-8-18-1-4-3-6-6-6s-5 2-6 6c-2 8-3 18-8 18-6 0-8-10-10-22-2-14-8-20-8-34z"/>' +
+    '<path class="art-s" d="M138 70h48l14-30M150 70v22h36M134 104h60M168 92v12M200 40l10 6"/><circle class="art-s" cx="150" cy="56" r="6"/>' +
+    '<rect class="art-s" x="246" y="34" width="76" height="70" rx="4"/><path class="art-s" d="M246 50h76M270 34v-6M298 34v-6M258 62h12M278 62h12M298 62h12M258 76h12M278 76h12M258 90h12"/><path class="art-s" d="M296 74l6 6 10-12"/>' +
+    '<rect class="art-s" x="386" y="30" width="40" height="74" rx="7"/><path class="art-s" d="M400 94h12M396 42h20"/><path class="art-s" d="M438 46a14 14 0 0 1 0 20M444 38a24 24 0 0 1 0 36"/>' +
+    '<path class="art-s" d="M486 104l52-60"/><rect class="art-s" x="528" y="34" width="16" height="10" rx="2" transform="rotate(-49 536 39)"/><path class="art-s" d="M524 44l6-6M530 49l6-6"/>' +
+    t(58, 22, 'ZUB') + t(166, 26, 'KŘESLO') + t(284, 20, 'ROZPIS') + t(406, 20, 'TELEFON') + t(512, 22, 'PREVENCE') +
+    '</svg>';
+}
+function rackArt() {
+  // rack, chladicí jednotka, rozvaděč, trafostanice, kontejnerové datové centrum
+  const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
+  return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
+    '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
+    '<rect class="art-s" x="30" y="30" width="54" height="76" rx="3"/><path class="art-s" d="M38 42h38M38 52h38M38 62h38M38 72h38M38 82h38M38 92h38M34 106v6M80 106v6"/>' +
+    '<rect class="art-s" x="136" y="36" width="44" height="70" rx="3"/><circle class="art-s" cx="158" cy="60" r="13"/><path class="art-s" d="M158 47v26M145 60h26M144 88h28M144 96h28"/>' +
+    '<rect class="art-s" x="232" y="32" width="74" height="74" rx="3"/><path class="art-s" d="M269 32v74M242 46h18M242 56h18M242 66h18M279 46h18M279 56h18M279 66h18M252 94l6-10h-6l6-10"/>' +
+    '<path class="art-s" d="M352 106V58l34-18 34 18v48zM372 106V86h28v20M390 54l-7 12h8l-7 12"/>' +
+    '<rect class="art-s" x="462" y="56" width="86" height="50" rx="3"/><path class="art-s" d="M476 66v32M490 66v32M504 66v32M518 66v32M532 66v32M472 56v-10h24v10M520 56v-8h20v8"/>' +
+    t(57, 22, 'RACK') + t(158, 26, 'CHLAZENÍ') + t(269, 22, 'ROZVADĚČ') + t(386, 30, 'TRAFOSTANICE') + t(505, 36, 'DATOVÉ CENTRUM') +
+    '</svg>';
+}
+function medicalArt() {
+  // víceoborová klinika: zub, dermatoskop nad kůží, ucho (ORL), pyl (alergie), hlava se srdcem (psychika)
+  const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
+  return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
+    '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
+    '<path class="art-s" d="M30 46c0-12 10-18 20-14 6 2 10 2 16 0 10-4 20 2 20 14 0 14-6 20-8 34-2 12-4 22-10 22-5 0-6-10-8-18-1-4-3-6-6-6s-5 2-6 6c-2 8-3 18-8 18-6 0-8-10-10-22-2-14-8-20-8-34z"/>' +
+    '<circle class="art-s" cx="156" cy="56" r="18"/><path class="art-s" d="M169 69l18 20M128 104c10-6 20-6 30 0s20 6 30 0"/>' +
+    '<path class="art-s" d="M268 100c-8 0-12-6-12-12 0-8 8-10 8-18 0-16 11-28 27-28s27 12 27 28c0 10-6 16-12 22-5 5-5 8-9 12M276 70c0-8 6-13 14-13s13 6 13 13c0 6-5 8-8 12"/>' +
+    '<circle class="art-s" cx="400" cy="62" r="7"/><circle class="art-s" cx="400" cy="43" r="9"/><circle class="art-s" cx="419" cy="62" r="9"/><circle class="art-s" cx="400" cy="81" r="9"/><circle class="art-s" cx="381" cy="62" r="9"/><path class="art-s" d="M400 90v16"/>' +
+    '<path class="art-s" d="M500 106V90c-11-5-17-15-17-28 0-18 14-30 32-30s30 12 30 28c0 6-2 10-4 14l6 10h-8v8c0 6-4 8-10 8h-6v6"/><path class="art-s" d="M508 58c0-6 8-8 10-2 2-6 10-4 10 2 0 6-10 12-10 12s-10-6-10-12z"/>' +
+    t(58, 22, 'ZUBY') + t(160, 26, 'KŮŽE') + t(290, 30, 'ORL') + t(400, 22, 'ALERGIE') + t(516, 22, 'PSYCHIKA') +
+    '</svg>';
+}
+function chpArt() {
+  // kogenerace: palivo (plyn, bioplyn, vodík), motor, kogenerační jednotka v kontejneru, elektřina a teplo, online monitoring
+  const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
+  return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
+    '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
+    '<path class="art-s" d="M46 104c-18 0-26-14-20-28 4-10 12-14 12-28 12 8 22 22 22 36 4-4 5-9 5-14 7 8 8 17 5 24-4 7-12 10-24 10z"/><circle class="art-s" cx="84" cy="56" r="13"/>' +
+    '<text class="art-t" x="84" y="60" text-anchor="middle">H₂</text>' +
+    '<rect class="art-s" x="124" y="62" width="60" height="40" rx="3"/><rect class="art-s" x="130" y="40" width="14" height="22" rx="2"/><rect class="art-s" x="147" y="40" width="14" height="22" rx="2"/><rect class="art-s" x="164" y="40" width="14" height="22" rx="2"/>' +
+    '<circle class="art-s" cx="154" cy="82" r="9"/><path class="art-s" d="M130 102v8M178 102v8"/>' +
+    '<rect class="art-s" x="222" y="56" width="96" height="50" rx="3"/><path class="art-s" d="M236 56V30h10v26M241 24c-4-4 4-8 0-12M258 68h24M258 76h24M258 84h24M258 92h24"/><rect class="art-s" x="290" y="64" width="20" height="36" rx="2"/>' +
+    '<path class="art-s" d="M378 40l-12 30h12l-8 30 22-38h-13l9-22z"/><rect class="art-s" x="402" y="62" width="34" height="44" rx="3"/><path class="art-s" d="M410 62v44M419 62v44M428 62v44M410 54c-3-4 3-8 0-12M419 54c-3-4 3-8 0-12M428 54c-3-4 3-8 0-12"/>' +
+    '<rect class="art-s" x="482" y="64" width="60" height="36" rx="3"/><path class="art-s" d="M512 100v6M500 106h24M490 90l10-10 8 6 10-14 8 6 8-8M500 52c8-8 16-8 24 0M494 44c12-12 24-12 36 0"/>' +
+    t(56, 22, 'PLYN · VODÍK') + t(154, 30, 'MOTOR') + t(286, 46, 'KOGENERACE') + t(402, 22, 'ELEKTŘINA A TEPLO') + t(512, 22, 'MONITORING') +
+    '</svg>';
+}
 function energyArt() {
-  // plyn, stožár elektřiny, dům s fotovoltaikou, tepelné čerpadlo, stojan CNG
-  const s = 'fill="none" stroke="#FA2B2B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
-  const g = 'fill="none" stroke="#484848" stroke-width="1.5" stroke-dasharray="4 5"';
+  // plyn, stožár elektřiny, dům s fotovoltaikou, tepelné čerpadlo, stojan CNG (barva z design.vars přes třídy art-s, art-g)
+  const s = 'class="art-s"';
+  const g = 'class="art-g"';
   const t = (x, y, txt) => '<text x="' + x + '" y="' + y + '" font-size="11" font-weight="700" fill="#6B6B6B" text-anchor="middle" style="font-family:var(--font)">' + txt + '</text>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
     '<line x1="0" y1="112" x2="560" y2="112" ' + g + '/>' +
@@ -2475,13 +2638,13 @@ function renderB() {
   return '<section class="sec sec-b" id="sec-b" aria-labelledby="b-title">' +
     '<div class="chip-sec"><b>B</b>Kalkulačka</div>' +
     '<div class="b-head"><div><h2 class="display h2" id="b-title">' + esc(K.title) + '</h2><p class="lead">' + esc(K.lead) + '</p></div>' +
-      '<div class="cur" role="group" aria-label="Měna"><button type="button" data-cur="czk" aria-pressed="true">Kč</button><button type="button" data-cur="eur" aria-pressed="false">€</button></div></div>' +
+      (K.mode === 'capacity' ? '' : '<div class="cur" role="group" aria-label="Měna"><button type="button" data-cur="czk" aria-pressed="true">Kč</button><button type="button" data-cur="eur" aria-pressed="false">€</button></div>') + '</div>' +
     inputsPanelHTML() +
     '<div class="calc">' +
       '<div class="result" aria-live="polite">' +
         '<div class="lbl">' + esc(K.resultLabel || 'Nárůst zisku ročně') + '</div>' +
         '<div class="res-val" id="resVal">+0</div>' +
-        '<div class="res-sub" id="resSub"></div>' +
+        '<div class="res-sub" id="resSub"></div><div class="res-units" id="resUnits" hidden></div>' +
         '<div class="target"><div class="target-top"><span class="lbl" id="tgtLbl">' + esc(K.targetLabel || 'Váš cíl z roadmapy') + '</span><span class="target-v" id="tgtV"></span></div>' +
           '<div class="track" id="track"><div class="fill"></div><div class="over"></div><div class="mark" data-m="base"></div><div class="mark" data-m="tgt"></div></div>' +
           '<div class="track-lbls"><span id="trkL"></span><span id="trkR"></span></div>' +
@@ -2515,6 +2678,7 @@ function model(xs) {
     else if (a.lever === 'overhead') fixed -= b.adminCosts * x;
     else if (a.lever === 'revenue') rev *= (1 + x);
     else if (a.lever === 'cost') save += (a.pool || 0) * x;
+    // 'units': výsledek v kusech (a.metric), do Kč se nepočítá
   });
   return rev * (gm - b.variableCosts) - fixed + save;
 }
@@ -2540,6 +2704,7 @@ function initCalc() {
 }
 function updateCalc() {
   const K = C.calc, b = K.base;
+  if (K.mode === 'capacity') { updateCapacity(K); return; }
   const xs = K.areas.map((a, i) => calcState.on[i] ? calcState.x[i] : 0);
   const base = model([]), now = model(xs), tgt = K.target;
   const delta = now - base;
@@ -2590,7 +2755,11 @@ function updateBenefit(K, xs, base, now) {
   $('#trkL').textContent = '0';
   $('#trkR').textContent = money(maxV, 0);
   let best = -1, bestV = 0; const acc = K.areas.map(() => 0), steps = []; let prev = base;
-  K.areas.forEach((a, i) => { acc[i] = xs[i]; const p = model(acc); steps.push({ l: a.short, v: p - prev }); if (p - prev > bestV) { bestV = p - prev; best = i; } prev = p; });
+  K.areas.forEach((a, i) => { if (a.lever === 'units') return; acc[i] = xs[i]; const p = model(acc); steps.push({ l: a.short, v: p - prev }); if (p - prev > bestV) { bestV = p - prev; best = i; } prev = p; });
+  // domény v kusech (povýšení, registrace…) mají vlastní řádek pod výsledkem v Kč
+  const U = K.areas.map((a, i) => a.lever === 'units' && calcState.on[i] ? metric(a, calcState.x[i], xs)[3] : '').filter(Boolean);
+  $('#resUnits').innerHTML = U.length ? esc(K.unitsLabel || 'Navíc v kusech') + ': ' + U.map(t => '<b>' + esc(t) + '</b>').join(' · ') : '';
+  $('#resUnits').hidden = !U.length;
   const top = best >= 0 ? ' Nejvíc přináší <b>' + esc(K.areas[best].title) + '</b>.' : '';
   $('#tgtMsg').innerHTML = !rng ? top
     : delta < lo ? 'Pod rozpětím o <b>' + money(lo - delta, 1) + '</b>. Zapněte další domény nebo upravte předpoklady.' + top
@@ -2598,6 +2767,59 @@ function updateBenefit(K, xs, base, now) {
     : '<b>V rozpětí podkladu.</b>' + top;
   updateAreas(K, xs);
   $('#wf').innerHTML = waterfallBenefit(steps, delta, rng);
+}
+// Režim kapacity (calc.mode = 'capacity'): oblasti jsou týmy, a.amount(x, vstupy) = { people, roles }.
+// Výsledek je součet rolí zapnutých týmů proti poptávané kapacitě (K.result), graf ukazuje náběh po měsících.
+function updateCapacity(K) {
+  const v = ui.values, h = { fmt, n: fmtAuto };
+  const per = K.areas.map((a, i) => calcState.on[i] ? a.amount(calcState.x[i], v) : { people: 0, roles: 0 });
+  const tot = per.reduce((s, p) => ({ people: s.people + p.people, roles: s.roles + p.roles }), { people: 0, roles: 0 });
+  const R = K.result(tot, v, h);
+  $('#resVal').textContent = R.val;
+  $('#resVal').classList.toggle('pos', tot.roles > 0);
+  $('#resSub').innerHTML = R.sub;
+  $('#resUnits').hidden = true;
+  $('#tgtLbl').textContent = R.needLabel;
+  $('#tgtV').textContent = R.needVal;
+  const maxV = Math.max(R.need, tot.roles, 1) * 1.12, pct = x => clamp(x / maxV * 100, 0, 100) + '%';
+  const tr = $('#track'); tr.classList.remove('band');
+  tr.querySelector('.fill').style.width = pct(tot.roles);
+  const over = tr.querySelector('.over'); over.style.left = pct(R.need); over.style.width = '0%';
+  tr.querySelector('[data-m="base"]').style.left = '0%';
+  tr.querySelector('[data-m="tgt"]').style.left = pct(R.need);
+  $('#trkL').textContent = '0';
+  $('#trkR').textContent = fmt(maxV, 0) + (K.unitShort ? ' ' + K.unitShort : '');
+  $('#tgtMsg').innerHTML = R.msg;
+  updateAreas(K, K.areas.map((a, i) => calcState.on[i] ? calcState.x[i] : 0));
+  $('#wf').innerHTML = rampChart(K, per, R.need);
+}
+// náběh kapacity po měsících: tým naběhne od měsíce a.start za K.ramp měsíců; pozadí jsou fáze zavedení
+function rampChart(K, per, need) {
+  const M = K.months || 12, ramp = K.ramp || 2, W = 620, H = 250, pl = 6, pr = 6, pt = 42, pb = 34;
+  const vals = Array.from({ length: M }, (_, m) => K.areas.reduce((s, a, i) => s + per[i].roles * clamp((m + 2 - (a.start || 1)) / ramp, 0, 1), 0));
+  const maxV = Math.max(need || 0, ...vals, 1) * 1.15, slot = (W - pl - pr) / M, bw = slot * .62;
+  const y = val => pt + (H - pt - pb) * (1 - val / maxV);
+  const red = cssVar('red', '#FA2B2B');
+  let out = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Náběh kapacity po měsících">';
+  let m0 = 0;
+  ((C.schedule && C.schedule.phases) || []).forEach((p, k) => {
+    const len = p.len || 1, x0 = pl + slot * m0, w = slot * Math.min(len, M - m0);
+    if (w > 0) out += '<rect x="' + x0 + '" y="' + (pt - 20) + '" width="' + w + '" height="' + (H - pb - pt + 20) + '" fill="' + (k % 2 ? '#FFFFFF' : '#F4F4F4') + '"/>' +
+      '<text x="' + (x0 + 4) + '" y="' + (pt - 8) + '" font-size="10.5" font-weight="800" fill="#8A8A8A" letter-spacing=".5" style="font-family:var(--font)">' + esc(String(p.short || '').toUpperCase()) + '</text>';
+    m0 += len;
+  });
+  out += '<line x1="0" x2="' + W + '" y1="' + y(0) + '" y2="' + y(0) + '" stroke="#DADADA"/>';
+  vals.forEach((val, m) => {
+    const x = pl + slot * m + (slot - bw) / 2, top = y(val);
+    out += '<rect x="' + x + '" y="' + top + '" width="' + bw + '" height="' + Math.max(1.5, y(0) - top) + '" rx="4" fill="' + (val > 0 ? red : '#E2E2E2') + '"/>';
+    if (val > 0) out += '<text x="' + (x + bw / 2) + '" y="' + (top - 6) + '" text-anchor="middle" font-size="11.5" font-weight="700" fill="#232323" style="font-family:var(--font)">' + fmt(val, Math.abs(val - Math.round(val)) < 0.05 ? 0 : 1) + '</text>';
+    out += '<text x="' + (x + bw / 2) + '" y="' + (H - pb + 16) + '" text-anchor="middle" font-size="11" font-weight="600" fill="#6B6B6B" style="font-family:var(--font)">' + (m + 1) + '</text>';
+  });
+  if (need) out += '<line x1="0" x2="' + W + '" y1="' + y(need) + '" y2="' + y(need) + '" stroke="#232323" stroke-width="1.5" stroke-dasharray="6 5"/>' +
+    '<text x="' + (W - 4) + '" y="' + (y(need) - 6) + '" text-anchor="end" font-size="11.5" font-weight="800" fill="#232323" style="font-family:var(--font)">' + esc(K.needShort || 'POPTÁVKA') + ' ' + fmt(need, 0) + '</text>';
+  out += '<text x="4" y="13" font-size="11" font-weight="800" fill="#6B6B6B" letter-spacing="1" style="font-family:var(--font)">' + esc(K.rampTitle || 'NÁBĚH KAPACITY PO MĚSÍCÍCH') + '</text>';
+  out += '<text x="' + (W - 4) + '" y="' + (H - 2) + '" text-anchor="end" font-size="10.5" fill="#8A8A8A" style="font-family:var(--font)">měsíc od startu</text>';
+  return out + '</svg>';
 }
 function updateAreas(K, xs) {
   K.areas.forEach((a, i) => {
@@ -2607,7 +2829,7 @@ function updateAreas(K, xs) {
     const sw = el.querySelector('.switch'); sw.setAttribute('aria-checked', String(on)); sw.querySelector('.sw-t').textContent = on ? 'AKTIVNÍ' : 'AKTIVOVAT';
     const r = el.querySelector('input'); r.disabled = !on; r.style.setProperty('--p', r.value + '%');
     const sign = a.display ? (a.display.dir === -1 ? '−' : '+') : (a.lever === 'waste' || a.lever === 'overhead') ? '−' : '+';
-    el.querySelector('[data-lift]').textContent = sign + fmt(x * 100, 0) + ' %';
+    el.querySelector('[data-lift]').textContent = typeof a.lift === 'function' ? a.lift(x) : sign + fmt(x * 100, 0) + ' %';
     const xe = on ? x : 0; const [k, v, sub] = metric(a, xe, xs);
     el.querySelector('[data-mk]').textContent = k;
     el.querySelector('[data-mv]').textContent = v;
@@ -2617,6 +2839,8 @@ function updateAreas(K, xs) {
 }
 function metric(a, x, xs) {
   const b = C.calc.base;
+  // vlastní výpočet z dat: a.metric(x, vstupy, h) → [popisek, hodnota, věta, krátce do výsledku]
+  if (typeof a.metric === 'function') { try { return a.metric(x, ui.values, { fmt, n: fmtAuto }); } catch (e) { return ['', '', '', '']; } }
   if (a.display) {
     // obecné zobrazení z dat: { label, base, unit, dec, dir } + volitelná věta sub s {money} {hours} {rev}
     const d = a.display, f = v => fmt(v, d.dec ?? 0) + (d.unit ? ' ' + d.unit : '');
@@ -2914,7 +3138,7 @@ function updatePricing() {
     rows.map(([a, l]) => { const t = q.total(a), d = t - q.base, same = Math.abs(d) < 1e-6 * q.base, pill = '<span class="pill ' + (same ? 'info' : d < 0 ? 'ok' : 'warn') + '">' + (same ? 'stejně' : priceFmt(d, true)) + '</span>'; return '<tr><td>' + l + '</td><td class="num">' + priceFmt(t) + '<span class="pr-dm">' + pill + '</span></td><td class="num">' + pill + '</td></tr>'; }).join('') + '</tbody>';
   const own = ui.kpis.filter(k => k.name.trim());
   $('#prRules').innerHTML = [
-    P.rate && P.team ? 'Cena programu na ' + totalWeeks + ' ' + unitN(totalWeeks) + ': ' + teamMD().map(t => t[0] + ' ' + fmtAuto(t[1]) + ' MD').join(', ') + ' = ' + fmtAuto(teamMD().reduce((a, t) => a + t[1], 0)) + ' MD × ' + fmt(P.rate) + ' Kč = ' + fmt(progPrice()) + ' Kč.' : '',
+    P.rate && P.team ? 'Cena ' + (P.programLabel || 'programu na ' + totalWeeks + ' ' + unitN(totalWeeks)) + ': ' + teamMD().map(t => t[0] + ' ' + fmtAuto(t[1]) + ' MD').join(', ') + ' = ' + fmtAuto(teamMD().reduce((a, t) => a + t[1], 0)) + ' MD × ' + fmt(P.rate) + ' Kč = ' + fmt(progPrice()) + ' Kč.' : '',
     'Výkonovou složku počítáme podle splnění cílů, které společně nastavíme na začátku: ' + P.kpis.join(', ') + '.',
     own.length ? 'Navázat ji můžeme i na vaše ukazatele: ' + own.map(k => k.name.trim() + (k.now || k.goal ? ' (' + (k.now || '?') + ' → ' + (k.goal || '?') + (k.unit ? ' ' + k.unit : '') + ')' : '')).join(', ') + '.' : '',
     'Pod ' + fmt(P.floor * 100) + ' % splnění se výkonová složka neplatí. Nad cílem platíte poměrně, nejvýš ' + fmt(P.cap * 100) + ' %.',
@@ -3062,7 +3286,7 @@ function renderC() {
       '<div class="dcol-title">' + esc(c.area) + '</div>' +
       '<div class="dcol-agent">' + icon(C.agents[c.agent].icon) + esc(C.agents[c.agent].name) + '</div>' +
       '<ul>' + c.items.map(t => '<li>' + icon('check') + '<span>' + esc(t) + '</span></li>').join('') + '</ul></div>').join('') +
-    '</div></section>';
+    '</div>' + (D.blocks ? '<div class="d-blocks">' + blocks(D.blocks) + '</div>' : '') + '</section>';
 }
 
 /* ============ D · Co potřebujete ============ */
@@ -3092,31 +3316,40 @@ function renderWeeksHead() {
   const W = C.weeksIntro;
   const agentsUsed = [...new Set(C.weeks.map(w => w.agent))];
   return '<div class="weeks-head" id="weeks"><div>' +
-    '<div class="chip-sec" style="margin-bottom:18px"><b data-dyn="1–{T}">1–' + totalWeeks + '</b>' + esc(W.chip) + '</div>' +
+    '<div class="chip-sec" style="margin-bottom:18px">' + (domainMode() ? '<b>' + esc(W.chipBig || String(C.weeks.length)) + '</b>' : '<b data-dyn="1–{T}">1–' + totalWeeks + '</b>') + esc(W.chip) + '</div>' +
     '<h2 class="display h2">' + esc(W.title.replace('{n}', cardOrder.length)) + '</h2><p class="lead">' + esc(W.lead) + '</p></div>' +
     '<div class="legend">' + agentsUsed.map(k => '<span><i>' + icon(C.agents[k].icon) + '</i>' + esc(C.agents[k].name) + '</span>').join('') + '</div>' +
-    '<div class="wk-list">' + C.weeks.map(w => '<button type="button" class="wk" data-go="w' + w.n + '"><span class="wk-n" data-wk="' + w.n + '" data-wkf="big">' + esc(wkLabel(w.n, 'big')) + '</span><span class="wk-t"><b>' + esc(w.title) + '</b><span>' + esc(C.agents[w.agent].name) + ' · ' + w.cards.length + ' ' + termN(w.cards.length) + '</span></span><span class="wk-i"><b>' + esc(w.impact) + '</b>' + esc(w.impactLabel) + '</span></button>').join('') + '</div></div>';
+    '<div class="wk-list">' + C.weeks.map(w => '<button type="button" class="wk" data-go="w' + w.n + '"><span class="wk-n"' + wkAttr(w.n, 'big') + '>' + esc(laneNum(w)) + '</span><span class="wk-t"><b>' + esc(w.title) + '</b><span>' + esc(domainMode() && w.kick ? w.kick : C.agents[w.agent].name) + ' · ' + w.cards.length + ' ' + termN(w.cards.length) + '</span></span><span class="wk-i"><b>' + esc(w.impact) + '</b>' + esc(w.impactLabel) + '</span></button>').join('') + '</div></div>';
 }
 function renderLane(w) {
   const ag = C.agents[w.agent];
-  return '<section class="lane' + (sched[w.n]?.on ? '' : ' off') + '" id="week-' + w.n + '" data-n="' + w.n + '" aria-labelledby="w' + w.n + '-t">' +
+  return '<section class="lane' + (domainMode() || sched[w.n]?.on ? '' : ' off') + '" id="week-' + w.n + '" data-n="' + w.n + '" aria-labelledby="w' + w.n + '-t">' +
     '<div class="lane-head">' +
-      '<div class="lane-top"><div class="lane-num" aria-hidden="true" data-wk="' + w.n + '" data-wkf="big">' + esc(wkLabel(w.n, 'big')) + '</div><div class="lane-impact"><b>' + esc(w.impact) + '</b><span>' + esc(w.impactLabel) + '</span></div></div>' +
-      '<div class="lane-kick"><span data-wk="' + w.n + '">' + esc(wkLabel(w.n)) + '</span> · ' + esc(w.short) + '</div>' +
+      '<div class="lane-top"><div class="lane-num" aria-hidden="true"' + wkAttr(w.n, 'big') + '>' + esc(laneNum(w)) + '</div><div class="lane-impact"><b>' + esc(w.impact) + '</b><span>' + esc(w.impactLabel) + '</span></div></div>' +
+      '<div class="lane-kick"><span' + wkAttr(w.n) + '>' + esc(laneWhen(w)) + '</span>' + (w.short && !domainMode() ? ' · ' + esc(w.short) : '') + '</div>' +
       '<h3 class="lane-title" id="w' + w.n + '-t">' + esc(w.title) + '</h3>' +
       '<span class="agent-chip"><i>' + icon(ag.icon) + '</i><b>' + esc(ag.name) + '</b><span>' + esc(ag.role) + '</span></span>' +
       '<div class="lane-arrows">' + w.arrows.map(t => '<span>' + icon(t[0] === '↓' ? 'down' : 'up') + esc(t.replace(/^[↑↓]\s*/, '')) + '</span>').join('') + '</div>' +
+      // ukazatele domény: [název, dnes, cíl]
+      (w.kpis ? '<div class="lane-kpis">' + w.kpis.map(k => '<div><span>' + esc(k[0]) + '</span><b>' + esc(k[1]) + (k[2] ? ' → ' + esc(k[2]) : '') + '</b></div>').join('') + '</div>' : '') +
       (w.optional ? '<div class="lane-mod"><button class="switch" type="button" role="switch" aria-checked="' + !!modState[w.n] + '" data-mod="' + w.n + '" aria-label="' + esc('Zahrnout do programu: ' + w.short) + '"><span class="sw-t">' + (modState[w.n] ? 'V PROGRAMU' : 'PŘIDAT') + '</span><span class="knob"></span></button><span>' + esc(w.optionalText || 'Volitelný modul programu') + '</span></div>' : '') +
     '</div>' +
-    '<div class="cards">' + w.cards.map(c => renderCard(c, w)).join('') + '</div></section>';
+    '<div class="cards">' + (w.overview ? laneOverview(w) : '') + w.cards.map(c => renderCard(c, w)).join('') + '</div></section>';
+}
+// přehled domény: světlá karta bez výstupu agenta na začátku pruhu (w.overview = { title, text, blocks })
+function laneOverview(w) {
+  const O = w.overview;
+  return '<div class="card lane-ov"><div class="card-meta"><span class="card-id">' + esc(laneNum(w)) + '</span>' + esc(O.kicker || 'Přehled domény') + '</div>' +
+    '<h4 class="card-title">' + esc(O.title) + '</h4>' + (O.text ? '<p class="card-desc">' + rich(O.text) + '</p>' : '') +
+    '<div class="lane-ov-b">' + blocks(O.blocks) + '</div>' + (O.note ? '<div class="tbl-note">' + rich(O.note) + '</div>' : '') + '</div>';
 }
 function renderCard(c, w) {
   const prev = c.preview || [c.output[0]];
   return '<article class="card" data-card="' + esc(c.id) + '">' +
-    '<div class="card-meta"><span class="card-id">' + esc(c.id) + '</span><span data-wk="' + w.n + '">' + esc(wkLabel(w.n)) + '</span> · ' + esc(w.short) + cardFlags(c) + '</div>' +
+    '<div class="card-meta"><span class="card-id">' + esc(c.id) + '</span><span' + wkAttr(w.n) + '>' + esc(cardWhen(c, w)) + '</span> · ' + esc(w.short) + cardFlags(c) + '</div>' +
     '<h4 class="card-title">' + esc(c.title) + '</h4>' +
     '<p class="card-desc">' + rich(c.desc) + '</p>' +
-    '<div class="prompt"><span class="prompt-lbl">PROMPT</span><span>' + esc(c.prompt) + '</span></div>' +
+    '<div class="prompt"><span class="prompt-lbl">' + esc(c.promptLabel || 'PROMPT') + '</span><span>' + esc(c.prompt) + '</span></div>' +
     '<div class="booster">' + esc(c.booster?.type || w.booster) + ' · ' + (c.booster?.skill || '').split('+').map(s => '<code>' + esc(s.trim()) + '</code>').join(' + ') + '</div>' +
     '<div class="card-prev c" aria-hidden="true">' + blocks(prev, true) + '</div>' +
     '<button class="card-open" type="button" data-open="' + esc(c.id) + '">Otevřít výstup' + icon('arrowR') + '</button>' +
@@ -3212,7 +3445,8 @@ const R = {
   gantt(b, c) {
     const [h0, h1] = b.hours, span = h1 - h0, tp = v => { const [h, m] = String(v).split(':').map(Number); return ((h + (m || 0) / 60) - h0) / span * 100; };
     const ticks = []; for (let h = h0; h <= h1; h += (b.step || 2)) ticks.push(h);
-    return '<div class="gantt"><div class="g-hours"><div></div><div>' + ticks.map(h => '<span style="left:' + ((h - h0) / span * 100) + '%">' + h + ':00</span>').join('') + '</div></div>' +
+    // b.months: osa v měsících (M1, M2…), from/to jsou čísla měsíců (konec = začátek dalšího měsíce)
+    return '<div class="gantt' + (b.months ? ' g-months' : '') + '"><div class="g-hours"><div></div><div>' + ticks.map(h => '<span style="left:' + ((h - h0) / span * 100) + '%">' + (b.months ? (h < h1 ? 'M' + h : '') : h + ':00') + '</span>').join('') + '</div></div>' +
       b.rows.map(r => '<div class="g-row"><div class="g-l">' + esc(r.l) + (r.s ? '<small>' + esc(r.s) + '</small>' : '') + '</div><div class="g-track" style="--tick:' + (100 / span * (b.step || 2)) + '%">' +
         r.blocks.map(k => { const l = tp(k.from), w = tp(k.to) - l; return '<div class="g-blk ' + (k.tone || '') + (k.pin ? ' pin' : '') + '" style="left:calc(' + l + '% + 2px);width:calc(' + w + '% - 4px)" title="' + esc(k.from + '–' + k.to + ' · ' + k.label) + '">' + esc(k.label) + '</div>'; }).join('') +
       '</div></div>').join('') + '</div>' + (!c && b.note ? '<div class="tbl-note">' + rich(b.note) + '</div>' : '');
@@ -3282,17 +3516,18 @@ function fitTables(root) {
   root.querySelectorAll('.tbl-wrap > table.tbl').forEach(t => {
     if (!t.querySelector('td[data-l]')) return;
     t.classList.remove('stack');
-    if (innerWidth <= 560 && t.parentNode.scrollWidth > t.parentNode.clientWidth + 4) t.classList.add('stack');
+    // na telefonu každá tabulka, jinak jen náhled v úzké kartě (tablet, stránka na desktopu)
+    if ((innerWidth <= 560 || t.closest('.c')) && t.parentNode.scrollWidth > t.parentNode.clientWidth + 4) t.classList.add('stack');
   });
 }
 function openCard(id) {
   const hit = cardIndex.get(id); if (!hit) return;
-  const { card: c, week: w } = hit, ag = C.agents[w.agent];
+  const { card: c, week: w } = hit, ag = agentOf(c, w);
   curCard = id;
   if ($('#modal').hidden) lastFocus = document.activeElement;
-  $('#mHead').innerHTML = '<div class="card-meta"><span class="card-id">' + esc(c.id) + '</span>' + esc(wkLabel(w.n)) + ' · ' + esc(w.short) + ' · ' + esc(ag.name) + cardFlags(c) + '</div>' +
+  $('#mHead').innerHTML = '<div class="card-meta"><span class="card-id">' + esc(c.id) + '</span>' + esc(cardWhen(c, w)) + ' · ' + esc(w.short) + ' · ' + esc(ag.name) + cardFlags(c) + '</div>' +
     '<h2 class="m-title" id="mTitle">' + esc(c.title) + '</h2><p class="m-desc">' + rich(c.desc) + '</p>' +
-    '<div class="prompt" style="max-width:820px;background:#fff"><span class="prompt-lbl">PROMPT</span><span>' + esc(c.prompt) + '</span></div>' +
+    '<div class="prompt" style="max-width:820px;background:#fff"><span class="prompt-lbl">' + esc(c.promptLabel || 'PROMPT') + '</span><span>' + esc(c.prompt) + '</span></div>' +
     '<div class="booster">' + esc(c.booster?.type || w.booster) + ' · ' + (c.booster?.skill || '').split('+').map(s => '<code>' + esc(s.trim()) + '</code>').join(' + ') + '</div>' +
     prioHTML(c.id);
   $('#mBody').innerHTML = blocks(c.output, false);
@@ -3356,10 +3591,64 @@ function openContact() {
       (K.web ? row('Web', '<a href="' + esc(K.web) + '" target="_blank" rel="noopener">' + esc(K.webLabel || K.web) + '</a>', 'ct-web', false) : '') +
     '</div>' +
     (K.email ? '<div class="ct-actions"><a class="btn btn-red" href="mailto:' + esc(K.email) + '?subject=' + encodeURIComponent(K.subject || 'AI Roadmapa') + '">Napsat e-mail' + icon('arrowR') + '</a><span class="ct-note">Tlačítko otevře vaši poštu, pokud to prohlížeč dovolí. Jinak adresu výše zkopírujte.</span></div>' : '') +
-    (K.address ? '<div class="ct-addr">' + esc(K.address) + '</div>' : '');
+    (K.address ? '<div class="ct-addr">' + esc(K.address) + '</div>' : '') +
+    (leadOn() ? leadForm() : '');
   $('#contact').hidden = false;
   $('.m-close', $('#contact')).focus({ preventScroll: true });
 }
+/* ---------- Poptávka z veřejné stránky (Velín: list Poptávky, firma, kontakt a úkol Ozvat se) ---------- */
+// Jen na veřejných stránkách (bez osobních vstupů), které znají úložiště: krátký formulář v kontaktním okně.
+// Proti robotům skryté pole a čas vyplnění, odeslaná poptávka se pamatuje v prohlížeči (ať ji nikdo nepošle omylem dvakrát).
+let leadT0 = 0;
+const leadOn = () => !!(C && !personal() && !preview && C.meta.slug && endpoint() && inputKey());
+function leadForm() {
+  leadT0 = Date.now();
+  const sent = store.get('poptavka:' + C.meta.slug);
+  if (sent) return '<div class="lead lead-done"><b>Poptávku jsme od vás dostali ' + esc(sent) + '.</b><span>Ozveme se. Chcete napsat ještě něco?</span>' +
+    '<button class="lead-again" type="button" data-lead-again>Poslat další poptávku</button></div>';
+  return '<form class="lead" id="leadForm" novalidate>' +
+    '<div class="lead-h"><b>Nebo nám nechte kontakt</b><span>Ozveme se do jednoho pracovního dne.</span></div>' +
+    '<div class="lead-g">' +
+      '<label>Jméno a příjmení<input name="name" autocomplete="name" maxlength="80" required></label>' +
+      '<label>Firma<input name="company" autocomplete="organization" maxlength="120"></label>' +
+      '<label>E-mail<input name="email" type="email" autocomplete="email" maxlength="120" required></label>' +
+      '<label>Telefon<input name="phone" type="tel" autocomplete="tel" maxlength="40"></label>' +
+      '<label class="lead-full">Co vás zajímá<textarea name="msg" rows="3" maxlength="1000" placeholder="Např. AI mapa pro výrobu a obchod, kdy se můžeme potkat."></textarea></label>' +
+    '</div>' +
+    '<label class="lead-hp" aria-hidden="true">Nevyplňujte<input name="web" tabindex="-1" autocomplete="off"></label>' +
+    '<label class="lead-ok"><input type="checkbox" name="consent"><span>Souhlasím, že mě ' + esc(C.vendor.name) + ' může kontaktovat ohledně této poptávky. Údaje použijeme jen k odpovědi.</span></label>' +
+    '<div class="lead-act"><button class="btn btn-red" type="submit">Odeslat poptávku' + icon('arrowR') + '</button><span class="lead-msg" role="status" aria-live="polite"></span></div></form>';
+}
+async function leadSend(form) {
+  const v = n => String((form.elements[n] && form.elements[n].value) || '').trim(), out = form.querySelector('.lead-msg'), btn = form.querySelector('button[type=submit]');
+  const say = (t, bad) => { out.textContent = t; out.classList.toggle('bad', !!bad); };
+  const d = { name: v('name'), company: v('company'), email: v('email'), phone: v('phone'), msg: v('msg'), web: v('web') };
+  if (!d.name) { say('Doplňte prosím jméno.', true); form.elements.name.focus(); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(d.email)) { say('Zkontrolujte prosím e-mail.', true); form.elements.email.focus(); return; }
+  if (!form.elements.consent.checked) { say('Potvrďte prosím souhlas s kontaktováním.', true); form.elements.consent.focus(); return; }
+  btn.disabled = true; say('Odesílám…');
+  let ref = '';
+  try { const r = document.referrer ? new URL(document.referrer) : null; if (r && r.host !== location.host) ref = r.host.replace(/^www\./, ''); } catch (e) {}
+  if (params.get('utm_source')) ref = (ref ? ref + ', ' : '') + 'utm ' + params.get('utm_source').slice(0, 40);
+  try {
+    const j = await post({ action: 'lead', name: d.name, company: d.company, email: d.email, phone: d.phone, msg: d.msg, consent: true, hp: d.web, t: Date.now() - leadT0, ref: ref });
+    if (j && j.ok) {
+      store.set('poptavka:' + C.meta.slug, new Date().toLocaleDateString('cs-CZ'));
+      form.outerHTML = '<div class="lead lead-done" role="status"><b>Děkujeme, poptávku jsme dostali.</b><span>Ozveme se na ' + esc(d.email) + ' do jednoho pracovního dne.</span></div>';
+      return;
+    }
+    say({ email: 'Zkontrolujte prosím e-mail.', name: 'Doplňte prosím jméno.', consent: 'Potvrďte prosím souhlas s kontaktováním.', busy: 'Teď to nejde, napište nám prosím e-mail.' }[j && j.error] ||
+      'Odeslání se nepovedlo, napište nám prosím e-mail.', true);
+  } catch (e) { say('Odeslání se nepovedlo, napište nám prosím e-mail.', true); }
+  btn.disabled = false;
+}
+document.addEventListener('submit', e => { if (e.target && e.target.id === 'leadForm') { e.preventDefault(); leadSend(e.target); } });
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('[data-lead-again]'); if (!b) return;
+  store.set('poptavka:' + C.meta.slug, '');
+  b.closest('.lead').outerHTML = leadForm();
+  $('#leadForm').elements.name.focus();
+});
 function closeContact() {
   if ($('#contact').hidden) return;
   $('#contact').hidden = true;
@@ -3377,8 +3666,8 @@ function renderMenu() {
   const secs = [['a', 'A', 'Úvod', 'Kde firma dnes ztrácí'], ['b', 'B', 'Kalkulačka', 'Dopad na zisk'], ['c', 'C', 'Co bude hotové', 'Výstupy po oblastech'], ['d', 'D', 'Co potřebujete', 'Program, nástroje, podpora']];
   $('#drBody').innerHTML = '<div class="dr-sec">Mapa</div>' +
     secs.map(s => '<button class="dr-item" type="button" data-go="' + s[0] + '"><span class="n">' + s[1] + '</span><span><b>' + s[2] + '</b><span>' + s[3] + '</span></span></button>').join('') +
-    '<div class="dr-sec" data-dyn="Program · {dur}">Program · ' + esc(durLabel(totalWeeks)) + '</div>' +
-    C.weeks.map(w => '<button class="dr-item" type="button" data-go="w' + w.n + '"><span class="n" data-wk="' + w.n + '" data-wkf="big">' + esc(wkLabel(w.n, 'big')) + '</span><span><b>' + esc(w.title) + '</b><span>' + esc(C.agents[w.agent].name) + '</span></span></button>').join('');
+    (domainMode() ? '<div class="dr-sec">' + esc(C.weeksIntro.menu || 'Domény') + '</div>' : '<div class="dr-sec" data-dyn="Program · {dur}">Program · ' + esc(durLabel(totalWeeks)) + '</div>') +
+    C.weeks.map(w => '<button class="dr-item" type="button" data-go="w' + w.n + '"><span class="n"' + wkAttr(w.n, 'big') + '>' + esc(laneNum(w)) + '</span><span><b>' + esc(w.title) + '</b><span>' + esc(domainMode() && w.kick ? w.kick : C.agents[w.agent].name) + '</span></span></button>').join('');
 }
 function openMenu(open) {
   $('#drawer').hidden = !open; $('#scrim').hidden = !open;
@@ -3447,6 +3736,8 @@ function go(key, animate = true) {
   else if (key === 'all') el = world;
   else el = $('#sec-' + key);
   if (!el) return;
+  // úvod s dalšími částmi (hero.after): mapa zaměří jen hlavní část úvodu, části pod ní jsou o kousek níž
+  if (key === 'a' && !isLinear() && C.hero.after && C.hero.after.length) { const hg = $('#sec-a .hero-grid'); if (hg) { const r0 = worldRect(el), r1 = worldRect(hg); animate ? animateTo(fitView({ x: r0.x, y: r0.y, w: r0.w, h: r1.y + r1.h - r0.y }, 36)) : (Object.assign(st, fitView({ x: r0.x, y: r0.y, w: r0.w, h: r1.y + r1.h - r0.y }, 36)), apply()); return; } }
   if (isLinear()) { el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); return; }
   const r = key === 'all' ? { x: 0, y: 0, w: world.offsetWidth, h: world.offsetHeight } : worldRect(el);
   const t = mode === 'top' ? topView(r) : fitView(r, key === 'all' ? 24 : 36);
