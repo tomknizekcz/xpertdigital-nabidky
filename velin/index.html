@@ -439,6 +439,11 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 .dir{font-size:11px;font-weight:700;border-radius:999px;padding:0 7px;background:var(--chip);color:var(--chip-ink);white-space:nowrap}
 .dir.in{background:var(--blue-50);color:var(--blue)}
 .oh .meta .lnk .ic{width:15px;height:15px}
+.mscode{display:grid;gap:10px;font-size:14px}
+.msc{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.msc b{font-size:26px;letter-spacing:.12em;color:var(--ink);background:var(--sunk);border-radius:10px;padding:6px 14px}
+.steps-ol{margin:0;padding:4px 14px 12px 32px;display:grid;gap:7px;font-size:13.5px}
+.steps-ol b{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -787,7 +792,7 @@ function vOffers() {
     (pub.length ? '<div class="panel mt"><div class="ph"><h4>Veřejné stránky</h4><span>jen anonymní měření</span></div>' + table(['Stránka', 'Zobrazení', 'Kontakt', 'Odkud přišli', ''], pub.map(o => ['<b style="color:var(--ink)">' + esc(o.short) + '</b> <span class="mono" style="color:var(--muted)">/' + esc(o.slug) + '/</span>', o.anon.views.length, o.anon.cta.length, esc(Object.keys(o.anon.refs).sort((a, b) => o.anon.refs[b] - o.anon.refs[a]).slice(0, 3).map(k => k + ' ' + o.anon.refs[k]).join(', ') || '—'), '<button class="btn" type="button" data-offer="' + esc(o.slug) + '" aria-label="Detail">' + icon('arrow') + '</button>']), [1, 2]) + '</div>' : '');
 }
 /* ============ CRM: firmy, kontakty, aktivity, úkoly, obchodní plán (crm.gs) ============ */
-Object.assign(V, { firm: '', ftab: 'prehled', fq: '', fmine: false, pmine: false, ff: null, cedit: '', cdel: '', pendingFirm: '', fsave: null });
+Object.assign(V, { msLogin: null, msEdit: false, msf: {}, firm: '', ftab: 'prehled', fq: '', fmine: false, pmine: false, ff: null, cedit: '', cdel: '', pendingFirm: '', fsave: null });
 const CRM_PROB = { ready: 5, sent: 10, opened: 20, engaged: 30, filled: 50, meeting: 60, won: 100, lost: 0, paused: 0 };
 const KIND = { note: ['Poznámka', 'pencil'], call: ['Hovor', 'phone'], meeting: ['Schůzka', 'cal'], email: ['E-mail', 'mail'] };
 const REASONS = ['Cena', 'Konkurence', 'Načasování', 'Rozpočet', 'Bez rozhodnutí', 'Řeší to sami', 'Řešení na míru', 'Rychlost', 'Reference', 'Vztah', 'Jiný důvod'];
@@ -933,6 +938,7 @@ function fTimeline(f) {
     (i.a && i.a.kind === 'email' ? ' <span class="dir ' + (i.a.dir === 'in' ? 'in' : '') + '">' + (i.a.dir === 'in' ? 'od klienta' : 'od nás') + '</span>' : '') + (i.o ? ' · <button class="lnk" type="button" data-offer="' + esc(i.o.slug) + '">' + esc(i.o.short) + '</button>' : '') +
     '<div class="sub" style="white-space:pre-line">' + esc(i.text) + '</div>' +
     (i.a && i.a.contact && D.crm.contacts.some(c => c.id === i.a.contact) ? '<div class="sub">' + icon('user') + ' ' + esc(D.crm.contacts.filter(c => c.id === i.a.contact)[0].name) + '</div>' : '') +
+    (i.a && i.a.src === 'm365' && isOwner() && i.a.ext ? '<a class="lnk" href="https://outlook.office.com/mail/deeplink/read/' + encodeURIComponent(i.a.ext) + '" target="_blank" rel="noopener noreferrer">Otevřít v Outlooku' + icon('arrow') + '</a>' : '') +
     (i.a && i.a.src === 'gmail' && isOwner() && i.a.ext ? '<a class="lnk" href="https://mail.google.com/mail/u/0/#all/' + esc(i.a.ext) + '" target="_blank" rel="noopener noreferrer">Otevřít v Gmailu' + icon('arrow') + '</a>' : '') +
     (i.a && i.a.src === 'velin' && canEdit() ? ' <button class="lnk dim" type="button" data-act-del="' + esc(i.a.id) + '">' + icon('trash') + 'Smazat</button>' : '') + '</div></div>';
   const days = list => { let out = '', day = 0; list.forEach(i => { const d = sod(i.at); if (d !== day) { day = d; out += '<div class="tl-day">' + new Date(d).toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' }) + '</div>'; } out += row(i); }); return out; };
@@ -1078,7 +1084,8 @@ function crmBizLocal(m, p) {
 /* ---------- Nastavení: Gmail a Kalendář, jméno vlastníka ---------- */
 function crmSettings(st) {
   const S = st.sync || {}, I = S.info;
-  const status = !I ? 'Zatím neproběhla.' : 'Naposledy ' + when(I.at) + ': ' + I.mails + ' ' + plural(I.mails, 'nový e-mail', 'nové e-maily', 'nových e-mailů') + ', ' + I.meetings + ' ' + plural(I.meetings, 'nová schůzka', 'nové schůzky', 'nových schůzek') +
+  const SRC = { gmail: 'Gmail', m365: 'Microsoft 365' }, bySrc = I && I.src ? Object.keys(I.src).filter(k => I.src[k]).map(k => (SRC[k] || k) + ' ' + I.src[k]) : [];
+  const status = !I ? 'Zatím neproběhla.' : 'Naposledy ' + when(I.at) + ': ' + I.mails + ' ' + plural(I.mails, 'nový e-mail', 'nové e-maily', 'nových e-mailů') + (bySrc.length > 1 ? ' (' + bySrc.join(', ') + ')' : '') + ', ' + I.meetings + ' ' + plural(I.meetings, 'nová schůzka', 'nové schůzky', 'nových schůzek') +
     (I.contacts ? ', ' + I.contacts + ' ' + plural(I.contacts, 'nový kontakt', 'nové kontakty', 'nových kontaktů') : '') + (I.more ? ', zbytek dodělá další běh' : '') + '.';
   const errs = I && I.errors && I.errors.length ? '<div class="callout"><span>' + icon('shield') + '</span><div>' + I.errors.map(esc).join('<br>') + '</div></div>' : '';
   return '<div class="panel"><div class="ph"><h4>Gmail a Kalendář</h4><span>' + esc(S.me || 'účet vlastníka') + '</span></div>' +
@@ -1087,16 +1094,91 @@ function crmSettings(st) {
     '<div class="rule"><div><b>Stav</b><p>' + status + '</p></div><button class="btn" type="button" data-sync-now>' + icon('refresh') + 'Synchronizovat teď</button></div>' + errs +
     '<p class="fig-note">Velín čte jen hlavičky (od, komu, předmět, datum) a u schůzek název, čas a hosty. Obsah e-mailů ani popis schůzek nečte a nic neposílá ani nemaže. ' +
     'Poprvé se stahuje půl roku zpět, e-maily a schůzky starší než rok noční údržba ve Velínu smaže (v Gmailu zůstávají). Přístup ke Gmailu a Kalendáři jste povolili v editoru skriptu, odebrat ho jde v účtu Google → Zabezpečení → Aplikace třetích stran.</p></div>' +
+    msPanel(st) +
     '<div class="panel"><div class="ph"><h4>Vaše jméno</h4><span>v seznamu odpovědných</span></div><div class="form f2"><label class="fld" for="own-n">Jméno<input id="own-n" autocomplete="name" placeholder="Vlastník Velínu" value="' + esc(st.ownerName || '') + '"></label>' +
     '<div class="btnrow" style="margin:0"><button class="btn red" type="button" data-owner-name style="height:38px">' + icon('check') + 'Uložit</button></div></div></div>';
 }
 
+/* ---------- Microsoft 365 (m365.gs): firemní pošta a kalendář ---------- */
+function msPanel(st) {
+  const M = st.ms || {}, L = V.msLogin, f = V.msf || {};
+  const head = '<div class="panel"><div class="ph"><h4>Microsoft 365</h4><span>' + esc(M.connected && M.me ? M.me : 'firemní pošta a kalendář') + '</span></div>';
+  const what = '<p class="fig-note">Stejně jako u Gmailu: jen hlavičky e-mailů (od, komu, předmět, datum) a u schůzek název, čas a hosty, obsah ani přílohy ne. Synchronizuje se spolu s Gmailem (přepínač výše). Přihlášení drží jen Velín vlastníka a jde kdykoli odpojit.</p>';
+  if (L) return head + '<div class="mscode"><p>Otevřete <a href="' + esc(L.url) + '" target="_blank" rel="noopener noreferrer">' + esc(L.url.replace(/^https?:\/\//, '')) + '</a>, zadejte kód a přihlaste se firemním účtem:</p>' +
+    '<div class="msc"><b class="mono" id="ms-code">' + esc(L.code) + '</b><button class="btn" type="button" data-copytext="' + esc(L.code) + '">' + icon('copy') + 'Kopírovat kód</button></div>' +
+    '<p class="fig-note"><i class="sync on" aria-hidden="true"></i> Čekám na přihlášení, kód platí do ' + hm(L.expires) + '. Po přihlášení Microsoft ukáže, co Velín smí číst (hlavičky pošty a kalendáře), a požádá o souhlas.</p>' +
+    '<div class="btnrow"><button class="btn" type="button" data-ms-cancel>Zrušit</button></div></div></div>';
+  if (M.connected) return head + '<div class="rule"><div><b>Připojeno</b><p>' + esc(M.me || 'firemní účet') + '. E-maily a schůzky s doménami firem se zapisují k firmám.</p></div><button class="btn" type="button" data-ms-off>Odpojit</button></div>' + what + '</div>';
+  if (M.clientId && !V.msEdit) return head + (M.lost ? '<div class="callout"><span>' + icon('shield') + '</span><div><b>Přihlášení vypršelo ' + when(M.lost) + '.</b> Připojte Microsoft 365 znovu, zapsané e-maily zůstaly.</div></div>' : '') +
+    '<div class="rule"><div><b>Aplikace je nastavená</b><p>ID ' + esc(M.clientId.slice(0, 8)) + '…' + (M.tenant ? ', adresář ' + esc(M.tenant.slice(0, 8)) + '…' : '') + '. Připojte firemní účet, ze kterého píšete klientům.</p></div>' +
+    '<button class="btn red" type="button" data-ms-start' + (V.busy ? ' disabled' : '') + '>' + icon('link') + 'Připojit Microsoft 365</button></div>' +
+    '<p class="fig-note"><button class="lnk" type="button" data-ms-edit>Změnit ID aplikace</button></p>' + what + '</div>';
+  return head + '<p style="font-size:14px">Velín potřebuje v Microsoft Entra zaregistrovanou aplikaci (jednou, asi 5 minut). Žádné heslo aplikace se nevytváří.</p>' +
+    '<details class="draft" open><summary>Jak aplikaci zaregistrovat</summary><ol class="steps-ol">' +
+    '<li>Otevřete <a href="https://entra.microsoft.com" target="_blank" rel="noopener noreferrer">entra.microsoft.com</a> a přihlaste se firemním účtem (nejlépe správce).</li>' +
+    '<li><b>Aplikace → Registrace aplikací → Nová registrace</b> (App registrations → New registration). Název: Velín nabídek. Podporované typy účtů: jen účty v tomto adresáři organizace. Identifikátor URI pro přesměrování nechte prázdný. <b>Zaregistrovat</b>.</li>' +
+    '<li>Na přehledu aplikace zkopírujte <b>ID aplikace (klienta)</b> a <b>ID adresáře (tenanta)</b> a vložte je níže.</li>' +
+    '<li><b>Ověřování → Upřesnit nastavení → Povolit toky veřejných klientů: Ano</b> (Authentication → Allow public client flows) a Uložit.</li>' +
+    '<li><b>Oprávnění rozhraní API → Přidat oprávnění → Microsoft Graph → Delegovaná oprávnění</b>: Mail.ReadBasic a Calendars.ReadBasic (User.Read tam už je). Jste-li správce, klikněte ještě na <b>Udělit souhlas správce</b>.</li></ol></details>' +
+    '<div class="form f2 mt"><label class="fld" for="ms-id">ID aplikace (klienta)<input id="ms-id" autocomplete="off" spellcheck="false" placeholder="1a2b3c4d-…" value="' + esc(f.clientId != null ? f.clientId : M.clientId || '') + '"></label>' +
+    '<label class="fld" for="ms-tn">ID adresáře (tenanta)<input id="ms-tn" autocomplete="off" spellcheck="false" placeholder="1a2b3c4d-…" value="' + esc(f.tenant != null ? f.tenant : M.tenant || '') + '"></label></div>' +
+    (f.err ? '<p class="ferr" role="alert">' + esc(f.err) + '</p>' : '') +
+    '<div class="btnrow"><button class="btn red" type="button" data-ms-save>' + icon('check') + 'Uložit</button>' + (V.msEdit ? '<button class="btn" type="button" data-ms-editoff>Zrušit</button>' : '') + '</div></div>';
+}
+// dotaz na dokončení přihlášení v intervalu, který určil Microsoft; konec po přihlášení, chybě nebo vypršení kódu
+let MS_TIMER = 0;
+function msPollLoop(gen) {
+  clearTimeout(MS_TIMER);
+  const L = V.msLogin;
+  if (!L || L.gen !== gen) return;
+  if (Date.now() > L.expires) { V.msLogin = null; toast('Kód vypršel, klikněte znovu na Připojit.', true); render(false, true); return; }
+  MS_TIMER = setTimeout(async () => {
+    const r = await api('velinMsPoll').catch(err => ({ ok: false, error: errText(err) }));
+    if (!V.msLogin || V.msLogin.gen !== gen) return;
+    if (r && r.ok && r.pending) return msPollLoop(gen);
+    V.msLogin = null;
+    if (r && r.ok && r.connected) {
+      D.settings.ms = Object.assign(D.settings.ms || {}, { connected: true, me: r.me, lost: 0 });
+      toast('Microsoft 365 připojen' + (r.me ? ': ' + r.me : '') + '. E-maily se načtou při synchronizaci.');
+      render(false, true);
+      load(true);
+    } else { toast((r && r.error) || 'Připojení se nepovedlo.', true); render(false, true); }
+  }, (L.interval || 5) * 1000);
+}
+
 /* ---------- ovládání ---------- */
 document.addEventListener('click', async e => {
-  const t = e.target.closest('[data-firm],[data-ftab],[data-fmine],[data-pmine],[data-firm-new],[data-firm-cancel],[data-firm-create],[data-firm-save],[data-firm-arch],[data-con-new],[data-con-edit],[data-con-cancel],[data-con-save],[data-con-del],[data-con-delgo],[data-act-save],[data-act-del],[data-todo-add],[data-todo-done],[data-todo-del],[data-sync],[data-sync-now],[data-owner-name]');
+  const t = e.target.closest('[data-ms-save],[data-ms-edit],[data-ms-editoff],[data-ms-start],[data-ms-cancel],[data-ms-off],[data-firm],[data-ftab],[data-fmine],[data-pmine],[data-firm-new],[data-firm-cancel],[data-firm-create],[data-firm-save],[data-firm-arch],[data-con-new],[data-con-edit],[data-con-cancel],[data-con-save],[data-con-del],[data-con-delgo],[data-act-save],[data-act-del],[data-todo-add],[data-todo-done],[data-todo-del],[data-sync],[data-sync-now],[data-owner-name]');
   if (!t || !D) return;
   const d = t.dataset;
   const focus = id => setTimeout(() => { const el = $('#' + id); if (el) { el.scrollIntoView({ block: 'center' }); el.focus({ preventScroll: true }); } }, 30);
+  if (d.msSave != null) {
+    const p = { clientId: $('#ms-id').value.trim(), tenant: $('#ms-tn').value.trim() };
+    V.msf = Object.assign({}, p);
+    const r = await call('velinMsSetup', [p], 'Uloženo. Teď připojte firemní účet.', () => {
+      const S = D.settings.ms = D.settings.ms || {}, was = Object.assign({}, S); Object.assign(S, { clientId: p.clientId, tenant: p.tenant });
+      return () => { D.settings.ms = was; };
+    });
+    if (r && r.ok !== false) { V.msf = {}; V.msEdit = false; } else V.msf.err = (r && r.error) || 'Nepodařilo se uložit.';
+    return render(false, true);
+  }
+  if (d.msEdit != null) { V.msEdit = true; return render(false, true); }
+  if (d.msEditoff != null) { V.msEdit = false; V.msf = {}; return render(false, true); }
+  if (d.msStart != null) {
+    V.busy = true; render(false, true);
+    const r = await api('velinMsStart').catch(err => ({ ok: false, error: errText(err) }));
+    V.busy = false;
+    if (!r || !r.ok) { toast((r && r.error) || 'Přihlášení se nepodařilo spustit.', true); return render(false, true); }
+    V.msLogin = { code: r.code, url: r.url, expires: r.expires, interval: r.interval, gen: Date.now() };
+    render(false, true);
+    try { window.open(r.url, '_blank', 'noopener'); } catch (err) {}
+    return msPollLoop(V.msLogin.gen);
+  }
+  if (d.msCancel != null) { V.msLogin = null; clearTimeout(MS_TIMER); return render(false, true); }
+  if (d.msOff != null) return call('velinMsDisconnect', [], 'Microsoft 365 odpojen. Zapsané e-maily zůstaly.', () => {
+    const S = D.settings.ms = D.settings.ms || {}, was = Object.assign({}, S); S.connected = false;
+    return () => { D.settings.ms = was; };
+  });
   if (d.firm) return go('firma', { firm: d.firm, ftab: 'prehled', cedit: '', cdel: '' });
   if (d.ftab) { V.ftab = d.ftab; V.cedit = ''; V.cdel = ''; render(false, true); if (d.focus) focus(d.focus); else { const b = $('[role="tab"][aria-selected="true"]', main); if (b) b.focus({ preventScroll: true }); } return; }
   if (d.fmine != null) { V.fmine = d.fmine === '1'; return render(false, true); }
