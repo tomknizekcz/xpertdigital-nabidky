@@ -475,6 +475,16 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 .ares-f:last-of-type{border-bottom:0}
 .ares-f > b{color:var(--ink);font-size:14px}
 .ares-f .links li small{display:block}
+.pb-st{padding:10px 0;border-bottom:1px solid var(--line-2)}
+.pb-st:last-of-type{border-bottom:0}
+.pb-st .chk{min-height:30px;flex-wrap:wrap;column-gap:8px;row-gap:0}
+.pb-st .chk .muted-s{font-size:12px}
+.pb-it{display:grid;grid-template-columns:minmax(0,1fr) 64px 28px;gap:8px;align-items:center;margin:6px 0 6px 25px}
+.pb-it input{height:34px;border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:0 10px;color:var(--ink);font-size:13.5px;font-weight:500;min-width:0;width:100%}
+.pb-it input:focus{outline:2px solid var(--red);outline-offset:0;border-color:transparent}
+.pb-it .x{color:var(--faint);background:none;border:0;padding:2px;border-radius:6px;cursor:pointer}
+.pb-st > .lnk{margin-left:25px}
+@media (max-width:640px){.pb-it{margin-left:0}.pb-st > .lnk{margin-left:0}}
 </style>
 </head>
 <body>
@@ -989,7 +999,7 @@ function csvTodos() {
   const st = t => t.done ? 'hotovo' : t.due && dayDiff(NOW, t.due) < 0 ? 'po termínu' : 'otevřený';
   const L = D.crm.todos.slice().sort((a, b) => (!!a.done - !!b.done) || ((a.due || 9e15) - (b.due || 9e15)));
   return [['Úkol', 'Firma', 'Nabídka', 'Termín', 'Odpovědný', 'Stav', 'Hotovo', 'Kdo zadal', 'Zadáno']].concat(L.map(t => [t.title, D.F[t.firm] ? D.F[t.firm].name : '',
-    t.slug && D.O[t.slug] ? D.O[t.slug].short : '', csvDay(t.due), t.owner ? person(t.owner) || 'bývalý kolega' : '', st(t), csvDate(t.done), whoName(t.by), csvDate(t.created)]));
+    t.slug && D.O[t.slug] ? D.O[t.slug].short : '', csvDay(t.due), t.owner ? person(t.owner) || 'bývalý kolega' : '', st(t), csvDate(t.done), byLabel(t.by), csvDate(t.created)]));
 }
 function csvActs() {
   const SRC = { velin: 'zapsáno ve Velínu', gmail: 'Gmail', kalendar: 'Google Kalendář', m365: 'Microsoft 365', m365kal: 'Outlook', web: 'poptávka z webu' };
@@ -1273,6 +1283,36 @@ function fMerged(f, ro) {
   return done || pick ? '<div class="stack" style="margin-top:14px">' + done + pick + '</div>' : '';
 }
 
+/* ---------- postup podle fáze (Nastavení; úkoly zakládá server, crm.gs crmPlaybook_) ---------- */
+const PB_STAGES = [['meeting', 'Schůzka', 'dní od schůzky (záporné = před ní)'], ['filled', 'Vyplněno', 'dní od prvního odeslaného formuláře'], ['won', 'Vyhráno', 'dní od výhry'], ['lost', 'Prohráno', 'dní od prohry']];
+const byLabel = by => /^postup:/.test(by) ? 'z postupu · ' + ((PB_STAGES.filter(s => s[0] === by.slice(7))[0] || [])[1] || 'fáze') : whoName(by);
+// rozpracovaný postup z formuláře (ať se při přidání nebo odebrání řádku neztratí, co je napsané)
+function pbRead() {
+  const P = V.pb || JSON.parse(JSON.stringify(D.crm.playbook || {})), out = {};
+  PB_STAGES.forEach(s => {
+    const c = P[s[0]] || { on: false, items: [] }, on = $('#pb-' + s[0] + '-on');
+    out[s[0]] = { on: on ? on.checked : !!c.on, items: (c.items || []).map((it, i) => {
+      const t = $('#pb-' + s[0] + '-' + i + '-t'), d = $('#pb-' + s[0] + '-' + i + '-d');
+      return { title: t ? t.value : it.title, days: d ? +d.value || 0 : +it.days || 0 };
+    }) };
+  });
+  return out;
+}
+function playbookPanel() {
+  const P = V.pb || D.crm.playbook || {};
+  const st = s => {
+    const c = P[s[0]] || { on: false, items: [] };
+    return '<div class="pb-st"><label class="chk" for="pb-' + s[0] + '-on"><input id="pb-' + s[0] + '-on" type="checkbox"' + (c.on ? ' checked' : '') + '><b>' + s[1] + '</b><span class="muted-s">termín: ' + s[2] + '</span></label>' +
+      (c.items || []).map((it, i) => '<div class="pb-it"><input id="pb-' + s[0] + '-' + i + '-t" aria-label="' + s[1] + ': úkol ' + (i + 1) + '" maxlength="200" value="' + esc(it.title) + '">' +
+        '<input id="pb-' + s[0] + '-' + i + '-d" type="number" min="-60" max="365" step="1" aria-label="Termín ve dnech, ' + s[2] + '" value="' + (+it.days || 0) + '">' +
+        '<button class="x" type="button" data-pb-del="' + s[0] + '|' + i + '" aria-label="Odebrat úkol ' + esc(it.title) + '">' + icon('x') + '</button></div>').join('') +
+      '<button class="lnk" type="button" data-pb-add="' + s[0] + '">' + icon('plus') + 'Přidat úkol</button></div>';
+  };
+  return '<div class="panel"><div class="ph"><h4>Postup podle fáze</h4><span>úkoly, které Velín sám založí</span></div>' + PB_STAGES.map(st).join('') +
+    '<div class="btnrow"><button class="btn red" type="button" data-pb-save>' + icon('check') + 'Uložit postupy</button><button class="btn" type="button" data-pb-reset>Výchozí postupy</button></div>' +
+    '<p class="fig-note">Když nabídka dostane schůzku, klient odešle formulář, nebo nabídku označíte jako vyhranou či prohranou, Velín k ní založí tyto úkoly, jednou na nabídku a fázi. Odpovědný je ten, kdo má na starosti nabídku, pak firmu, jinak vy. Přeplánovaná schůzka úkoly posune, zrušená je odebere. Smazaný úkol z postupu se znovu nezaloží.</p></div>';
+}
+
 /* ---------- úkoly ---------- */
 // ctx: { firm, slug, key (jedinečná část id polí), title }
 function todoPanel(list, ctx) {
@@ -1290,7 +1330,8 @@ function todoRow(t, ctx) {
   const ro = !canEdit();
   return '<div class="todo' + (t.done ? ' done' : '') + '"><button class="tk" type="button"' + (ro ? ' disabled' : '') + ' data-todo-done="' + esc(t.id) + '" data-on="' + (t.done ? '0' : '1') + '" aria-label="' + (t.done ? 'Vrátit mezi otevřené: ' : 'Hotovo: ') + esc(t.title) + '">' + icon('check') + '</button>' +
     '<div><span class="tt">' + esc(t.title) + '</span><div class="tm">' + dueChip(t) + (!ctx.firm && t.firm ? firmLink(t.firm) : '') + (t.slug && D.O[t.slug] && !ctx.slug ? '<span>' + esc(D.O[t.slug].short) + '</span>' : '') +
-    (t.owner && !isMine(t.owner) ? '<span>' + icon('user') + ' ' + esc(person(t.owner) || 'bývalý kolega') + '</span>' : '') + (t.by && t.by !== D.me.name && !(D.me.owner && t.by === 'vlastník') ? '<span>zadal(a) ' + esc(whoName(t.by)) + '</span>' : '') + '</div></div>' +
+    (t.owner && !isMine(t.owner) ? '<span>' + icon('user') + ' ' + esc(person(t.owner) || 'bývalý kolega') + '</span>' : '') +
+    (/^postup:/.test(t.by) ? '<span>' + esc(byLabel(t.by)) + '</span>' : t.by && t.by !== D.me.name && !(D.me.owner && t.by === 'vlastník') ? '<span>zadal(a) ' + esc(whoName(t.by)) + '</span>' : '') + '</div></div>' +
     (ro ? '<span></span>' : '<button class="x" type="button" data-todo-del="' + esc(t.id) + '" aria-label="Smazat úkol ' + esc(t.title) + '">' + icon('x') + '</button>') + '</div>';
 }
 // Přehled: moje úkoly (vlastník: jeho a nepřidělené; kolega: jeho)
@@ -1463,7 +1504,8 @@ function msPollLoop(gen) {
 document.addEventListener('click', async e => {
   const t = e.target.closest('[data-ms-save],[data-ms-edit],[data-ms-editoff],[data-ms-start],[data-ms-cancel],[data-ms-off],[data-firm],[data-ftab],[data-fmine],[data-pmine],[data-firm-new],[data-firm-cancel],[data-firm-create],[data-firm-save],[data-firm-arch],[data-con-new],[data-con-edit],[data-con-cancel],[data-con-save],[data-con-del],[data-con-delgo],[data-act-save],[data-act-del],[data-todo-add],[data-todo-done],[data-todo-del],[data-sync],[data-sync-now],[data-owner-name],' +
     '[data-merge],[data-merge-pick],[data-merge-swap],[data-merge-back],[data-merge-go],[data-unmerge],[data-nodup],[data-dup-all],' +
-    '[data-ares-find],[data-ares-use],[data-ares-clear],[data-ares-scan],[data-ares-pick],[data-ares-sure],[data-ares-done]');
+    '[data-ares-find],[data-ares-use],[data-ares-clear],[data-ares-scan],[data-ares-pick],[data-ares-sure],[data-ares-done],' +
+    '[data-pb-add],[data-pb-del],[data-pb-save],[data-pb-reset]');
   if (!t || !D) return;
   const d = t.dataset;
   const focus = id => setTimeout(() => { const el = $('#' + id); if (el) { el.scrollIntoView({ block: 'center' }); el.focus({ preventScroll: true }); } }, 30);
@@ -1551,6 +1593,15 @@ document.addEventListener('click', async e => {
     return render(false, true);
   }
   if (d.aresDone != null) { V.aresScan = null; return render(false, true); }
+  // postup podle fáze: úpravy v prohlížeči (V.pb), uložení jedním tlačítkem
+  if (d.pbAdd) { V.pb = pbRead(); V.pb[d.pbAdd].items.push({ title: '', days: d.pbAdd === 'meeting' ? -1 : 0 }); render(false, true); return focus('pb-' + d.pbAdd + '-' + (V.pb[d.pbAdd].items.length - 1) + '-t'); }
+  if (d.pbDel) { const p = d.pbDel.split('|'); V.pb = pbRead(); V.pb[p[0]].items.splice(+p[1], 1); return render(false, true); }
+  if (d.pbSave != null) {
+    const cfg = pbRead();
+    PB_STAGES.forEach(s => { cfg[s[0]].items = cfg[s[0]].items.filter(it => String(it.title || '').trim()); });
+    return call('velinPlaybook', [cfg], 'Postupy uloženy.', () => { const was = D.crm.playbook, pb = V.pb; D.crm.playbook = cfg; V.pb = null; return () => { D.crm.playbook = was; V.pb = pb; }; });
+  }
+  if (d.pbReset != null) { V.pb = null; return call('velinPlaybook', [null], 'Výchozí postupy vráceny.'); }
   if (d.firm) return go('firma', { firm: d.firm, ftab: 'prehled', cedit: '', cdel: '' });
   if (d.ftab) { V.ftab = d.ftab; V.cedit = ''; V.cdel = ''; render(false, true); if (d.focus) focus(d.focus); else { const b = $('[role="tab"][aria-selected="true"]', main); if (b) b.focus({ preventScroll: true }); } return; }
   if (d.fmine != null) { V.fmine = d.fmine === '1'; return render(false, true); }
@@ -1950,7 +2001,7 @@ function vSettings() {
     (R.archived ? ' V archivu ' + plural(R.archived, 'je', 'jsou', 'je') + ' ' + R.archived + ' ' + plural(R.archived, 'měsíční souhrn', 'měsíční souhrny', 'měsíčních souhrnů') + '.' : '') + '</p>' +
     '<p style="font-size:14px">Když čtenář požádá o smazání: detail nabídky → Čtenáři → Smazat údaje. Smaže jeho návštěvy a jméno u odeslaných formulářů a osobní odkaz zneplatní. E-maily z Velínu ve schránce smažte ručně.</p></div>';
   return vh('Nastavení', 'přístupy kolegů, Gmail a Kalendář, ranní přehled, ochrana dat a pravidla') +
-    '<div class="grid g2e"><div class="stack">' + teamPanel(st) + crmSettings(st) + '</div><div class="stack">' + digest + data + score + '</div></div>' + logPanel(st);
+    '<div class="grid g2e"><div class="stack">' + teamPanel(st) + crmSettings(st) + playbookPanel() + '</div><div class="stack">' + digest + data + score + '</div></div>' + logPanel(st);
 }
 function teamPanel(st) {
   const T = V.team || {}, list = (st.team || []).filter(x => !x.revoked), gone = (st.team || []).filter(x => x.revoked);
