@@ -279,7 +279,7 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 .card h2{font-size:22px;margin-bottom:8px}
 .card p{font-size:14.5px;margin-bottom:14px}
 .loading{opacity:.55;transition:opacity .2s}
-/* ---------- fáze 2: skóre, Na tah, obchod, analytika, nastavení ---------- */
+/* ---------- fáze 2: skóre, doporučené kroky, obchod, analytika, nastavení ---------- */
 .score{display:inline-flex;align-items:center;gap:8px;min-width:140px}
 .score b{font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;min-width:20px;text-align:right}
 .meter{flex:1;height:6px;border-radius:3px;background:var(--track);overflow:hidden;min-width:44px;display:block}
@@ -775,7 +775,7 @@ function vOverview() {
     kpi('Odeslané formuláře', hNow.length, hNow.length ? 'z ' + new Set(hNow.map(h => h.slug)).size + ' nabídek' : 'zatím nic') +
     kpi('V jednání', pipe ? fmt(pipe / 1e6, 1) + ' mil. Kč' : '—', inDeal.length + ' ' + plural(inDeal.length, 'nabídka', 'nabídky', 'nabídek') + (hot ? ' · ' + hot + ' s vysokým zájmem' : '')) + '</div>';
   const open = D.actions.filter(a => !a.done);
-  const acts = '<div class="panel"><div class="ph"><h4>Na tah</h4><span>' + (open.length ? open.length + ' ' + plural(open.length, 'krok', 'kroky', 'kroků') + ' podle pravidel' : 'nic nečeká') + '</span></div>' +
+  const acts = '<div class="panel"><div class="ph"><h4>Doporučené kroky</h4><span>' + (open.length ? open.length + ' ' + plural(open.length, 'krok', 'kroky', 'kroků') + ' podle pravidel' : 'nic nečeká') + '</span></div>' +
     (D.actions.length ? '<div class="acts">' + D.actions.slice(0, 12).map(actionCard).join('') + '</div>' : '<p style="font-size:13.5px;color:var(--muted)">Teď nic nečeká. Kroky se objeví, jakmile klienti začnou číst, odesílat nebo zmlknou.</p>') + '</div>';
   const lives = S.filter(s => s.live).sort((a, b) => b.end - a.end);
   const liveHTML = '<div class="panel"><div class="ph"><h4>Právě teď</h4><span>aktivita za poslední 2 minuty</span></div>' + (lives.length ? lives.map(s => {
@@ -959,7 +959,7 @@ function buyTeamPanel(o) {
   const idle = T.idle.length ? '<p class="fig-note" style="margin-top:10px"><b>Ve firmě, ale nečtou:</b> ' + T.idle.slice(0, 6).map(c => esc(c.name + (c.role ? ' (' + c.role + ')' : ''))).join(', ') + '. Osobní odkaz jim vytvoříte v záložce Čtenáři.</p>' : '';
   return '<div class="panel"><div class="ph"><h4>Nákupní tým</h4><span>' + (T.readers.length ? T.readers.length + ' ' + plural(T.readers.length, 'čtenář', 'čtenáři', 'čtenářů') + ' se souhlasem' : 'zatím nikdo nečte') + '</span></div>' +
     '<div class="team-g">' + chips + '</div>' + (rows ? '<ul class="links">' + rows + '</ul>' : '') + idle +
-    '<p class="fig-note">Skupina podle názvu funkce u osobního odkazu (čtenáři bez odkazu ji nemají). O AI projektu mají vidět vedení a finance, ' + (T.anon ? 'u čtenářů bez odkazu Velín nepozná, kdo to je.' : 'Na tah upozorní, když chybí.') + '</p></div>';
+    '<p class="fig-note">Skupina podle názvu funkce u osobního odkazu (čtenáři bez odkazu ji nemají). O AI projektu mají vidět vedení a finance, ' + (T.anon ? 'u čtenářů bez odkazu Velín nepozná, kdo to je.' : 'když chybí, upozorní na to doporučený krok.') + '</p></div>';
 }
 
 /* ---------- export CRM do CSV (Firmy → Export do CSV; soubor složí a stáhne exportCsv) ---------- */
@@ -1655,7 +1655,7 @@ function vDetail() {
   return head + tiles + bar + '<div role="tabpanel">' + body + '</div>';
 }
 
-// Souhrn: obchod (fáze, hodnota, schůzka, platnost, poznámka), skóre a kroky Na tah
+// Souhrn: obchod (fáze, hodnota, schůzka, platnost, poznámka), skóre a doporučené kroky
 function tSummary(o) {
   const m = o.manual, auto = { ready: 'Připraveno', sent: 'Odesláno', opened: 'Otevřeno', engaged: 'Zapojeno', filled: 'Vyplněno' }[o.autoStage];
   const opts = [['', 'Automaticky: ' + auto], ['meeting', 'Schůzka'], ['won', 'Vyhráno'], ['lost', 'Prohráno'], ['paused', 'Pozastaveno']];
@@ -1681,7 +1681,7 @@ function tSummary(o) {
       '</div><p class="sc-foot">Součet ' + sc.raw + ' × útlum ' + fmt(sc.decay, 2) + (sc.idle > 2 ? ' (' + sc.idle + ' ' + plural(sc.idle, 'den', 'dny', 'dní') + ' bez aktivity)' : sc.last ? ' (aktivní)' : '') + ' = ' + sc.total + '</p></div>';
   }
   const mine = D.actions.filter(a => a.slug === o.slug);
-  const acts = '<div class="panel"><div class="ph"><h4>Na tah</h4><span>' + (mine.filter(a => !a.done).length || 'žádné') + ' otevřené</span></div>' + (mine.length ? '<div class="acts">' + mine.map(actionCard).join('') + '</div>' : '<p style="font-size:13.5px;color:var(--muted)">Pro tuto nabídku teď nic nečeká.</p>') + '</div>';
+  const acts = '<div class="panel"><div class="ph"><h4>Doporučené kroky</h4><span>' + (mine.filter(a => !a.done).length || 'žádné') + ' otevřené</span></div>' + (mine.length ? '<div class="acts">' + mine.map(actionCard).join('') + '</div>' : '<p style="font-size:13.5px;color:var(--muted)">Pro tuto nabídku teď nic nečeká.</p>') + '</div>';
   return biz + '<div class="grid g2 mt">' + acts + scoreP + '</div>' + (o.meta.personal !== false && o.sess.length ? '<div class="mt">' + buyTeamPanel(o) + '</div>' : '');
 }
 
@@ -1935,12 +1935,12 @@ function vSettings() {
     (SW ? ' Váhy jsou upravené podle výher a proher (Analytika → Kalibrace skóre), body se přepočítají na novou váhu.' : '') + '</p></div>';
   if (!isOwner()) {
     const mine = '<div class="panel"><div class="ph"><h4>Váš přístup</h4><span>' + esc(D.me.name || '') + '</span></div><p style="font-size:14px">' +
-      (D.me.role === 'edit' ? 'Můžete měnit údaje nabídek (fáze, hodnota, schůzka, platnost, poznámka, firma, pravděpodobnost), vytvářet a rušit osobní odkazy, zakládat a upravovat firmy a kontakty, zapisovat hovory a poznámky, zadávat úkoly a odškrtávat kroky Na tah.' : 'Máte přístup jen ke čtení: vidíte všechno, ale nic neměníte.') +
+      (D.me.role === 'edit' ? 'Můžete měnit údaje nabídek (fáze, hodnota, schůzka, platnost, poznámka, firma, pravděpodobnost), vytvářet a rušit osobní odkazy, zakládat a upravovat firmy a kontakty, zapisovat hovory a poznámky, zadávat úkoly a odškrtávat doporučené kroky.' : 'Máte přístup jen ke čtení: vidíte všechno, ale nic neměníte.') +
       ' Ranní přehled, přístupy kolegů, synchronizaci s Gmailem a mazání údajů čtenářů a kontaktů má vlastník Velínu. Každá změna se zapisuje do záznamu změn.</p><p class="fig-note">Odkaz, kterým jste Velín otevřeli, je jen pro vás, neposílejte ho dál. Když se ztratí, požádejte vlastníka Velínu o nový.</p></div>';
     return vh('Nastavení', 'váš přístup a pravidla skóre') + '<div class="grid g2e">' + mine + score + '</div>';
   }
   const digest = '<div class="panel"><div class="ph"><h4>Ranní přehled</h4><span>e-mail kolem 7:30</span></div>' +
-    '<div class="rule"><div><b id="dg-l">Posílat ranní přehled</b><p>Kroky Na tah, co se stalo od minula a změny skóre. Když se nic nestalo, e-mail nepřijde.</p></div><button class="sw" type="button" role="switch" aria-checked="' + !!st.digest + '" aria-labelledby="dg-l" data-digest="' + (st.digest ? '0' : '1') + '"></button></div>' +
+    '<div class="rule"><div><b id="dg-l">Posílat ranní přehled</b><p>Doporučené kroky, co se stalo od minula a změny skóre. Když se nic nestalo, e-mail nepřijde.</p></div><button class="sw" type="button" role="switch" aria-checked="' + !!st.digest + '" aria-labelledby="dg-l" data-digest="' + (st.digest ? '0' : '1') + '"></button></div>' +
     '<div class="rule"><div><b>Zkušební přehled</b><p>Pošle přehled hned teď, i když je prázdný.' + (st.lastDigest ? ' Poslední ranní přehled: ' + when(st.lastDigest) + '.' : '') + '</p></div><button class="btn" type="button" data-digest-test>' + icon('send') + 'Poslat teď</button></div>' +
     '<p class="fig-note">Okamžitá upozornění chodí e-mailem z úložiště: první otevření, nový čtenář, cena otevřená 2× za 24 hodin, osobní odkaz na dalším zařízení, odeslané formuláře a Poslat kolegovi. Mezi 20:00 a 7:00 počkají do ranního přehledu.</p></div>';
   const R = st.retention || {}, keep = R.months || 12;
@@ -1980,7 +1980,7 @@ function teamPanel(st) {
     (R.on ? '<div class="rule"><div><b>Poslat připomínky teď</b><p>E-mail hned, jen kolegům, na které dnes něco čeká.</p></div><button class="btn" type="button" data-remind-now>' + icon('send') + 'Poslat teď</button></div>' : '') : '';
   return '<div class="panel"><div class="ph"><h4>Přístup kolegů</h4><span>vlastní odkaz pro každého</span></div>' + form + fresh + rows + remind +
     (gone.length ? '<p class="fig-note">Odebraný přístup: ' + gone.map(x => esc(x.name) + ' (' + dm(x.revoked) + ')').join(', ') + '.</p>' : '') +
-    '<p class="fig-note">Kolega otevře Velín svým odkazem v libovolném prohlížeči, na počítači i v mobilu, účet Google nepotřebuje. Odkaz je klíč: kdo ho má, dostane se dovnitř. Posílejte ho proto jen dotyčnému a když se ztratí nebo ho uvidí někdo další, dejte Nový odkaz. Jen čtení: vidí všechno, nic nemění. Může upravovat: fáze, hodnoty, schůzky, platnost, poznámky, osobní odkazy a kroky Na tah. Ranní přehled, přístupy a mazání údajů čtenářů zůstávají vám, každou změnu najdete v záznamu změn.</p>' +
+    '<p class="fig-note">Kolega otevře Velín svým odkazem v libovolném prohlížeči, na počítači i v mobilu, účet Google nepotřebuje. Odkaz je klíč: kdo ho má, dostane se dovnitř. Posílejte ho proto jen dotyčnému a když se ztratí nebo ho uvidí někdo další, dejte Nový odkaz. Jen čtení: vidí všechno, nic nemění. Může upravovat: fáze, hodnoty, schůzky, platnost, poznámky, osobní odkazy a doporučené kroky. Ranní přehled, přístupy a mazání údajů čtenářů zůstávají vám, každou změnu najdete v záznamu změn.</p>' +
     (st.teamUrl ? '<p class="fig-note">Odkazy vedou na <span style="overflow-wrap:anywhere">' + esc(st.teamUrl.replace('https://', '')) + '</span>. Na zařízení, kde nejste přihlášeni k Googlu, si můžete stejně vytvořit přístup i pro sebe.</p>'
       : '<p class="msg err">Velín je otevřený přes testovací adresu. Přístupy kolegů vytvářejte v běžném Velínu (adresa končí /exec).</p>') + '</div>';
 }
@@ -2008,7 +2008,7 @@ function vError() { return '<div class="center"><div class="card"><h2>' + (/pozv
 function renderRail() {
   const cur = V.view === 'detail' ? 'nabidky' : V.view === 'firma' || V.view === 'slouceni' ? 'firmy' : V.view;
   const open = D ? D.actions.filter(a => !a.done).length : 0;
-  patch($('#rnav'), [['prehled', 'grid', 'Přehled', open, true], ['firmy', 'building', 'Firmy', D && D.F ? Object.keys(D.F).filter(k => !D.F[k].archived).length : 0], ['nabidky', 'file', 'Nabídky', D ? D.list.filter(o => o.meta.personal !== false).length : 0], ['obchod', 'columns', 'Obchod'], ['analytika', 'chart', 'Analytika'], ['nastaveni', 'gear', 'Nastavení']].map(i => '<button type="button" data-nav="' + i[0] + '"' + (cur === i[0] ? ' aria-current="page"' : '') + '>' + icon(i[1]) + '<span>' + i[2] + '</span>' + (i[3] ? '<span class="cnt' + (i[4] ? ' hot' : '') + '"' + (i[4] ? ' title="kroky Na tah"' : '') + '>' + i[3] + '</span>' : '') + '</button>').join(''));
+  patch($('#rnav'), [['prehled', 'grid', 'Přehled', open, true], ['firmy', 'building', 'Firmy', D && D.F ? Object.keys(D.F).filter(k => !D.F[k].archived).length : 0], ['nabidky', 'file', 'Nabídky', D ? D.list.filter(o => o.meta.personal !== false).length : 0], ['obchod', 'columns', 'Obchod'], ['analytika', 'chart', 'Analytika'], ['nastaveni', 'gear', 'Nastavení']].map(i => '<button type="button" data-nav="' + i[0] + '"' + (cur === i[0] ? ' aria-current="page"' : '') + '>' + icon(i[1]) + '<span>' + i[2] + '</span>' + (i[3] ? '<span class="cnt' + (i[4] ? ' hot' : '') + '"' + (i[4] ? ' title="doporučené kroky"' : '') + '>' + i[3] + '</span>' : '') + '</button>').join(''));
   patch($('#rshort'), D && D.list.length ? '<div class="rail-h">Podle zájmu</div>' + D.list.filter(o => o.meta.personal !== false).slice().sort((a, b) => (b.live - a.live) || ((b.band ? b.score.total : -1) - (a.band ? a.score.total : -1))).slice(0, 12).map(o => '<button type="button" data-offer="' + esc(o.slug) + '"' + (V.view === 'detail' && V.slug === o.slug ? ' aria-current="page"' : '') + '><i class="dot ' + (o.live ? 'live' : o.stage[0] === 'won' ? 'ok' : o.band && o.score.total >= 45 ? 'act' : '') + '"></i><span>' + esc(o.short) + '</span><em>' + (o.live ? 'teď' : o.band ? (o.band[0] === 'none' ? '–' : o.score.total) : o.stage[1]) + '</em></button>').join('') : '');
   if (V.signin) { patch($('#rfoot'), '<span class="note">Nepřihlášeno</span>'); return; }
   patch($('#rfoot'), (D && !D.me.owner ? '<span class="note who-me">' + esc(D.me.name) + ' · ' + (D.me.role === 'edit' ? 'může upravovat' : 'jen čtení') + '</span>' : '') + '<span class="note"><i class="sync' + (V.loading ? ' on' : '') + '" aria-hidden="true"></i>' + (V.loading ? (V.savedAt ? 'Uloženo ' + hm(V.savedAt) + ', načítám změny…' : 'Načítám změny…') : !D ? '' : V.pollFail ? 'Spojení vypadlo, zkouším to znovu…' : 'Aktuální k ' + (V.checkedAt ? hm(V.checkedAt) : '…') + ', změny se hlídají každých 12 s.') + '</span><button type="button" data-reload>' + icon('refresh') + 'Obnovit</button>' + (D && D.M.sheetUrl ? '<a href="' + esc(D.M.sheetUrl) + '" target="_blank" rel="noopener">' + icon('sheet') + 'Tabulka</a>' : '') +
@@ -2152,7 +2152,7 @@ function csvOffers() {
     D.actions.filter(a => a.slug === o.slug && !a.done).map(a => a.title).join(' | '), o.manual.note
   ]);
   return [['Klient', 'Nabídka', 'Adresa', 'Dodavatel', 'Druh', 'Fáze', 'Hodnota (Kč)', 'Skóre zájmu', 'Zájem', 'Zobrazení', 'Čtenáři se souhlasem', 'Čistý čas (min)',
-    'Odeslané formuláře', 'Rozpracované formuláře', 'Poslední aktivita', 'Platnost do', 'Ukončeno', 'Schůzka', 'Osobní odkazy', 'Kroky Na tah', 'Poznámka']].concat(rows);
+    'Odeslané formuláře', 'Rozpracované formuláře', 'Poslední aktivita', 'Platnost do', 'Ukončeno', 'Schůzka', 'Osobní odkazy', 'Doporučené kroky', 'Poznámka']].concat(rows);
 }
 function csvContacts() {
   const rows = [];
