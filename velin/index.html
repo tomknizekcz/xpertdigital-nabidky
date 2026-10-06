@@ -470,6 +470,7 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 .mrow:last-child{border-bottom:0}
 .mrow small{display:block;font-size:12px;color:var(--muted)}
 @media (max-width:640px){.dup{grid-template-columns:30px minmax(0,1fr)}.dup .bb{grid-column:1/-1;justify-content:flex-start}}
+.team-g{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -737,7 +738,7 @@ function fdots(o) {
   return '<span class="fd" tabindex="0" data-tip="' + esc(n + ' z 5 odesláno\n' + lines.join('\n')) + '">' + FORMS.map(f => '<i class="' + (st[f[0]] || 'none') + '"></i>').join('') + '<span class="sr">' + n + ' z 5 odesláno</span></span>';
 }
 const RULE_IC = { meeting: 'cal', price: 'flame', sent: 'send', first: 'user', newreader: 'user', device: 'mob', draft: 'pencil', unopened: 'mail', silent: 'clock', no: 'x', expiry: 'cal',
-  nostep: 'target', nocontact: 'phone', stale: 'clock' };
+  nostep: 'target', nocontact: 'phone', stale: 'clock', team: 'user', roles: 'user' };
 function actionCard(a) {
   const o = D.O[a.slug];
   return '<article class="act' + (a.done ? ' done' : '') + '"><span class="pri ' + a.pri + '">' + icon(RULE_IC[a.rule] || 'target') + '</span>' +
@@ -925,6 +926,36 @@ function vFirms() {
     '</div><p class="fig-note">Firmy i archivované, kontakty i s e-maily a telefony sloučených kontaktů, úkoly otevřené a hotové za posledních 30 dní, záznamy za rok (hovory, poznámky, e-maily, schůzky a poptávky). Soubory obsahují jména a kontakty, nikam je nezveřejňujte.</p></div>';
   return vh('Firmy', total + ' ' + plural(total, 'firma', 'firmy', 'firem') + (arch ? ' · ' + arch + ' v archivu' : ''), right) + form + dups +
     '<div class="panel">' + tbl + '<p class="fig-note">Firmy a kontakty vznikají samy z nabídek a osobních odkazů. Poslední kontakt = poslední návštěva nabídky, e-mail, schůzka nebo zapsaný hovor.</p></div>' + exp;
+}
+
+/* ---------- nákupní tým u nabídky (detail → Souhrn; stejná pravidla jako crmTeam_ v crm.gs) ---------- */
+const GROUPS = { vedeni: 'vedení', finance: 'finance', it: 'IT', obchod: 'obchod', provoz: 'provoz' }, NEED = ['vedeni', 'finance'];
+function roleGroup(role) {
+  const r = ' ' + crmNorm(role).replace(/[^a-z0-9]+/g, ' ') + ' ';
+  if (/financ| cfo |ekonom|controll|ucetn|rozpoct|treasur/.test(r)) return 'finance';
+  if (/ it | cio | cto |technick|informat|digital| data |vyvoj|developer|architekt|bezpecnost|security/.test(r)) return 'it';
+  if (/obchod|sales|prodej|marketing| kam |account/.test(r)) return 'obchod';
+  if (/vyrob|provoz|logist|operat|kvalit|sklad|nakup/.test(r)) return 'provoz';
+  if (/ ceo | coo |jednatel|majitel|vlastnik|predsed|generaln|reditel|founder|zakladatel|statutar|partner| md |managing/.test(r)) return 'vedeni';
+  return '';
+}
+function buyTeam(o) {
+  const by = {};
+  o.sess.forEach(s => { const k = s.who.key, x = by[k] || (by[k] = { key: k, name: s.who.name, role: s.who.role || '', known: !!s.who.known, first: s.start, last: 0, n: 0 }); x.first = Math.min(x.first, s.start); x.last = Math.max(x.last, s.end); x.n++; });
+  const readers = Object.keys(by).map(k => by[k]).sort((a, b) => a.first - b.first), groups = {}, reading = {};
+  readers.forEach(r => { r.group = roleGroup(r.role); if (r.group) groups[r.group] = 1; reading[r.key] = 1; reading['n:' + personKey(r.name)] = 1; });
+  const F = D.F[o.manual.firm];
+  const idle = (F ? F.contacts : []).filter(c => ![c.token].concat((c.merged || []).map(m => m.token)).some(t => t && reading['p:' + t]) && !reading['n:' + personKey(c.name)]);
+  return { readers: readers, groups: groups, missing: NEED.filter(g => !groups[g]), idle: idle, anon: readers.some(r => !r.known) };
+}
+function buyTeamPanel(o) {
+  const T = buyTeam(o);
+  const chips = Object.keys(GROUPS).map(g => T.groups[g] ? chip('ok', GROUPS[g], 'check') : NEED.indexOf(g) >= 0 ? chip('warm', GROUPS[g] + ': chybí') : chip('line', GROUPS[g] + ': nikdo')).join(' ');
+  const rows = T.readers.map(r => '<li><div><b>' + esc(r.name) + '</b><small>' + esc([r.role || (r.known ? 'role neuvedena' : 'bez osobního odkazu'), r.group ? GROUPS[r.group] : '', r.n + ' ' + plural(r.n, 'návštěva', 'návštěvy', 'návštěv'), 'naposledy ' + when(r.last)].filter(Boolean).join(' · ')) + '</small></div><span></span></li>').join('');
+  const idle = T.idle.length ? '<p class="fig-note" style="margin-top:10px"><b>Ve firmě, ale nečtou:</b> ' + T.idle.slice(0, 6).map(c => esc(c.name + (c.role ? ' (' + c.role + ')' : ''))).join(', ') + '. Osobní odkaz jim vytvoříte v záložce Čtenáři.</p>' : '';
+  return '<div class="panel"><div class="ph"><h4>Nákupní tým</h4><span>' + (T.readers.length ? T.readers.length + ' ' + plural(T.readers.length, 'čtenář', 'čtenáři', 'čtenářů') + ' se souhlasem' : 'zatím nikdo nečte') + '</span></div>' +
+    '<div class="team-g">' + chips + '</div>' + (rows ? '<ul class="links">' + rows + '</ul>' : '') + idle +
+    '<p class="fig-note">Skupina podle názvu funkce u osobního odkazu (čtenáři bez odkazu ji nemají). O AI projektu mají vidět vedení a finance, ' + (T.anon ? 'u čtenářů bez odkazu Velín nepozná, kdo to je.' : 'Na tah upozorní, když chybí.') + '</p></div>';
 }
 
 /* ---------- export CRM do CSV (Firmy → Export do CSV; soubor složí a stáhne exportCsv) ---------- */
@@ -1565,7 +1596,8 @@ function tSummary(o) {
     (ro ? '' : '<button class="btn" type="button" data-extend="' + esc(o.slug) + '">+14 dní</button><button class="btn" type="button" data-end="' + esc(o.slug) + '" data-end-on="' + (m.ended ? '0' : '1') + '">' + (m.ended ? 'Obnovit platnost' : 'Ukončit platnost') + '</button>') +
     '<span>Po skončení mapa ukáže kontakt místo obsahu. Hodnota bez vyplnění = cena programu' + (o.valueAuto ? ' (' + money(o.valueAuto) + ')' : '') + '.</span></div></div>';
   let scoreP;
-  if (!o.band) scoreP = '<div class="panel"><div class="ph"><h4>Uzavřeno</h4></div><p style="font-size:14px">' + (o.stage[0] === 'won' ? 'Vyhráno. Měření dál běží, v mapě se může ukazovat Naměřeno vedle odhadu.' : 'Prohráno. Důvod si zapište do poznámky, pomůže kalibraci skóre.') + '</p></div>';
+  if (!o.band) scoreP = '<div class="panel"><div class="ph"><h4>Uzavřeno</h4></div><p style="font-size:14px">' + (o.stage[0] === 'won' ? 'Vyhráno. Měření dál běží, v mapě se může ukazovat Naměřeno vedle odhadu.' : 'Prohráno.') +
+    ' Důvod vyberte v Obchodu výše. Uzavřené nabídky Velín používá ke kalibraci skóre (Analytika → Kalibrace skóre).</p></div>';
   else {
     const sc = o.score, d = o.scorePrev == null ? chip('line', 'nová nabídka') : delta(sc.total - o.scorePrev) + ' za týden';
     scoreP = '<div class="panel"><div class="ph"><h4>Skóre zájmu</h4><span>z čeho se skládá</span></div><div class="bigsc"><b>' + sc.total + '</b>' + chip(bandCls(o.band), o.band[1]) + d + '</div><div class="sp-rows">' +
@@ -1574,7 +1606,7 @@ function tSummary(o) {
   }
   const mine = D.actions.filter(a => a.slug === o.slug);
   const acts = '<div class="panel"><div class="ph"><h4>Na tah</h4><span>' + (mine.filter(a => !a.done).length || 'žádné') + ' otevřené</span></div>' + (mine.length ? '<div class="acts">' + mine.map(actionCard).join('') + '</div>' : '<p style="font-size:13.5px;color:var(--muted)">Pro tuto nabídku teď nic nečeká.</p>') + '</div>';
-  return biz + '<div class="grid g2 mt">' + acts + scoreP + '</div>';
+  return biz + '<div class="grid g2 mt">' + acts + scoreP + '</div>' + (o.meta.personal !== false && o.sess.length ? '<div class="mt">' + buyTeamPanel(o) + '</div>' : '');
 }
 
 // Brief na schůzku: podklad z dat (brief.gs) a zadání pro Claude, hotový brief napíše Claude Code nebo claude.ai
@@ -1794,16 +1826,37 @@ function vAnalytics() {
     kpi('Čtenářů na nabídku', A.readersPerOffer ? fmt(A.readersPerOffer, 1) : '—', 'nákupní tým u otevřených nabídek') +
     kpi('Volba ceny', A.prices.length ? A.prices.map(p => Math.round(p.fixed * 100) + ' %').join(', ') : '—', A.prices.length ? 'pevná část u ' + A.prices.map(p => p.short).join(', ') : 'zatím nikdo nezvolil') +
     kpi('Anonymní zobrazení', A.anonViews, 'bez souhlasu, všechny stránky') + '</div>';
-  return vh('Analytika', 'všechny osobní nabídky od začátku měření') + tiles + '<div class="grid g2e">' + funnel + when2 + '</div><div class="grid g2e mt">' + boost + corr + '</div><div class="grid g2e mt">' + reach + '</div>';
+  return vh('Analytika', 'všechny osobní nabídky od začátku měření') + tiles + '<div class="grid g2e">' + funnel + when2 + '</div><div class="grid g2e mt">' + boost + corr + '</div><div class="grid g2e mt">' + reach + calibFig() + '</div>';
+}
+// Kalibrace skóre (model.gs vCalib_): které části skóre odlišují výhry od proher, úspěšnost podle zájmu a zapojení,
+// navržené váhy (od C.min výher i proher); použít nebo vrátit výchozí smí vlastník (velinScoreWeights)
+function calibFig() {
+  const C = D.A.calib || { won: 0, lost: 0, min: 3 }, W = D.M.scoreW, S = D.settings.scoreW;
+  const head = '<div class="panel"><div class="ph"><h4>Kalibrace skóre</h4><span>' + (C.won || C.lost ? C.won + '× vyhráno, ' + C.lost + '× prohráno' : 'podle výher a proher') + '</span></div>';
+  const custom = W ? '<p class="fig-note"><b>Skóre teď počítá s vahami podle výher a proher' + (S && S.at ? ' (od ' + dm(S.at) + ')' : '') + '.</b> Stupně zájmu (70+, 45+, 20+) zůstávají.</p>' +
+    (isOwner() ? '<div class="btnrow"><button class="btn" type="button" data-calib="reset">' + icon('refresh') + 'Vrátit výchozí váhy</button></div>' : '') : '';
+  if (!C.won && !C.lost) return head + '<p class="muted-p">Zatím žádná uzavřená nabídka. Až nabídky označíte jako vyhrané nebo prohrané (detail → Souhrn → Obchod → Fáze), Velín tu porovná, které signály skóre u výher a proher sedí, a od ' + C.min + ' výher a ' + C.min + ' proher navrhne nové váhy.</p>' + custom + '</div>';
+  const pct = v => v == null ? '—' : fmt(v * 100) + ' %';
+  const verdict = s => s == null ? '' : s >= 0.25 ? chip('ok', 'silný signál') : s >= 0.1 ? chip('line', 'slabý signál') : s <= -0.1 ? chip('bad', 'opačně') : chip('line', 'nerozhoduje');
+  const rows = C.parts.map(p => [esc(p.label), p.max + (W && p.max !== p.base ? ' <small class="muted-s">(výchozí ' + p.base + ')</small>' : ''), pct(p.won), pct(p.lost),
+    p.sep == null ? '—' : '<span class="nw">' + (p.sep >= 0 ? '+' : '−') + fmt(Math.abs(p.sep) * 100) + ' b.</span> ' + verdict(p.sep), C.suggest ? '<b>' + C.suggest[p.label] + '</b>' : '—']);
+  const rate = M => Object.keys(M || {}).map(k => esc(k) + ' ' + M[k][0] + ' z ' + (M[k][0] + M[k][1])).join(' · ');
+  const note = '<p class="fig-note">Výhry a prohry = průměrný podíl bodů části skóre ke dni uzavření, bez útlumu za ticho. Úspěšnost podle zájmu: ' + rate(C.bands) + '. Podle zapojení klienta: ' + rate(C.stages) + '.' +
+    (C.suggest ? ' Navržená váha: výchozí váha × (1 + rozdíl), nejméně polovina a nejvýš dvojnásobek, součet 100.' : ' Navržené váhy se ukážou od ' + C.min + ' výher a ' + C.min + ' proher (teď ' + C.won + ' a ' + C.lost + '). Do té doby berte srovnání jako signál, ne statistiku.') + '</p>';
+  const apply = C.suggest && isOwner() && JSON.stringify(C.suggest) !== JSON.stringify(W) ? '<div class="btnrow"><button class="btn red" type="button" data-calib="apply">' + icon('check') + 'Použít navržené váhy</button><span class="muted-s" style="align-self:center">Skóre všech nabídek se přepočítá, vrátit to jde.</span></div>' : '';
+  return head + table(['Signál', 'Váha', 'Výhry', 'Prohry', 'Rozdíl', 'Navržená váha'], rows, [1, 2, 3, 5]) + note + apply + custom + '</div>';
 }
 
 /* ============ Nastavení ============ */
 function vSettings() {
   const st = D.settings || {};
+  // (váhy podle výher a proher, když je vlastník použil: Max je nová váha, body části se na ni přepočítají)
+  const SW = D.M.scoreW, mx = (k, n) => SW && SW[k] != null && SW[k] !== n ? SW[k] + ' <small class="muted-s">(výchozí ' + n + ')</small>' : n;
   const score = '<div class="panel"><div class="ph"><h4>Skóre zájmu</h4><span>0–100, útlum po 2 dnech ticha</span></div>' + table(['Signál', 'Body', 'Max'], [
-      ['Návštěvy', '3 za návštěvu', 12], ['Čistý čas čtení', '1 za 3 minuty', 14], ['Hloubka', '1 za sekci, 1 za kartu', 14], ['Formuláře', '4 za odeslaný, 1 za rozpracovaný', 20],
-      ['Cena', '4 prohlížení, 12 odeslaná volba', 12], ['Kontakt', '4 otevření, 10 kopie telefonu či e-mailu', 10], ['Nákupní tým', '6 za dalšího čtenáře', 12], ['Návrat po pauze', '6 po 5 a více dnech', 6]
-    ], [2]) + '<p class="fig-note">Stupně zájmu: vysoký 70+, střední 45–69, nízký 20–44, minimální pod 20. Nabídka, kterou nikdo neotevřel, má štítek Neotevřeno. Po 2 dnech bez aktivity se skóre každých 7 dní půlí.</p></div>';
+      ['Návštěvy', '3 za návštěvu', mx('Návštěvy', 12)], ['Čistý čas čtení', '1 za 3 minuty', mx('Čas čtení', 14)], ['Hloubka', '1 za sekci, 1 za kartu', mx('Hloubka', 14)], ['Formuláře', '4 za odeslaný, 1 za rozpracovaný', mx('Formuláře', 20)],
+      ['Cena', '4 prohlížení, 12 odeslaná volba', mx('Cena', 12)], ['Kontakt', '4 otevření, 10 kopie telefonu či e-mailu', mx('Kontakt', 10)], ['Nákupní tým', '6 za dalšího čtenáře', mx('Nákupní tým', 12)], ['Návrat po pauze', '6 po 5 a více dnech', mx('Návrat po pauze', 6)]
+    ], [2]) + '<p class="fig-note">Stupně zájmu: vysoký 70+, střední 45–69, nízký 20–44, minimální pod 20. Nabídka, kterou nikdo neotevřel, má štítek Neotevřeno. Po 2 dnech bez aktivity se skóre každých 7 dní půlí.' +
+    (SW ? ' Váhy jsou upravené podle výher a proher (Analytika → Kalibrace skóre), body se přepočítají na novou váhu.' : '') + '</p></div>';
   if (!isOwner()) {
     const mine = '<div class="panel"><div class="ph"><h4>Váš přístup</h4><span>' + esc(D.me.name || '') + '</span></div><p style="font-size:14px">' +
       (D.me.role === 'edit' ? 'Můžete měnit údaje nabídek (fáze, hodnota, schůzka, platnost, poznámka, firma, pravděpodobnost), vytvářet a rušit osobní odkazy, zakládat a upravovat firmy a kontakty, zapisovat hovory a poznámky, zadávat úkoly a odškrtávat kroky Na tah.' : 'Máte přístup jen ke čtení: vidíte všechno, ale nic neměníte.') +
@@ -2070,7 +2123,7 @@ function copy(btn) {
   try { navigator.clipboard.writeText(text).then(ok, legacy); } catch (e) { legacy(); }
 }
 document.addEventListener('click', async e => {
-  const t = e.target.closest('[data-nav],[data-offer],[data-tab],[data-range],[data-tv],[data-copytext],[data-mklink],[data-reload],[data-setup],[data-task],[data-save-offer],[data-extend],[data-end],[data-revoke],[data-digest],[data-digest-test],[data-export],[data-forget],[data-forget-go],[data-forget-cancel],[data-team-add],[data-team-role],[data-team-ask],[data-team-keep],[data-team-off],[data-team-rot],[data-team-rotgo],[data-signout],[data-remind],[data-remind-now]');
+  const t = e.target.closest('[data-nav],[data-offer],[data-tab],[data-range],[data-tv],[data-copytext],[data-mklink],[data-reload],[data-setup],[data-task],[data-save-offer],[data-extend],[data-end],[data-revoke],[data-digest],[data-digest-test],[data-export],[data-forget],[data-forget-go],[data-forget-cancel],[data-team-add],[data-team-role],[data-team-ask],[data-team-keep],[data-team-off],[data-team-rot],[data-team-rotgo],[data-signout],[data-remind],[data-remind-now],[data-calib]');
   if (!t) return;
   const d = t.dataset;
   if (d.copytext != null) return copy(t);
@@ -2114,6 +2167,11 @@ document.addEventListener('click', async e => {
     const R = D.settings.remind = D.settings.remind || {}, was = R.on; R.on = d.remind === '1';
     return () => { R.on = was; };
   });
+  if (d.calib) {
+    const S = d.calib === 'apply' ? (D.A.calib || {}).suggest : null;
+    if (d.calib === 'apply' && !S) return;
+    return call('velinScoreWeights', [S], S ? 'Váhy použity, skóre nabídek se přepočítá.' : 'Výchozí váhy skóre vráceny.');
+  }
   if (d.remindNow != null) {
     toast('Posílám…');
     const r = await call('velinRemindNow', [], null);
