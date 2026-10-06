@@ -471,6 +471,10 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 .mrow small{display:block;font-size:12px;color:var(--muted)}
 @media (max-width:640px){.dup{grid-template-columns:30px minmax(0,1fr)}.dup .bb{grid-column:1/-1;justify-content:flex-start}}
 .team-g{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.ares-f{padding:10px 0;border-bottom:1px solid var(--line-2)}
+.ares-f:last-of-type{border-bottom:0}
+.ares-f > b{color:var(--ink);font-size:14px}
+.ares-f .links li small{display:block}
 </style>
 </head>
 <body>
@@ -821,7 +825,7 @@ function vOffers() {
 }
 /* ============ CRM: firmy, kontakty, aktivity, úkoly, obchodní plán (crm.gs) ============ */
 Object.assign(V, { msLogin: null, msEdit: false, msf: {}, firm: '', ftab: 'prehled', fq: '', fmine: false, pmine: false, ff: null, cedit: '', cdel: '', pendingFirm: '', fsave: null,
-  mk: '', ma: '', mb: '', mback: null, dupAll: false });
+  mk: '', ma: '', mb: '', mback: null, dupAll: false, ares: null, aresScan: null });
 const CRM_PROB = { ready: 5, sent: 10, opened: 20, engaged: 30, filled: 50, meeting: 60, won: 100, lost: 0, paused: 0 };
 const KIND = { note: ['Poznámka', 'pencil'], call: ['Hovor', 'phone'], meeting: ['Schůzka', 'cal'], email: ['E-mail', 'mail'], lead: ['Poptávka z webu', 'bell'] };
 const REASONS = ['Cena', 'Konkurence', 'Načasování', 'Rozpočet', 'Bez rozhodnutí', 'Řeší to sami', 'Řešení na míru', 'Rychlost', 'Reference', 'Vztah', 'Jiný důvod'];
@@ -892,7 +896,7 @@ function vFirms() {
   let list = Object.keys(D.F).map(k => D.F[k]).filter(f => !f.archived);
   const total = list.length;
   // hledá i v názvech a doménách sloučených firem a v e-mailech sloučených kontaktů
-  if (q) list = list.filter(f => crmNorm([f.name, f.domain, f.ico].concat((f.merged || []).map(m => m.name + ' ' + m.domain),
+  if (q) list = list.filter(f => crmNorm([f.name, f.domain, f.ico, f.official].concat((f.merged || []).map(m => m.name + ' ' + m.domain),
     f.contacts.map(c => c.name + ' ' + c.email + ' ' + (c.merged || []).map(m => m.name + ' ' + m.email).join(' '))).join(' ')).indexOf(q) >= 0);
   if (V.fmine) list = list.filter(f => isMine(f.owner));
   const rows = list.map(f => [f, firmStats(f)]).sort((a, b) => (b[1].last - a[1].last) || a[0].name.localeCompare(b[0].name, 'cs'));
@@ -924,7 +928,7 @@ function vFirms() {
   const exp = '<div class="panel mt"><div class="ph"><h4>Export do CSV</h4><span>pro Excel v češtině</span></div><div class="btnrow" style="margin:0">' +
     [['firmy', 'building', 'Firmy'], ['lide', 'user', 'Kontakty firem'], ['ukoly', 'check', 'Úkoly'], ['zaznamy', 'clock', 'Záznamy']].map(x => '<button class="btn" type="button" data-export="' + x[0] + '">' + icon(x[1]) + x[2] + '</button>').join('') +
     '</div><p class="fig-note">Firmy i archivované, kontakty i s e-maily a telefony sloučených kontaktů, úkoly otevřené a hotové za posledních 30 dní, záznamy za rok (hovory, poznámky, e-maily, schůzky a poptávky). Soubory obsahují jména a kontakty, nikam je nezveřejňujte.</p></div>';
-  return vh('Firmy', total + ' ' + plural(total, 'firma', 'firmy', 'firem') + (arch ? ' · ' + arch + ' v archivu' : ''), right) + form + dups +
+  return vh('Firmy', total + ' ' + plural(total, 'firma', 'firmy', 'firem') + (arch ? ' · ' + arch + ' v archivu' : ''), right) + form + dups + aresScanPanel() +
     '<div class="panel">' + tbl + '<p class="fig-note">Firmy a kontakty vznikají samy z nabídek a osobních odkazů. Poslední kontakt = poslední návštěva nabídky, e-mail, schůzka nebo zapsaný hovor.</p></div>' + exp;
 }
 
@@ -962,10 +966,10 @@ function buyTeamPanel(o) {
 const csvMoney = v => v ? Math.round(v) : '';
 const byFirmName = () => Object.keys(D.F).map(k => D.F[k]).sort((a, b) => a.name.localeCompare(b.name, 'cs'));
 function csvFirms() {
-  return [['Firma', 'Doména', 'Další domény', 'Web', 'IČO', 'Odpovědný', 'Kontakty', 'Nabídky', 'Otevřené nabídky', 'Otevřená hodnota (Kč)', 'Vážená hodnota (Kč)', 'Nejvyšší zájem',
+  return [['Firma', 'Doména', 'Další domény', 'Web', 'IČO', 'Úřední název', 'DIČ', 'Sídlo', 'Právní forma', 'Odpovědný', 'Kontakty', 'Nabídky', 'Otevřené nabídky', 'Otevřená hodnota (Kč)', 'Vážená hodnota (Kč)', 'Nejvyšší zájem',
     'Poslední kontakt', 'Příští schůzka', 'Otevřené úkoly', 'Další úkol', 'Termín dalšího úkolu', 'Sloučené firmy', 'V archivu od', 'Založeno', 'Poznámka']].concat(byFirmName().map(f => {
     const s = firmStats(f), mg = f.merged || [], next = s.todo[0];
-    return [f.name, f.domain, mg.map(m => m.domain).filter(Boolean).join(', '), f.web, f.ico, f.owner ? person(f.owner) || 'bývalý kolega' : '', f.contacts.length,
+    return [f.name, f.domain, mg.map(m => m.domain).filter(Boolean).join(', '), f.web, f.ico, f.official || '', f.dic || '', f.address || '', f.legal || '', f.owner ? person(f.owner) || 'bývalý kolega' : '', f.contacts.length,
       f.offers.map(o => o.short).join(', '), s.open.length, csvMoney(s.value), csvMoney(s.weighted), s.best ? s.best.score.total + ' (' + s.best.band[1] + ')' : '',
       csvDate(s.last), csvDate(s.meet), s.todo.length, next ? next.title : '', next ? csvDay(next.due) : '', mg.map(m => m.name).join(', '), csvDay(f.archived), csvDay(f.created), f.note];
   }));
@@ -1019,7 +1023,7 @@ function crmDups() {
   const F = Object.keys(D.F).map(k => D.F[k]).filter(f => !f.archived), mf = f => [f].concat(f.merged || []);
   groups(F, f => mf(f).map(x => x.domain), (a, b, v) => add(out.firms, 'firm', a, b, 'stejná doména ' + v));
   groups(F, f => mf(f).map(x => x.ico), (a, b, v) => add(out.firms, 'firm', a, b, 'stejné IČO ' + v));
-  groups(F, f => mf(f).map(x => firmKey(x.name)), (a, b) => add(out.firms, 'firm', a, b, 'stejný název'));
+  groups(F, f => mf(f).map(x => firmKey(x.name)).concat(f.official ? [firmKey(f.official)] : []), (a, b) => add(out.firms, 'firm', a, b, 'stejný název'));
   const words = F.map(f => [f, firmKey(f.name).split(' ').filter(Boolean)]);
   words.forEach(x => {
     if (!x[1].some(w => w.length >= 3)) return;
@@ -1108,7 +1112,8 @@ function vFirm() {
   const head = '<button class="back" type="button" data-nav="firmy">' + icon('back') + 'Všechny firmy</button>' +
     '<div class="oh"><div><h3 tabindex="-1" data-vh>' + esc(f.name) + '</h3><div class="meta">' +
     (web ? '<a href="' + esc(/^https?:/.test(web) ? web : 'https://' + web) + '" target="_blank" rel="noopener noreferrer">' + esc(f.domain || web.replace(/^https?:\/\//, '')) + '</a>' : '<span>bez domény</span>') +
-    (f.ico ? '<span>IČO ' + esc(f.ico) + '</span>' : '') + (f.owner ? chip('line', 'odpovědný: ' + person(f.owner), 'user') : chip('line', 'bez odpovědného')) + (f.archived ? chip('bad', 'v archivu') : '') + '</div></div>' +
+    (f.official && firmKey(f.official) !== firmKey(f.name) ? '<span>' + esc(f.official) + '</span>' : '') + (f.ico ? '<span>IČO ' + esc(f.ico) + '</span>' : '') +
+    (f.owner ? chip('line', 'odpovědný: ' + person(f.owner), 'user') : chip('line', 'bez odpovědného')) + (f.archived ? chip('bad', 'v archivu') : '') + '</div></div>' +
     (canEdit() ? '<div class="bb"><button class="btn" type="button" data-ftab="osa" data-focus="ac-t">' + icon('pencil') + 'Zapsat hovor nebo poznámku</button><button class="btn red" type="button" data-ftab="prehled" data-focus="td-t-f">' + icon('plus') + 'Úkol</button></div>' : '') + '</div>';
   const tiles = '<div class="kpis">' +
     kpi('Otevřené nabídky', s.open.length, s.value ? money(s.value) + ' celkem' : f.offers.length ? f.offers.length + ' celkem' : 'zatím žádná') +
@@ -1214,7 +1219,46 @@ function fDetails(f) {
     (ro ? '' : '<div class="btnrow"><button class="btn red" type="button" data-firm-save="' + esc(f.id) + '">' + icon('check') + 'Uložit</button>' +
     '<button class="btn" type="button" data-firm-arch="' + esc(f.id) + '" data-on="' + (f.archived ? '0' : '1') + '">' + (f.archived ? 'Vrátit z archivu' : 'Archivovat') + '</button></div>') +
     '<p class="fig-note">Doména: e-maily a schůzky s adresami @doména se přiřadí k firmě. Domény jako gmail.com nebo seznam.cz firmě nepatří, takové adresy patří ke kontaktům. Archivovaná firma zmizí ze seznamu, data zůstanou.</p></div>' +
-    fMerged(f, ro);
+    '<div class="mt">' + fAres(f, ro) + '</div>' + fMerged(f, ro);
+}
+/* ---------- ARES: úřední údaje firmy (crm.gs velinAres, velinFirm {ares}, velinAresScan, velinAresApply) ---------- */
+const sameIco = (a, b) => !!a && !!b && String(a).replace(/^0+/, '') === String(b).replace(/^0+/, '');
+const icoOwner = (ico, not) => Object.keys(D.F).map(k => D.F[k]).filter(g => g.id !== not && sameIco(g.ico, ico))[0] || null;
+const aresLine = x => [x.ico ? 'IČO ' + x.ico : '', x.legal, x.address, x.ended ? 'zaniklo ' + x.ended : ''].filter(Boolean).join(' · ');
+// výsledek z ARES: Použít, nebo (IČO už má jiná firma ve Velínu) Porovnat a sloučit
+function aresPick(firmId, x, scan) {
+  const other = icoOwner(x.ico, firmId);
+  return '<li><div><b>' + esc(x.name) + '</b><small>' + esc(aresLine(x)) + '</small>' + (other ? '<small style="color:var(--red-ink)">IČO už má firma ' + esc(other.name) + '</small>' : '') + '</div>' +
+    (other ? '<button class="btn" type="button" data-merge="firm|' + esc(firmId) + '|' + esc(other.id) + '">' + icon('link') + 'Porovnat a sloučit</button>'
+      : '<button class="btn' + (scan ? '' : ' red') + '" type="button" data-' + (scan ? 'ares-pick' : 'ares-use') + '="' + esc(firmId + '|' + x.ico) + '">' + icon('check') + 'Použít</button>') + '</li>';
+}
+function fAres(f, ro) {
+  const A = V.ares && V.ares.firm === f.id ? V.ares : null;
+  const have = f.aresAt ? '<dl class="facts">' + [['Úřední název', f.official], ['IČO', f.ico], ['DIČ', f.dic], ['Sídlo', f.address], ['Právní forma', f.legal]]
+      .map(r => '<dt>' + r[0] + '</dt><dd>' + esc(r[1] || '—') + '</dd>').join('') + '</dl><p class="fig-note">Z ARES ' + when(f.aresAt) + '.</p>' +
+    (ro ? '' : '<div class="btnrow"><button class="btn" type="button" data-ares-use="' + esc(f.id + '|' + f.ico) + '">' + icon('refresh') + 'Obnovit z ARES</button><button class="lnk dim" type="button" data-ares-clear="' + esc(f.id) + '">Odebrat údaje z ARES</button></div>') : '';
+  const q = A ? A.q : f.ico || f.official || f.name;
+  const search = ro ? '' : '<div class="tadd"' + (f.aresAt ? '' : ' style="border-top:0;margin-top:0;padding-top:0"') + '><label class="fld" for="ar-q">IČO nebo název<input id="ar-q" autocomplete="off" value="' + esc(q) + '"></label>' +
+    '<button class="btn" type="button" data-ares-find="' + esc(f.id) + '" style="height:38px"' + (A && A.busy ? ' disabled' : '') + '>' + icon('target') + (A && A.busy ? 'Hledám…' : 'Hledat v ARES') + '</button></div>';
+  const res = !A || A.busy ? '' : A.err ? '<p class="msg err" role="alert">' + esc(A.err) + '</p>' : !A.results.length ? '<p class="muted-p">ARES nic nenašel. Zkuste IČO, nebo jen hlavní část názvu.</p>' :
+    '<ul class="links">' + A.results.map(x => aresPick(f.id, x, false)).join('') + '</ul>' + (A.total > A.results.length ? '<p class="fig-note">Celkem ' + A.total + ' výsledků, upřesněte hledání.</p>' : '');
+  return '<div class="panel"><div class="ph"><h4>Údaje z ARES</h4><span>veřejný registr firem</span></div>' + have + search + res +
+    '<p class="fig-note">K firmě se zapíše IČO, úřední název, sídlo, DIČ a právní forma, vždy přímo z registru. Název ve Velínu zůstane, nabídky s úředním názvem se k firmě přiřadí samy.</p></div>';
+}
+// Firmy: firmy bez údajů z ARES, návrhy (velinAresScan) a jejich potvrzení
+function aresScanPanel() {
+  if (!canEdit()) return '';
+  const miss = Object.keys(D.F).map(k => D.F[k]).filter(f => !f.archived && !f.aresAt), S = V.aresScan;
+  if (!S && !miss.length) return '';
+  const head = '<div class="panel mb"><div class="ph"><h4>Údaje z ARES</h4><span>' + (miss.length ? miss.length + ' ' + plural(miss.length, 'firma', 'firmy', 'firem') + ' bez úředních údajů' : 'vše doplněno') + '</span></div>';
+  if (!S) return head + '<div class="btnrow" style="margin:0"><button class="btn" type="button" data-ares-scan>' + icon('target') + 'Najít v ARES</button></div><p class="fig-note">Velín zkusí najít IČO, úřední název a sídlo podle IČO, nebo podle názvu firmy. Nic se nezapíše bez potvrzení.</p></div>';
+  if (S.busy) return head + '<p class="muted-p">Hledám v ARES…</p></div>';
+  if (S.err) return head + '<p class="msg err" role="alert">' + esc(S.err) + '</p><div class="btnrow"><button class="btn" type="button" data-ares-scan>Zkusit znovu</button></div></div>';
+  const list = S.list.filter(x => miss.some(f => f.id === x.firm)), sure = list.filter(x => x.sure && x.results[0] && !icoOwner(x.results[0].ico, x.firm));
+  const rows = list.map(x => '<div class="ares-f"><b>' + esc(x.name) + '</b> ' + (x.error ? chip('bad', 'chyba') : x.sure ? chip('ok', x.by === 'ico' ? 'podle IČO' : 'stejný název', 'check') : x.results.length ? chip('line', 'možná') : chip('line', 'nenalezeno')) +
+    (x.error ? '<p class="muted-p">' + esc(x.error) + '</p>' : x.results.length ? '<ul class="links">' + x.results.map(r => aresPick(x.firm, r, true)).join('') + '</ul>' : '<p class="muted-p">' + esc(x.note || 'ARES podle názvu nic nenašel. Zkuste to v Údajích firmy s IČO.') + '</p>') + '</div>').join('');
+  return head + (sure.length ? '<div class="btnrow" style="margin:0 0 6px"><button class="btn red" type="button" data-ares-sure>' + icon('check') + 'Použít jisté shody (' + sure.length + ')</button><button class="btn" type="button" data-ares-done>Zavřít</button></div>' : '<div class="btnrow" style="margin:0 0 6px"><button class="btn" type="button" data-ares-done>Zavřít</button></div>') +
+    rows + (S.more ? '<p class="fig-note">Další firmy se nestihly, klikněte na Najít v ARES znovu.</p>' : '') + '</div>';
 }
 // Údaje firmy: co je do ní sloučené (s vrácením) a sloučení s jinou firmou, když je to stejná firma pod jiným názvem
 function fMerged(f, ro) {
@@ -1418,7 +1462,8 @@ function msPollLoop(gen) {
 /* ---------- ovládání ---------- */
 document.addEventListener('click', async e => {
   const t = e.target.closest('[data-ms-save],[data-ms-edit],[data-ms-editoff],[data-ms-start],[data-ms-cancel],[data-ms-off],[data-firm],[data-ftab],[data-fmine],[data-pmine],[data-firm-new],[data-firm-cancel],[data-firm-create],[data-firm-save],[data-firm-arch],[data-con-new],[data-con-edit],[data-con-cancel],[data-con-save],[data-con-del],[data-con-delgo],[data-act-save],[data-act-del],[data-todo-add],[data-todo-done],[data-todo-del],[data-sync],[data-sync-now],[data-owner-name],' +
-    '[data-merge],[data-merge-pick],[data-merge-swap],[data-merge-back],[data-merge-go],[data-unmerge],[data-nodup],[data-dup-all]');
+    '[data-merge],[data-merge-pick],[data-merge-swap],[data-merge-back],[data-merge-go],[data-unmerge],[data-nodup],[data-dup-all],' +
+    '[data-ares-find],[data-ares-use],[data-ares-clear],[data-ares-scan],[data-ares-pick],[data-ares-sure],[data-ares-done]');
   if (!t || !D) return;
   const d = t.dataset;
   const focus = id => setTimeout(() => { const el = $('#' + id); if (el) { el.scrollIntoView({ block: 'center' }); el.focus({ preventScroll: true }); } }, 30);
@@ -1476,6 +1521,36 @@ document.addEventListener('click', async e => {
     return call('velinNoDup', [p[0], p[1], p[2]], 'Dvojici už Velín nenabídne.', () => { D.crm.nodup = (D.crm.nodup || []).concat([k]); D.dups = null; return () => { D.crm.nodup = D.crm.nodup.filter(x => x !== k); D.dups = null; }; });
   }
   if (d.dupAll != null) { V.dupAll = true; return render(false, true); }
+  // ARES: hledání v Údajích firmy, zápis (server bere údaje znovu z registru), hromadné návrhy na Firmách
+  if (d.aresFind) {
+    const q = (($('#ar-q') || {}).value || '').trim(), fid = d.aresFind;
+    V.ares = { firm: fid, q: q, busy: true, results: [] }; render(false, true);
+    const r = await api('velinAres', q).catch(err => ({ ok: false, error: errText(err) }));
+    if (!V.ares || V.ares.firm !== fid) return;
+    V.ares = { firm: fid, q: q, busy: false, results: (r && r.results) || [], total: (r && r.total) || 0, err: r && r.ok === false ? r.error || 'Hledání se nepovedlo.' : '' };
+    return render(false, true);
+  }
+  if (d.aresUse) { const p = d.aresUse.split('|'); V.ares = null; return call('velinFirm', [p[0], { ares: { ico: p[1] } }], 'Údaje z ARES zapsány.'); }
+  if (d.aresClear) return call('velinFirm', [d.aresClear, { ares: null }], 'Údaje z ARES odebrány, IČO zůstalo.');
+  if (d.aresScan != null) {
+    V.aresScan = { busy: true }; render(false, true);
+    const r = await api('velinAresScan').catch(err => ({ ok: false, error: errText(err) }));
+    V.aresScan = r && r.ok ? { list: r.list || [], more: !!r.more } : { err: (r && r.error) || 'Hledání v ARES se nepovedlo.' };
+    return render(false, true);
+  }
+  if (d.aresPick || d.aresSure != null) {
+    const S = V.aresScan || { list: [] }, items = d.aresPick ? [{ firm: d.aresPick.split('|')[0], ico: d.aresPick.split('|')[1] }]
+      : S.list.filter(x => x.sure && x.results[0] && !icoOwner(x.results[0].ico, x.firm)).map(x => ({ firm: x.firm, ico: x.results[0].ico }));
+    if (!items.length) return;
+    const r = await call('velinAresApply', [items], null);
+    if (r && r.ok) {
+      const names = r.names.join(', ');
+      toast((r.done ? 'Zapsáno z ARES: ' + names + (/\.$/.test(names) ? '' : '.') : 'Nic se nezapsalo.') + (r.errors && r.errors.length ? ' ' + r.errors[0] : ''), !!(r.errors && r.errors.length && !r.done));
+      if (V.aresScan && V.aresScan.list) V.aresScan.list = V.aresScan.list.filter(x => !items.some(i => i.firm === x.firm && r.names.indexOf(x.name) >= 0));
+    }
+    return render(false, true);
+  }
+  if (d.aresDone != null) { V.aresScan = null; return render(false, true); }
   if (d.firm) return go('firma', { firm: d.firm, ftab: 'prehled', cedit: '', cdel: '' });
   if (d.ftab) { V.ftab = d.ftab; V.cedit = ''; V.cdel = ''; render(false, true); if (d.focus) focus(d.focus); else { const b = $('[role="tab"][aria-selected="true"]', main); if (b) b.focus({ preventScroll: true }); } return; }
   if (d.fmine != null) { V.fmine = d.fmine === '1'; return render(false, true); }
@@ -1555,6 +1630,7 @@ document.addEventListener('keydown', e => {
   const t = e.target;
   if (e.key === 'Enter' && t.matches && (t.matches('tr[data-firm]') || t.matches('.kd[data-offer]'))) { e.preventDefault(); t.click(); }
   if (e.key === 'Enter' && t.id && /^td-t-/.test(t.id)) { e.preventDefault(); const b = $('[data-todo-add="' + t.id.slice(5) + '"]'); if (b) b.click(); }
+  if (e.key === 'Enter' && t.id === 'ar-q') { e.preventDefault(); const b = $('[data-ares-find]'); if (b) b.click(); }
 });
 
 /* ============ Detail nabídky ============ */
