@@ -499,7 +499,7 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 </div>
 <div class="tip" id="tip" role="tooltip" hidden></div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
-<script>window.VELIN_WEB = {"api":"https://script.google.com/macros/s/AKfycbz4I0R4WyRrAPjIDHIafWiHDAEMAmPHIy7HLZlM2SoR-WkyqObU9Hq2UA7M9Qvg3cFGpA/exec","clientId":"65673347814-nhrt59jlkv19oohn3r1g8dc82o9v23ip.apps.googleusercontent.com"};</script>
+<script>window.VELIN_WEB = {"api":"https://script.google.com/macros/s/AKfycbz4I0R4WyRrAPjIDHIafWiHDAEMAmPHIy7HLZlM2SoR-WkyqObU9Hq2UA7M9Qvg3cFGpA/exec","clientId":"65673347814-nhrt59jlkv19oohn3r1g8dc82o9v23ip.apps.googleusercontent.com","cf":"https://velin-nabidek.velin-nabidek.workers.dev","gas":"https://script.google.com/macros/s/AKfycbz4I0R4WyRrAPjIDHIafWiHDAEMAmPHIy7HLZlM2SoR-WkyqObU9Hq2UA7M9Qvg3cFGpA/exec"};</script>
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script>
 (function () {
@@ -572,14 +572,34 @@ let K = '';
 const errText = e => String((e && e.message) || e || '').replace(/^(Error|Exception|Chyba):\s*/i, '');
 const GAS = !!(window.google && google.script && google.script.run);
 const WEB = GAS ? null : window.VELIN_WEB || null;
+// Velín na Cloudflaru (nastroje/cloudflare): WEB.cf = adresa Workeru, WEB.gas = webová aplikace v Apps Scriptu.
+// Po přesunu odpoví Apps Script „__moved“: okno si novou adresu zapamatuje (localStorage, jen když souhlasí s WEB.cf)
+// a načte se znovu, u kolegů stejně. Až bude web.json → api mířit na Cloudflare, není paměť potřeba.
+const CF_KEY = 'velin-cf';
+const cfSaved = () => { try { return WEB && WEB.cf && localStorage.getItem(CF_KEY) === WEB.cf ? WEB.cf : ''; } catch (e) { return ''; } };
+const API_URL = WEB ? (cfSaved() ? cfSaved() + '/velin' : WEB.api) : '';
+const ON_CF = !!(WEB && WEB.cf && API_URL.indexOf(WEB.cf) === 0);
+// jak často se okno ptá na změny (Cloudflare odpoví za desítky ms, proto každé 3 s; jinak 12 s; web.json → poll přebije)
+const POLL = (WEB && +WEB.poll) || (ON_CF ? 3000 : 12000);
+function cfMoved(url) {
+  if (!WEB || !WEB.cf || url !== WEB.cf || ON_CF) return;
+  try { localStorage.setItem(CF_KEY, url); } catch (e) {}
+  location.reload();
+}
+const postJson = (url, body) => fetch(url, { method: 'POST', body: JSON.stringify(body) })
+  .then(r => { if (!r.ok && r.status !== 403) throw new Error('Velín teď neodpovídá (' + r.status + '), zkuste to za chvíli.'); return r.json(); })
+  .then(j => { if (j && j.__moved) cfMoved(j.__moved); if (j && j.__error) throw new Error(j.__error); return j; });
 function api(fn) {
   const a = [K].concat(Array.prototype.slice.call(arguments, 1));
   if (GAS) return new Promise((res, rej) => { google.script.run.withSuccessHandler(res).withFailureHandler(rej)[fn].apply(null, a); });
-  const post = (url, body) => fetch(url, { method: 'POST', body: JSON.stringify(body) })
-    .then(r => { if (!r.ok) throw new Error('Velín teď neodpovídá (' + r.status + '), zkuste to za chvíli.'); return r.json(); })
-    .then(j => { if (j && j.__error) throw new Error(j.__error); return j; });
-  if (WEB) return idToken().then(t => post(WEB.api, { fn: fn, args: a, t: t })).then(j => j.r);
-  return post('/velin-api/' + fn, a);
+  if (WEB) return idToken().then(t => postJson(API_URL, { fn: fn, args: a, t: t })).then(j => j.r);
+  return postJson('/velin-api/' + fn, a);
+}
+// volání Velínu v Apps Scriptu i po přepnutí (přenos dat)
+function gasApi(fn) {
+  const a = [K].concat(Array.prototype.slice.call(arguments, 1)), url = WEB && (WEB.gas || (ON_CF ? '' : WEB.api));
+  if (!url) return Promise.reject(new Error('Chybí adresa Velínu v Apps Scriptu.'));
+  return idToken().then(t => postJson(url, { fn: fn, args: a, t: t })).then(j => j.r);
 }
 
 /* ---------- přihlášení vlastníka na vlastní adrese (Google Identity Services) ---------- */
@@ -2001,7 +2021,42 @@ function vSettings() {
     (R.archived ? ' V archivu ' + plural(R.archived, 'je', 'jsou', 'je') + ' ' + R.archived + ' ' + plural(R.archived, 'měsíční souhrn', 'měsíční souhrny', 'měsíčních souhrnů') + '.' : '') + '</p>' +
     '<p style="font-size:14px">Když čtenář požádá o smazání: detail nabídky → Čtenáři → Smazat údaje. Smaže jeho návštěvy a jméno u odeslaných formulářů a osobní odkaz zneplatní. E-maily z Velínu ve schránce smažte ručně.</p></div>';
   return vh('Nastavení', 'přístupy kolegů, Gmail a Kalendář, ranní přehled, ochrana dat a pravidla') +
-    '<div class="grid g2e"><div class="stack">' + teamPanel(st) + crmSettings(st) + playbookPanel() + '</div><div class="stack">' + digest + data + score + '</div></div>' + logPanel(st);
+    '<div class="grid g2e"><div class="stack">' + teamPanel(st) + crmSettings(st) + playbookPanel() + '</div><div class="stack">' + cfPanel() + digest + data + score + '</div></div>' + logPanel(st);
+}
+// přesun na Cloudflare (jen vlastník, jen dokud Velín běží v Apps Scriptu a stránka zná adresu Cloudflaru)
+function cfPanel() {
+  if (!WEB || !WEB.cf || ON_CF || !D.me.owner) return '';
+  const M = V.cfMove || {};
+  const btns = M.busy ? '' : M.ask ? '<div class="btnrow"><button class="btn red" type="button" data-cf-move="go">' + icon('check') + 'Ano, přenést teď</button><button class="btn" type="button" data-cf-move="no">Zrušit</button></div>'
+    : '<div class="btnrow"><button class="btn red" type="button" data-cf-move="ask">' + icon('refresh') + 'Přenést a přepnout</button></div>';
+  return '<div class="panel"><div class="ph"><h4>Rychlejší server</h4><span>Cloudflare</span></div>' +
+    '<p style="font-size:14px">Velín se přesune z Google Apps Scriptu na Cloudflare: změny se uloží a ukážou hned a nové návštěvy uvidíte do pár sekund. Data se přenesou z Google tabulky přímo z vašeho prohlížeče, kolegům se Velín přepne sám a jejich odkazy platí dál. E-maily dál odcházejí z vašeho Gmailu.</p>' +
+    (M.ask ? '<p style="font-size:14px"><b>Přenos trvá asi půl minuty.</b> Google tabulka pak zůstane jako stará kopie a nabídky budou měřit na Cloudflare.</p>' : '') +
+    (M.busy ? '<p class="fig-note">' + esc(M.step) + '</p>' : '') + (M.err ? '<p class="fig-note" style="color:var(--red-ink)">' + esc(M.err) + '</p>' : '') + btns + '</div>';
+}
+async function cfMove() {
+  const S = m => { V.cfMove = { busy: true, step: m }; render(false, true); };
+  try {
+    S('Stahuji data z Google tabulky…');
+    const dump = await gasApi('velinExport');
+    S('Nahrávám data na Cloudflare…');
+    const r = await postJson(WEB.cf + '/prenos', { action: 'import', t: await idToken(), dump: JSON.parse(dump) });
+    if (!r.ok) throw new Error(r.error || 'Přenos se nepovedl.');
+    S('Přepínám Velín…');
+    await gasApi('velinMove', WEB.cf, r.releKey);
+    // co přibylo během přenosu (úložiště nabídek začne přeposílat na Cloudflare nejpozději do 15 s)
+    let counts = r.counts;
+    for (const w of [1500, 20000]) {
+      S(w > 5000 ? 'Dokončuji přenos: návštěvy z poslední chvíle…' : 'Doplňuji, co přibylo během přenosu…');
+      await new Promise(res => setTimeout(res, w));
+      const cu = JSON.parse(await gasApi('velinCatchUp', counts));
+      const a = await postJson(WEB.cf + '/prenos', { action: 'append', t: await idToken(), rows: cu, from: counts });
+      if (a.ok) counts = a.counts;
+    }
+    S('Hotovo, otevírám Velín na Cloudflaru…');
+    try { localStorage.setItem(CF_KEY, WEB.cf); } catch (e) {}
+    location.reload();
+  } catch (e) { V.cfMove = { err: 'Přenos se nepovedl: ' + errText(e) + ' Velín dál běží v Apps Scriptu, zkuste to znovu.' }; render(false, true); }
 }
 function teamPanel(st) {
   const T = V.team || {}, list = (st.team || []).filter(x => !x.revoked), gone = (st.team || []).filter(x => x.revoked);
@@ -2062,7 +2117,7 @@ function renderRail() {
   patch($('#rnav'), [['prehled', 'grid', 'Přehled', open, true], ['firmy', 'building', 'Firmy', D && D.F ? Object.keys(D.F).filter(k => !D.F[k].archived).length : 0], ['nabidky', 'file', 'Nabídky', D ? D.list.filter(o => o.meta.personal !== false).length : 0], ['obchod', 'columns', 'Obchod'], ['analytika', 'chart', 'Analytika'], ['nastaveni', 'gear', 'Nastavení']].map(i => '<button type="button" data-nav="' + i[0] + '"' + (cur === i[0] ? ' aria-current="page"' : '') + '>' + icon(i[1]) + '<span>' + i[2] + '</span>' + (i[3] ? '<span class="cnt' + (i[4] ? ' hot' : '') + '"' + (i[4] ? ' title="doporučené kroky"' : '') + '>' + i[3] + '</span>' : '') + '</button>').join(''));
   patch($('#rshort'), D && D.list.length ? '<div class="rail-h">Podle zájmu</div>' + D.list.filter(o => o.meta.personal !== false).slice().sort((a, b) => (b.live - a.live) || ((b.band ? b.score.total : -1) - (a.band ? a.score.total : -1))).slice(0, 12).map(o => '<button type="button" data-offer="' + esc(o.slug) + '"' + (V.view === 'detail' && V.slug === o.slug ? ' aria-current="page"' : '') + '><i class="dot ' + (o.live ? 'live' : o.stage[0] === 'won' ? 'ok' : o.band && o.score.total >= 45 ? 'act' : '') + '"></i><span>' + esc(o.short) + '</span><em>' + (o.live ? 'teď' : o.band ? (o.band[0] === 'none' ? '–' : o.score.total) : o.stage[1]) + '</em></button>').join('') : '');
   if (V.signin) { patch($('#rfoot'), '<span class="note">Nepřihlášeno</span>'); return; }
-  patch($('#rfoot'), (D && !D.me.owner ? '<span class="note who-me">' + esc(D.me.name) + ' · ' + (D.me.role === 'edit' ? 'může upravovat' : 'jen čtení') + '</span>' : '') + '<span class="note"><i class="sync' + (V.loading ? ' on' : '') + '" aria-hidden="true"></i>' + (V.loading ? (V.savedAt ? 'Uloženo ' + hm(V.savedAt) + ', načítám změny…' : 'Načítám změny…') : !D ? '' : V.pollFail ? 'Spojení vypadlo, zkouším to znovu…' : 'Aktuální k ' + (V.checkedAt ? hm(V.checkedAt) : '…') + ', změny se hlídají každých 12 s.') + '</span><button type="button" data-reload>' + icon('refresh') + 'Obnovit</button>' + (D && D.M.sheetUrl ? '<a href="' + esc(D.M.sheetUrl) + '" target="_blank" rel="noopener">' + icon('sheet') + 'Tabulka</a>' : '') +
+  patch($('#rfoot'), (D && !D.me.owner ? '<span class="note who-me">' + esc(D.me.name) + ' · ' + (D.me.role === 'edit' ? 'může upravovat' : 'jen čtení') + '</span>' : '') + '<span class="note"><i class="sync' + (V.loading ? ' on' : '') + '" aria-hidden="true"></i>' + (V.loading ? (V.savedAt ? 'Uloženo ' + hm(V.savedAt) + ', načítám změny…' : 'Načítám změny…') : !D ? '' : V.pollFail ? 'Spojení vypadlo, zkouším to znovu…' : 'Aktuální k ' + (V.checkedAt ? hm(V.checkedAt) : '…') + ', změny se hlídají každých ' + Math.round(POLL / 1000) + ' s.') + '</span><button type="button" data-reload>' + icon('refresh') + 'Obnovit</button>' + (D && D.M.sheetUrl ? '<a href="' + esc(D.M.sheetUrl) + '" target="_blank" rel="noopener">' + icon('sheet') + 'Tabulka</a>' : '') +
     (WEB && !K && D ? '<button type="button" data-signout>' + icon('x') + 'Odhlásit</button>' : ''));
 }
 // soft = překreslit jen změny (obnova dat, akce); jinak celý pohled (přechod mezi obrazovkami)
@@ -2083,7 +2138,7 @@ function render(focus, soft) {
   if (focus) { const h = $('[data-vh]', main); if (h) h.focus({ preventScroll: true }); }
 }
 function go(view, extra) { Object.assign(V, { view: view }, extra || {}); render(true); window.scrollTo(0, 0); }
-// mode: 'poll' = tichý dotaz „změnilo se něco?“ (každých 12 s, odpověď beze změny je pár bajtů),
+// mode: 'poll' = tichý dotaz „změnilo se něco?“ (každých POLL ms, odpověď beze změny je pár bajtů),
 // 'fresh' = tlačítko Obnovit (server přepočítá přehled bez mezipaměti), 'check' = dotaz na změny hned po otevření
 // (server při otevření pošle poslední hotový přehled, quick: true). Celá data přijdou jen po změně.
 /* ---------- poslední data v tomto prohlížeči ---------- */
@@ -2250,13 +2305,14 @@ function copy(btn) {
   try { navigator.clipboard.writeText(text).then(ok, legacy); } catch (e) { legacy(); }
 }
 document.addEventListener('click', async e => {
-  const t = e.target.closest('[data-nav],[data-offer],[data-tab],[data-range],[data-tv],[data-copytext],[data-mklink],[data-reload],[data-setup],[data-task],[data-save-offer],[data-extend],[data-end],[data-revoke],[data-digest],[data-digest-test],[data-export],[data-forget],[data-forget-go],[data-forget-cancel],[data-team-add],[data-team-role],[data-team-ask],[data-team-keep],[data-team-off],[data-team-rot],[data-team-rotgo],[data-signout],[data-remind],[data-remind-now],[data-calib]');
+  const t = e.target.closest('[data-nav],[data-offer],[data-tab],[data-range],[data-tv],[data-copytext],[data-mklink],[data-reload],[data-setup],[data-task],[data-save-offer],[data-extend],[data-end],[data-revoke],[data-digest],[data-digest-test],[data-export],[data-forget],[data-forget-go],[data-forget-cancel],[data-team-add],[data-team-role],[data-team-ask],[data-team-keep],[data-team-off],[data-team-rot],[data-team-rotgo],[data-signout],[data-remind],[data-remind-now],[data-calib],[data-cf-move]');
   if (!t) return;
   const d = t.dataset;
   if (d.copytext != null) return copy(t);
   if (d.tv != null) { const f = t.closest('[data-fig]'), on = t.getAttribute('aria-pressed') !== 'true'; V.tv[f.getAttribute('data-fig-title')] = on; t.setAttribute('aria-pressed', String(on)); $('.fig-c', f).hidden = on; $('.fig-t', f).hidden = !on; t.innerHTML = on ? icon('chart') + 'Graf' : icon('table') + 'Tabulka'; return; }
   if (d.reload != null) return load(!!D, 'fresh');
   if (d.signout != null) return signOut();
+  if (d.cfMove) { if (V.cfMove && V.cfMove.busy) return; if (d.cfMove === 'go') return cfMove(); V.cfMove = d.cfMove === 'ask' ? { ask: true } : null; return render(false, true); }
   if (d.task) return call('velinTask', [d.task, d.taskDone === '1', d.taskSlug, d.taskRule], d.taskDone === '1' ? 'Hotovo.' : 'Vráceno mezi otevřené.', () => {
     const x = D.actions.find(y => y.key === d.task), was = x ? x.done : 0;
     if (x) x.done = d.taskDone === '1' ? Date.now() : 0;
@@ -2415,9 +2471,9 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 document.addEventListener('focusin', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if (el) showTip(el); else hideTip(); });
 document.addEventListener('focusout', hideTip);
 addEventListener('scroll', hideTip, { passive: true });
-// dotaz na změny každých 12 s, jen když je karta vidět (schovaná karta se nezeptá vůbec, po návratu hned)
-setInterval(() => { if (document.visibilityState === 'visible' && D && !V.busy && !V.refreshing) load(true, 'poll'); }, 12000);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && D && !V.refreshing && Date.now() - V.checkedAt > 12000) load(true, 'poll'); });
+// dotaz na změny každých POLL ms (12 s, na Cloudflaru 3 s), jen když je karta vidět (schovaná karta se nezeptá vůbec, po návratu hned)
+setInterval(() => { if (document.visibilityState === 'visible' && D && !V.busy && !V.refreshing) load(true, 'poll'); }, POLL);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && D && !V.refreshing && Date.now() - V.checkedAt > POLL) load(true, 'poll'); });
 // přímý odkaz z e-mailu nebo upozornění: ?nabidka=<konec adresy>&tab=<záložka>
 let START = null;
 function applyStart() {
