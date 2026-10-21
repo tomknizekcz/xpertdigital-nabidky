@@ -13,10 +13,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   XpertDigital · AI mapa — šablona (engine + vzhled)
-   Obsah klienta je v data/<klient>.js, tento soubor se nemění.
-   ============================================================ */
 :root{
   --red:#FA2B2B; --red-ink:#D31414; --red-btn:#E52020; --red-on-dark:#FF6B6B;
   --red-50:#FFF1F1; --red-100:#FFE1E1;
@@ -32,7 +28,6 @@
   --mono:ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace;
   --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
 }
-/* Záměrně jeden světlý vzhled podle webu XpertDigital; všechny barvy jsou nastavené explicitně. */
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{font-family:var(--font);color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow:hidden;font-size:16px}
@@ -43,10 +38,8 @@ a{color:inherit}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .display{font-stretch:72%;font-weight:800;text-transform:uppercase;letter-spacing:-.005em;line-height:.9;color:var(--ink)}
-/* nadpisy a velká úzká čísla: vlastní písmo z design.displayFont, jinak stejné jako text */
 .display,.pain-val,.fact b,.story-val,.res-val,.target-v,.area-row .lift,.dcol-num,.pills span,.prod-num,.wk-n,.wk-i b,.lane-num,.lane-impact b,.lane-title,.kpi-v,.score-row b,.q-no,.q-compact .q-sum b,.wcalc-out b,.pr-slider b,.pr-tiles b{font-family:var(--font-display,var(--font))}
 
-/* ---------- Top bar ---------- */
 .topbar{position:fixed;z-index:40;top:calc(12px + var(--sat));left:12px;right:12px;height:60px;display:flex;align-items:center;gap:20px;padding:0 10px 0 20px;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:18px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
 .brand{display:flex;align-items:center;flex:none}
 .brand svg{height:30px;width:auto;display:block}
@@ -65,7 +58,6 @@ a{color:inherit}
 .btn-ghost:hover{border-color:var(--ink)}
 .topbar .btn-red{margin-left:auto}
 
-/* ---------- Floating controls ---------- */
 .fab{position:fixed;z-index:35;width:48px;height:48px;border-radius:14px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.08);color:var(--ink)}
 .fab:hover{border-color:var(--ink)}
 .menu-btn{top:calc(88px + var(--sat));left:12px}
@@ -79,7 +71,6 @@ body.linear .zoomctl,body.linear .hint{display:none}
 body.linear .menu-btn{position:fixed;top:auto;bottom:calc(16px + var(--sab));left:auto;right:12px}
 body.linear .modelbadge{display:none}
 
-/* ---------- Viewport & world ---------- */
 #viewport{position:fixed;inset:0;overflow:hidden;touch-action:none;cursor:grab;background-color:var(--bg);background-image:radial-gradient(circle,var(--dot) 1.1px,transparent 1.4px);background-size:28px 28px}
 #viewport.dragging{cursor:grabbing}
 #world{position:absolute;left:0;top:0;transform-origin:0 0;width:max-content;padding:150px 170px 220px;user-select:none;-webkit-user-select:none}
@@ -90,7 +81,7 @@ body.linear #world{position:static;transform:none!important;width:auto;max-width
 .row>.conn{align-self:stretch}
 .row-2{display:block;margin-top:220px}
 body.linear .row{flex-direction:column}
-body.linear .row>.sec{align-self:stretch;min-width:0}   /* široký obsah (tabulka v sekci) nesmí roztáhnout stránku */
+body.linear .row>.sec{align-self:stretch;min-width:0}
 body.linear .row-2{margin-top:40px}
 .sec{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-xl);padding:64px 68px 60px;box-shadow:var(--shadow);scroll-margin-top:90px}
 body:not(.linear) .sec-a{width:1700px}
@@ -105,7 +96,6 @@ body.linear .sec{padding:30px 20px 28px;border-radius:24px;margin-bottom:22px}
 .conn-line{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--red) 0 8px,transparent 8px 14px)}
 body.linear .conn{display:none}
 
-/* ---------- Section typography ---------- */
 .chip-sec{display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:30px}
 .chip-sec b{min-width:32px;height:32px;padding:0 8px;border-radius:16px;border:2px solid var(--red);color:var(--red-ink);display:grid;place-items:center;font-size:14px;letter-spacing:0}
 .kicker{font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--red-ink);margin-bottom:18px}
@@ -114,10 +104,8 @@ body.linear .h2{font-size:clamp(34px,7vw,64px)}
 .lead{font-size:21px;line-height:1.45;color:var(--text);max-width:820px;margin:20px 0 0}
 body.linear .lead{font-size:18px}
 
-/* ---------- A · hero ---------- */
 .hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px;align-items:start}
 body:not(.linear) .hero-grid{grid-template-columns:980px 1fr;gap:60px}
-/* další části úvodu (hero.after) */
 .a-part{margin-top:64px;padding-top:44px;border-top:1px solid var(--line)}
 .a-part .kicker{margin-bottom:10px}
 .a-blocks{margin-top:26px;display:grid;gap:20px}
@@ -129,7 +117,6 @@ body:not(.linear) .hero-grid{grid-template-columns:980px 1fr;gap:60px}
 .hero-title span{display:block}
 .hero-title .accent{color:var(--red)}
 body.linear .hero-title{font-size:clamp(46px,11vw,120px)}
-/* hero.titleFit: v režimu stránky se nadpis úvodu přizpůsobí šířce sloupce, aby dlouhá slova nepřetekla */
 body.linear .hero-main.title-fit{container-type:inline-size}
 body.linear .hero-main.title-fit .hero-title{font-size:clamp(40px,18cqw,120px)}
 .hero-lead{font-size:23px;line-height:1.45;margin:28px 0 0;max-width:820px}
@@ -162,12 +149,10 @@ body.linear .hero-lead{font-size:18px}
 .story-val{font-stretch:72%;font-weight:800;font-size:64px;line-height:1;color:var(--accent-dark,var(--red))}
 .story p{font-size:18px;line-height:1.45;margin:10px 0 16px;color:#fff}
 .story-tag{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--on-dark-muted);border-top:1px solid var(--dark-line);padding-top:12px}
-/* příběh s portrétem (story.photo): fotka vlevo, text vpravo */
 .story-ph{display:flex;gap:18px;align-items:flex-start}
 .story-ph img{width:104px;height:130px;object-fit:cover;border-radius:14px;flex:none;border:1px solid var(--dark-line)}
 .story-ph>div{min-width:0}
 @media (max-width:420px){.story-ph{gap:12px}.story-ph img{width:76px;height:95px;border-radius:10px}}
-/* do 500 px je sloupec vedle fotky na velký nadpis úzký (např. „designed by“ přetékal): fotka nad textem */
 @media (max-width:500px){.story-ph{flex-direction:column;gap:12px}}
 .feed{background:var(--dark-3);color:#fff;border-radius:24px;padding:20px 22px 12px}
 .feed-head{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark-muted)}
@@ -180,7 +165,6 @@ body.linear .hero-lead{font-size:18px}
 .feed-time{font-variant-numeric:tabular-nums;color:var(--on-dark-muted);font-size:13px}
 .feed-agent{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--red-on-dark);margin-bottom:2px}
 
-/* ---------- B · kalkulačka ---------- */
 .b-head{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap;justify-content:space-between}
 .cur{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
 .cur button{padding:9px 16px;font-weight:800;font-size:14px;color:var(--muted)}
@@ -248,19 +232,18 @@ input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:#d9d
 input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--red)}
 input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--red)}
 
-/* ---------- C · co bude hotové ---------- */
 .deliver{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;margin-top:40px}
 .dcol{background:var(--panel-2);border:1px solid var(--line);border-radius:22px;padding:26px 24px 18px}
 .dcol-num{font-stretch:72%;font-weight:800;font-size:40px;line-height:1;color:var(--red);text-transform:uppercase}
 .dcol-title{font-weight:800;letter-spacing:.07em;font-size:18px;text-transform:uppercase;color:var(--ink);margin-top:14px}
 .dcol-agent{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--muted);margin-top:6px}
 .dcol-agent .ic{width:17px;height:17px;color:var(--red)}
+.dcol-own{font-size:13px;color:var(--muted);margin:2px 0 0 25px}
 .dcol ul{list-style:none;margin:18px 0 0;padding:0}
 .dcol li{display:flex;gap:10px;padding:12px 0;border-top:1px solid var(--line);font-size:17.5px;line-height:1.35;color:var(--text)}
 .dcol li .ic{color:var(--red);width:18px;height:18px;margin-top:2px;stroke-width:2.4}
 body.linear .dcol li{font-size:15.5px;padding:9px 0}
 
-/* ---------- D · co potřebujete ---------- */
 .pills{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:22px}
 .pills span{font-stretch:78%;font-weight:800;font-size:30px;text-transform:uppercase;color:var(--ink);border:2px solid var(--ink);border-radius:14px;padding:6px 16px}
 .pills i{font-style:normal;font-weight:800;font-size:30px;color:var(--red)}
@@ -305,7 +288,6 @@ body.linear .prod li{font-size:14.5px}
 body.linear .cta-box{padding:18px}
 .cta-box span{font-size:15px;color:var(--text)}
 
-/* ---------- Týdny ---------- */
 .weeks-head{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-xl);padding:56px 60px;box-shadow:var(--shadow);margin-bottom:56px;display:grid;grid-template-columns:1fr;gap:34px;align-items:end;scroll-margin-top:90px}
 body:not(.linear) .row-2{display:flex;align-items:flex-start;gap:60px}
 body:not(.linear) .weeks-head{width:1320px;flex:none;margin:0}
@@ -346,6 +328,9 @@ body.linear .lane-title{font-size:28px}
 .agent-chip i{width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center}
 .agent-chip b{font-size:15px}
 .agent-chip span{font-size:13px;color:var(--on-dark-muted)}
+.agent-own{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;line-height:1.35;color:var(--on-dark-muted)}
+.agent-own .ic{width:16px;height:16px;flex:none;color:var(--red)}
+.agent-own b{color:#fff;font-weight:700}
 .lane-arrows{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:16px;font-size:14px;color:#E6E6E6}
 .lane-arrows span{display:inline-flex;align-items:center;gap:5px}
 .lane-arrows .ic{width:15px;height:15px;color:var(--red-on-dark)}
@@ -373,7 +358,6 @@ body.linear .weeks-end{width:auto;padding:26px 20px;border-radius:24px}
 .weeks-end p{font-size:16px;line-height:1.5;margin:0 0 20px}
 .weeks-end .btns{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
 
-/* ---------- Bloky výstupů (karta i detail) ---------- */
 .blk+.blk{margin-top:22px}
 .blk-title{font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
 .fields{display:grid;grid-template-columns:180px 1fr;margin:0}
@@ -579,7 +563,6 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeri
 .ph-in{padding:12px}
 .c .phone{width:250px;border-width:7px;border-radius:30px}
 
-/* ---------- Menu drawer ---------- */
 .scrim{position:fixed;inset:0;background:rgba(20,20,20,.38);z-index:60}
 .drawer{position:fixed;z-index:61;top:calc(12px + var(--sat));left:12px;bottom:calc(12px + var(--sab));width:min(380px,calc(100vw - 24px));background:#fff;border-radius:22px;box-shadow:0 20px 50px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden}
 .dr-head{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 12px 22px;border-bottom:1px solid var(--line)}
@@ -595,7 +578,6 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeri
 .icon-btn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--ink)}
 .icon-btn:hover{background:var(--panel-2)}
 
-/* ---------- Modal ---------- */
 .modal{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:calc(20px + var(--sat)) 20px calc(20px + var(--sab))}
 .modal[hidden],.drawer[hidden],.scrim[hidden]{display:none}
 .m-back{position:absolute;inset:0;background:rgba(20,20,20,.55)}
@@ -607,6 +589,10 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeri
 .m-close:hover{border-color:var(--ink)}
 .m-title{font-size:34px;line-height:1.1;font-weight:800;color:var(--ink);margin:12px 60px 8px 0}
 .m-desc{font-size:17px;line-height:1.5;margin:0;max-width:820px}
+.m-roles{margin-top:12px;max-width:820px;font-size:14.5px;line-height:1.5;color:var(--text)}
+.m-roles .prompt-lbl{display:block;margin-bottom:4px}
+.m-roles ul{margin:0;padding-left:18px}
+.m-roles li+li{margin-top:2px}
 .m-body{padding:26px 36px 30px;font-size:15px}
 .m-foot{display:flex;justify-content:space-between;gap:10px;padding:14px 18px;border-top:1px solid var(--line);background:#fff}
 .m-foot button{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);font-weight:700;font-size:14px;color:var(--ink);max-width:48%;text-align:left}
@@ -614,7 +600,6 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeri
 .m-foot button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .m-foot button:disabled{visibility:hidden}
 @media (max-width:640px){.modal{padding:var(--sat) 0 var(--sab);align-items:stretch}.m-panel{max-height:100%;border-radius:0}.m-head{padding:22px 18px 16px}.m-body{padding:20px 16px 24px}.m-title{font-size:25px}}
-/* Nápověda: plovoucí karta, nezakrývá mapu */
 .guide-card{position:fixed;z-index:45;left:12px;bottom:calc(64px + var(--sab));width:min(400px,calc(100% - 24px));background:var(--dark);color:#fff;border-radius:20px;padding:20px 20px 18px;box-shadow:0 18px 44px rgba(0,0,0,.28);animation:mIn .22s ease-out}
 .guide-card .kicker{color:var(--red-on-dark);margin-bottom:6px;font-size:11px}
 .guide-card h2{font-size:21px;margin:0 40px 6px 0;color:#fff;font-weight:800;line-height:1.2}
@@ -631,7 +616,6 @@ body.linear .guide-card{display:none}
 .hint{transition:background .3s,color .3s,border-color .3s}
 .hint.hi{background:var(--dark);color:#fff;border-color:var(--dark);box-shadow:0 10px 28px rgba(0,0,0,.25)}
 .hint.hi::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent-dark,var(--red));margin-right:10px;vertical-align:1px;animation:pulse 2s infinite}
-/* Kontakt: adresa jako text ke zkopírování (odkaz mailto nemusí všude fungovat) */
 .contact .m-panel{width:min(580px,100%)}
 .ct-in{padding:34px 34px 30px;overflow:auto}
 .ct-title{font-size:30px;line-height:1.12;font-weight:800;color:var(--ink);margin:4px 48px 10px 0;text-wrap:balance}
@@ -647,7 +631,6 @@ body.linear .guide-card{display:none}
 .ct-note{font-size:13px;color:var(--muted);line-height:1.45;flex:1;min-width:200px}
 .ct-addr{font-size:13px;color:var(--muted);margin-top:16px}
 @media (max-width:480px){.ct-row{grid-template-columns:minmax(0,1fr) auto}.ct-k{grid-column:1/-1}.ct-in{padding:24px 18px}.ct-title{font-size:25px}}
-/* poptávka z veřejné stránky (formulář v kontaktním okně) */
 .lead{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:grid;gap:12px}
 .lead-h b{display:block;font-size:17px;color:var(--ink)}
 .lead-h span{font-size:14px;color:var(--muted)}
@@ -670,7 +653,6 @@ body.linear .guide-card{display:none}
 @media (max-width:480px){.lead-g{grid-template-columns:1fr}}
 .err{max-width:640px;margin:120px auto;background:#fff;border-radius:22px;padding:32px;border:1px solid var(--line);font-size:16px;line-height:1.5}
 
-/* ---------- Vstupy klienta, výběr boosterů, cena ---------- */
 .btn:disabled{opacity:.6;cursor:wait}
 .btn .ic{width:18px;height:18px}
 .inputs{margin-top:30px;border:1px solid var(--red-100);border-radius:22px;background:var(--red-50)}
@@ -802,10 +784,8 @@ body:not(.linear) .pr-grid{grid-template-columns:620px minmax(0,1fr);gap:34px}
 }
 @media print{.savebar,.inputs-toggle .chev{display:none!important}}
 
-/* ---------- Dodavatel, šifrovaná nabídka, přínosy ---------- */
 .brand img{height:34px;width:auto;max-width:160px;object-fit:contain;display:block}
 body.locked .topbar,body.locked .fab,body.locked #viewport,body.locked .zoomctl,body.locked .hint,body.locked .modelbadge,body.locked .savebar{display:none!important}
-/* ---------- Souhlas s měřením (Velín) ---------- */
 .consent{position:fixed;z-index:55;left:12px;bottom:calc(76px + var(--sab));width:min(390px,calc(100% - 24px));background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px 14px;box-shadow:0 18px 44px rgba(0,0,0,.18);font-size:14px;color:var(--text);animation:mIn .2s ease-out}
 .consent[hidden]{display:none}
 .consent b{display:block;color:var(--ink);font-size:15.5px;margin-bottom:6px}
@@ -819,7 +799,6 @@ body.locked .consent{display:none!important}
 .dr-privacy b{color:var(--ink)}
 .dr-privacy:hover{color:var(--ink)}
 @media print{.consent{display:none!important}}
-/* ---------- Velín: platnost, Poslat kolegovi, kdo odesílá ---------- */
 .gone{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:calc(20px + var(--sat)) 16px calc(20px + var(--sab));background:var(--panel-2);overflow:auto}
 .gone[hidden]{display:none}
 body.gone-on .topbar,body.gone-on .fab,body.gone-on #viewport,body.gone-on .zoomctl,body.gone-on .hint,body.gone-on .modelbadge,body.gone-on .savebar,body.gone-on .consent,body.gone-on .guide-card,body.gone-on .drawer,body.gone-on .scrim{display:none!important}
@@ -847,7 +826,7 @@ body.gone-on .topbar,body.gone-on .fab,body.gone-on #viewport,body.gone-on .zoom
 .sh-url span{font-size:15px;font-weight:700;color:var(--ink);overflow-wrap:anywhere;user-select:all;-webkit-user-select:all}
 .sh-url .ct-copy{padding:10px 12px}
 body.d-square .gone-card,body.d-square .sh-f input,body.d-square .sh-url{border-radius:4px}
-@media (max-width:480px){.sh-2{grid-template-columns:1fr}.save-ui .btn{white-space:normal}}   /* dlouhé „Uložit … a poslat XpertDigital“ nesmí na 375 px rozšířit stránku */
+@media (max-width:480px){.sh-2{grid-template-columns:1fr}.save-ui .btn{white-space:normal}}
 @media print{.gone,.who-line{display:none!important}}
 .lock{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:20px;background:#ECECEC}
 .lock[hidden]{display:none}
@@ -868,7 +847,6 @@ body.d-square .gone-card,body.d-square .sh-f input,body.d-square .sh-url{border-
 .art-f{fill:var(--red)}
 .art-g{fill:none;stroke:#484848;stroke-width:1.5;stroke-dasharray:4 5}
 .art-t{font-size:11px;font-weight:700;fill:#6B6B6B;font-family:var(--font)}
-/* ---------- Design klienta: rovné nadpisy (d-plain), hranaté rohy (d-square) ---------- */
 body.d-plain *{font-stretch:100%!important}
 body.d-plain .display{text-transform:none;font-weight:var(--head-weight,700);letter-spacing:-.015em;line-height:1.04}
 body.d-plain .hero-title{font-size:88px}
@@ -891,7 +869,6 @@ body.linear.d-plain .lane-title{font-size:24px}
 body.d-square .sec,body.d-square .weeks-head,body.d-square .weeks-end,body.d-square .lane,body.d-square .card,body.d-square .pain,body.d-square .profile,body.d-square .story,body.d-square .feed,body.d-square .result,body.d-square .target,body.d-square .wf,body.d-square .area,body.d-square .dcol,body.d-square .prod,body.d-square .cta-box,body.d-square .inputs,body.d-square .inputs-toggle,body.d-square .inp,body.d-square .pick,body.d-square .pricing,body.d-square .m-panel,body.d-square .topbar,body.d-square .drawer,body.d-square .guide-card,body.d-square .tl-seg,body.d-square .tl-after,body.d-square .mod-row,body.d-square .lane-mod,body.d-square .wk,body.d-square .facts,body.d-square .tbl-wrap,body.d-square .kpi,body.d-square .split>div,body.d-square .b-col,body.d-square .b-item,body.d-square .chat,body.d-square .mail,body.d-square .browser,body.d-square .quote,body.d-square .gantt,body.d-square .wcalc,body.d-square .spark,body.d-square .prompt,body.d-square .pick-item,body.d-square .pick-empty,body.d-square .explain div,body.d-square .prio,body.d-square .ct-row,body.d-square .q-compact,body.d-square .dr-item,body.d-square .savebar,body.d-square .hint,body.d-square .modelbadge,body.d-square .g-list li,body.d-square .pr-tiles div{border-radius:4px}
 body.d-square .btn,body.d-square .fab,body.d-square .zoomctl button,body.d-square .cur,body.d-square .tabs button,body.d-square .prio-btns button,body.d-square .inp input,body.d-square .okpi input,body.d-square .okpi-del,body.d-square .prio textarea,body.d-square .pick-wish textarea,body.d-square .ct-copy,body.d-square .icon-btn,body.d-square .m-close,body.d-square .m-foot button,body.d-square .pr-presets button,body.d-square .card-id,body.d-square .area-ic,body.d-square .pain-ic,body.d-square .inputs-toggle>i,body.d-square .inp-count,body.d-square .pill,body.d-square .tag,body.d-square .agent-chip,body.d-square .agent-chip i,body.d-square .legend span,body.d-square .legend span i,body.d-square .area-items span,body.d-square .inp-src,body.d-square .chip-sec b,body.d-square .wk-n,body.d-square .dr-item .n,body.d-square .gc-close,body.d-square .chat-head i,body.d-square .g-list i{border-radius:3px}
 body.d-square .callout{border-radius:0}
-/* ---------- Úzké obrazovky ---------- */
 @media (max-width:820px){
   .topbar{height:56px;gap:12px;padding:0 8px 0 14px;top:calc(8px + var(--sat));left:8px;right:8px}
   .tb-copy{display:none}
@@ -903,19 +880,18 @@ body.d-square .callout{border-radius:0}
 }
 .cta-short{display:none}
 @media (max-width:560px){.topbar .cta-long{display:none}.topbar .cta-short{display:inline}.tb-client span{display:none}}
-/* logo dodavatele a klienta vedle sebe se na úzký telefon nevejdou v plné šířce */
 @media (max-width:420px){.brand img{max-width:96px}.tb-client img{max-width:96px}}
 @media (max-width:380px){.tb-client{display:none}}
-/* ---------- Doménový režim: ukazatele domény, přehled domény, výsledek v kusech ---------- */
 .lane-kpis{display:grid;gap:6px;margin-top:18px}
 .lane-kpis div{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 14px;border-top:1px solid var(--dark-line);padding-top:7px;font-size:13.5px;line-height:1.4;color:var(--on-dark-muted)}
 .lane-kpis b{margin-left:auto;color:#fff;font-weight:800;font-variant-numeric:tabular-nums}
+.lane-kpis .kpi-sig b{color:var(--on-dark-muted);font-weight:700}
+.lane-kpis .kpi-sig i{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--dark-line);border-radius:999px;padding:1px 7px;margin-left:8px;vertical-align:1px}
 .claim{margin:26px 0 0;max-width:820px;border-left:4px solid var(--red);background:var(--panel-2);padding:16px 20px 14px}
 .claim-l{display:block;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red-ink)}
 .claim p{margin:6px 0 0;font-size:20px;line-height:1.4;font-weight:700;color:var(--ink)}
 .claim-s{display:block;margin-top:6px;font-size:15px;line-height:1.45;color:var(--muted)}
 body.linear .claim p{font-size:18px}
-/* pruhový graf v úzké kartě a na telefonu: popisek a hodnota nahoře, pruh pod nimi */
 body.linear .c .bar-row,.lane-ov .bar-row{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}
 body.linear .c .bar-l,.lane-ov .bar-l{grid-column:1;grid-row:1}
 body.linear .c .bar-v,.lane-ov .bar-v{grid-column:2;grid-row:1}
@@ -932,11 +908,18 @@ body.linear .c .bar-track,.lane-ov .bar-track{grid-column:1/-1;grid-row:2}
 .res-units{margin-top:8px;font-size:15px;line-height:1.5;color:var(--on-dark-muted)}
 .res-units[hidden]{display:none}
 .res-units b{color:#fff}
-/* ---------- Telefon: opravy rozložení (úzké obrazovky) ---------- */
+.res-acc{margin-top:16px;border-top:1px solid #4a4a4a;padding-top:12px}
+.res-acc[hidden]{display:none}
+.acc-h{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark-muted);margin-bottom:4px}
+.acc-row{display:grid;grid-template-columns:minmax(150px,auto) 1fr;gap:0 14px;padding:7px 0;border-top:1px solid #3d3d3d;font-size:14.5px;line-height:1.4}
+.acc-row:first-of-type{border-top:0}
+.acc-l{color:var(--on-dark-muted)}
+.acc-row b{color:#fff;font-variant-numeric:tabular-nums;text-align:right}
+.acc-n{grid-column:1 / -1;font-size:12.5px;color:var(--on-dark-muted);text-align:right}
+.area-acc{font-size:12px;font-weight:700;color:var(--muted);margin-top:6px}
 .area-head>div{min-width:0}
 .area-t{overflow-wrap:anywhere}
 .mail-meta span,.mail-meta b,.chat-head b,.chat-head span,.br-logo,.pick-t,.inp-l{overflow-wrap:anywhere}
-/* tabulka složená do řádků pod sebe (fitTables, jen telefon) */
 .tbl.stack thead{display:none}
 .tbl.stack,.tbl.stack tbody,.tbl.stack tr{display:block}
 .tbl.stack tr{padding:9px 12px 8px}
@@ -961,7 +944,6 @@ body.linear .c .bar-track,.lane-ov .bar-track{grid-column:1/-1;grid-row:2}
   table.tbl{font-size:13px}
   .tbl th,.tbl td{padding:8px 9px}
   .tbl th,.tbl th.num{white-space:normal}
-  /* stín u okraje: tabulka pokračuje do strany */
   .tbl-wrap{background:linear-gradient(90deg,#fff 30%,rgba(255,255,255,0)) 0 0/28px 100% no-repeat local,linear-gradient(270deg,#fff 30%,rgba(255,255,255,0)) 100% 0/28px 100% no-repeat local,radial-gradient(farthest-side at 0 50%,rgba(0,0,0,.16),rgba(0,0,0,0)) 0 0/10px 100% no-repeat scroll,radial-gradient(farthest-side at 100% 50%,rgba(0,0,0,.16),rgba(0,0,0,0)) 100% 0/10px 100% no-repeat scroll #fff}
   .card-meta{display:block;line-height:2}
   .card-meta .card-id{display:inline-block;margin-right:8px;line-height:1.3}
@@ -969,7 +951,6 @@ body.linear .c .bar-track,.lane-ov .bar-track{grid-column:1/-1;grid-row:2}
   .booster code{display:inline-block;max-width:100%;overflow-wrap:anywhere}
   .c table.tbl{font-size:12px}
   .c .tbl th,.c .tbl td{padding:6px 7px}
-  /* náhled v kartě: jen první dva a poslední sloupec, celá tabulka je v detailu */
   .c .tbl th:nth-child(n+3):not(:last-child),.c .tbl td:nth-child(n+3):not(:last-child){display:none}
   .pr-presets{grid-template-columns:1fr}
   .pr-presets button{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
@@ -1122,22 +1103,9 @@ body.linear .c .bar-track,.lane-ov .bar-track{grid-column:1/-1;grid-row:2}
   </div>
 </div>
 
-<script>window.XD_INPUTS = {"endpoint":"https://velin-nabidek.velin-nabidek.workers.dev/ulozeni","key":"5b9786bc696788c67dcc7d5783f42fb5","v":"2026-10-13 21:26 · ecc765"};</script>
+<script>window.XD_INPUTS = {"endpoint":"https://velin-nabidek.velin-nabidek.workers.dev/ulozeni","key":"5b9786bc696788c67dcc7d5783f42fb5","v":"2026-10-21 08:46 · 18f48c"};</script>
 <script>
-/* =====================================================================
-   KASTT, spol. s r.o. (IČO 13583948, skupina VINCI Energies) · AI mapa
-   Rozhodnutí Tomáše 13. 10. 2026: nabízí XpertDigital, veřejně na neutrální adrese,
-   jen přínosy bez ceny programu (rozdělení rizika v procentech), standardní program
-   13 týdnů a výroba rotorů jako volitelný modul +2 týdny.
-   Fakta z veřejných zdrojů (rešerše 13. 10. 2026): výroční zprávy KASTT 2022–2025
-   a konečné závěrky INT CZ, INT Control System a INT SERVIS k 31. 12. 2025 (Sbírka listin),
-   obchodní rejstřík, weby kastt.cz a intechnology.cz, inzeráty na kastt.cz, certifikáty
-   Eurovent a TÜV SÜD. Od 1. 1. 2026 jsou firmy INT sloučené do KASTT; čísla po fúzi
-   jsou součet výkazů bez vzájemných obchodů, tedy odhad. Jména osob se nepoužívají, jen role.
-   Ukázkové výstupy na kartách používají fiktivní zákazníky, zakázky a osoby.
-   ===================================================================== */
 window.XD_CLIENT = {
-  // logo: oficiální KASTT-v1.png z hlavičky kastt.cz (13. 10. 2026), oříznuté průhledné okraje
   meta: { client: 'KASTT, spol. s r.o.', titleShort: 'KASTT', slug: 'kastt-xtjq', domain: 'kastt.cz', web: 'https://www.kastt.cz', logo: 'data:image/png;base64,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', model: false, badge: 'Připraveno pro KASTT' },
 
   vendor: {
@@ -1165,17 +1133,16 @@ window.XD_CLIENT = {
   guideText: 'Nejdřív strategie a AI mozek, pak marketing, zakázky a rozpočty, zákazníci a servis, potom protokoly, vícepráce a reklamace. Výrobu rotorů můžete přidat jako modul. Na konci ladění a předání vašemu týmu.',
 
   agents: {
-    ceo:   { name: 'AI CEO',              role: 'vrchní orchestrátor',                       icon: 'ceo' },
-    mkt:   { name: 'AI Marketér',         role: 'role CMO · obsah a veletrhy',               icon: 'mkt' },
-    sales: { name: 'AI Obchodník',        role: 'role CSO · zakázky a nabídky',              icon: 'sales' },
+    ceo:   { name: 'AI asistent vedení', role: 'ranní přehled, data a priority',                       icon: 'ceo' },
+    mkt:   { name: 'AI Marketér',         role: 'obsah a veletrhy',               icon: 'mkt' },
+    sales: { name: 'AI Obchodník',        role: 'zakázky a nabídky',              icon: 'sales' },
     rozp:  { name: 'AI Rozpočtář',        role: 'cenotvorba · rozpočty a poptávky',          icon: 'money' },
     serv:  { name: 'AI Servisní manažer', role: 'servisní smlouvy a zákazníci',              icon: 'users' },
-    ops:   { name: 'AI Provozní manažer', role: 'role CFO · protokoly, fakturace, reklamace', icon: 'back' },
-    vyr:   { name: 'AI Plánovač výroby',  role: 'role COO · výroba rotorů',                  icon: 'prod' },
-    dev:   { name: 'AI Programátor',      role: 'role CTO · aplikace na míru',               icon: 'dev' }
+    ops:   { name: 'AI Provozní manažer', role: 'protokoly, fakturace, reklamace', icon: 'back' },
+    vyr:   { name: 'AI Plánovač výroby',  role: 'výroba rotorů',                  icon: 'prod' },
+    dev:   { name: 'AI Programátor',      role: 'aplikace na míru',               icon: 'dev' }
   },
 
-  /* ---------------- A · Úvod ---------------- */
   hero: {
     kicker: 'XpertDigital AI tým · pro KASTT',
     title: ['Co všechno', 'udělá', 'váš AI tým'],
@@ -1183,7 +1150,7 @@ window.XD_CLIENT = {
     lead: 'Šest míst, kde AI tým nejvíc pomůže KASTT po spojení s INTECHNOLOGY.',
     leadStrong: 'Všechna zapojíme za {dur}.',
     pains: [
-      { value: '4 → 1', label: 'firmy v jedné od 1. 1. 2026: výroba rotorů, TZB na klíč, měření a regulace a servis. Nabídky, data a postupy je potřeba sjednotit', agent: 'AI CEO · jeden přehled pro celou firmu', icon: 'ceo', open: '1.2' },
+      { value: '4 → 1', label: 'firmy v jedné od 1. 1. 2026: výroba rotorů, TZB na klíč, měření a regulace a servis. Nabídky, data a postupy je potřeba sjednotit', agent: 'AI asistent vedení · jeden přehled pro celou firmu', icon: 'ceo', open: '1.2' },
       { value: '3', label: 'otevřené pozice v cenotvorbě. Inzeráty chtějí práci s nabídkami zjednodušit a postupně digitalizovat', agent: 'AI Rozpočtář · rozpočet z výkazu výměr', icon: 'money', open: '3.2' },
       { value: '50 zemí', label: 'kam míří rotory KASTT. Výrobce jednotek čeká technickou nabídku v němčině nebo angličtině hned a správně', agent: 'AI Obchodník · nabídka rotoru pro výrobce jednotek', icon: 'sales', open: '3.4' },
       { value: 'Excel', label: 'pro fakturační protokoly, karty zakázek, servisní smlouvy a reklamace. Inzerát výslovně chce data nepřepisovat mezi tabulkami', agent: 'AI Provozní manažer · protokoly a karty zakázek', icon: 'back', open: '5.1' },
@@ -1224,17 +1191,15 @@ window.XD_CLIENT = {
     ]
   },
 
-  /* ---------------- B · Kalkulačka ---------------- */
   calc: {
     title: 'Jaký to bude mít dopad na čísla KASTT?',
     lead: 'Výchozí bod jsou výkazy KASTT a firem INT za rok 2025. Doplňte svá čísla, zapněte oblasti, kterým věříte, a posuňte, o kolik se zlepší.',
     disclaimer: 'Tržby a provozní výsledky jsou součtem výkazů KASTT a firem INT za roky 2024 a 2025 (Sbírka listin) bez vzájemných obchodů mezi firmami, takže jde o odhad. Ostatní vstupy jsou náš odhad. Nahraďte je svými čísly. Je to výpočet, ne příslib.',
-    howText: 'Provozní výsledek = tržby × příspěvek z tržeb − fixní náklady + ušetřený čas. Tržby rostou s novými zakázkami i se servisem a dalšími službami pro stávající zákazníky. Ušetřený čas počítáme cenou hodiny z osobních nákladů 2025 (119,9 mil. Kč / 131 lidí ≈ 515 Kč/h). Cílem je vrátit provozní výsledek sloučené firmy na úroveň roku 2024.',
+    howText: 'Provozní výsledek = tržby × příspěvek z tržeb − fixní náklady. Tržby rostou s novými zakázkami i se servisem a dalšími službami pro stávající zákazníky. Ušetřený čas vedeme zvlášť jako uvolněnou kapacitu v hodinách a do výsledku ho nepočítáme. Pro představu ho převádíme na Kč cenou hodiny z osobních nákladů 2025 (119,9 mil. Kč / 131 lidí ≈ 515 Kč/h). Cílem je vrátit provozní výsledek sloučené firmy na úroveň roku 2024.',
     targetLabel: 'Cíl: provozní výsledek roku 2024 (součet firem)',
     eurRate: 25,
     target: 34.1e6,
     base: { revenue: 487e6, grossMargin: 0.25, variableCosts: 0, fixedCosts: 103.55e6 },
-    // Vaše čísla: klient přepíše naše odhady, model se přepočítá (revenue, contrib, profit a hodiny × rate se napojí samy)
     inputsTitle: 'Upravte kalkulačku na čísla KASTT',
     inputs: [
       { id: 'revenue',  label: 'Tržby ročně',                                    unit: 'mil. Kč', value: 487,  src: 'součet výkazů 2025' },
@@ -1248,7 +1213,6 @@ window.XD_CLIENT = {
       { id: 'hVyr',     label: 'Technická příprava a plánování výroby',          unit: 'h ročně', value: 3000, src: 'odhad XD' }
     ],
     kpiExample: ['Dní od poptávky po rozpočet', '5', '2', 'dny'],
-    // strom hodnoty: co z čísel KASTT plyne (h.n = číslo s nejvýš 1 desetinným místem)
     explain: (v, h) => {
       const c = v.contrib / 100;
       return [
@@ -1259,7 +1223,6 @@ window.XD_CLIENT = {
         '**Cíl** = provozní výsledek 2024 ' + h.n(v.profit24) + ' mil. Kč, o ' + h.n(v.profit24 - v.profit) + ' mil. Kč víc než v roce 2025'
       ];
     },
-    // vlastní vazby: tržby stávajících zákazníků a cíl z roku 2024
     bind: (v, K) => {
       const A = id => K.areas.find(a => a.id === id);
       A('stav').display.base = v.revenue;
@@ -1284,22 +1247,21 @@ window.XD_CLIENT = {
         display: { label: 'Tržby ročně (odhad)', base: 487, unit: 'mil. Kč', dec: 0 }, sub: '+{rev} tržeb ročně' },
       { id: 'rozp', agent: 'rozp', title: 'AI Rozpočtářské boostery', short: 'Rozpočty', items: ['Rozpočet z výkazu výměr', 'Poptávky subdodavatelům', 'Porovnání nabídek'], arrows: ['↓ méně ručního přepisu', '↑ rozpočet za hodiny, ne dny', '↑ víc nabídek se stejným týmem'],
         sliderLabel: 'Méně času na rozpočty a nabídky', lever: 'cost', pool: 3.605e6, hoursPool: 135, max: 0.50, default: 0.30, input: 'hRozp',
-        display: { label: 'Hodin ročně (odhad)', base: 7000, unit: 'h', dir: -1 }, sub: 'Úspora {money} ročně · až {hours} h týdně zpět' },
+        display: { label: 'Hodin ročně (odhad)', base: 7000, unit: 'h', dir: -1 }, sub: 'Až {hours} h týdně zpět · v ceně práce {money} ročně' },
       { id: 'back', agent: 'ops', title: 'AI Back-office boostery', short: 'Back-office', items: ['Protokoly a karty zakázek', 'Vícepráce a fakturace', 'Reklamace a servisní agenda'], arrows: ['↓ žádné přepisování mezi tabulkami', '↑ faktura hned po protokolu', '↓ rychlejší reklamace'],
         sliderLabel: 'Méně času na administrativu', lever: 'cost', pool: 4.12e6, hoursPool: 154, max: 0.50, default: 0.25, input: 'hBack',
-        display: { label: 'Hodin ročně (odhad)', base: 8000, unit: 'h', dir: -1 }, sub: 'Úspora {money} ročně · až {hours} h týdně zpět' },
+        display: { label: 'Hodin ročně (odhad)', base: 8000, unit: 'h', dir: -1 }, sub: 'Až {hours} h týdně zpět · v ceně práce {money} ročně' },
       { id: 'vyroba', agent: 'vyr', title: 'AI Výrobní boostery', short: 'Výroba', items: ['Výrobní podklady z objednávky', 'Plán výroby a termíny', 'Kvalita a certifikáty'], arrows: ['↓ méně ruční přípravy', '↑ termíny, které platí', '↑ protokol ke každému rotoru'],
         sliderLabel: 'Méně času na přípravu a plánování výroby', lever: 'cost', pool: 1.545e6, hoursPool: 58, max: 0.40, default: 0.20, module: 6, moduleNote: 'Volitelný modul · +2 týdny programu', input: 'hVyr',
-        display: { label: 'Hodin ročně (odhad)', base: 3000, unit: 'h', dir: -1 }, sub: 'Úspora {money} ročně · až {hours} h týdně zpět' }
+        display: { label: 'Hodin ročně (odhad)', base: 3000, unit: 'h', dir: -1 }, sub: 'Až {hours} h týdně zpět · v ceně práce {money} ročně' }
     ]
   },
 
-  /* ---------------- C · Co bude hotové ---------------- */
   deliver: {
     title: 'Co přesně budete mít za {dur} hotové?',
     lead: 'AI tým pro výrobu rotorů, zakázky TZB a MaR, servis a back-office KASTT: od poptávky přes rozpočet a vícepráce po fakturu a servisní smlouvu. Napojený na SAP, Microsoft 365 a dokumenty, které už používáte.',
     columns: [
-      { area: 'Strategie a data', lanes: [1], agent: 'ceo', items: ['AI CEO a ranní přehled zakázek, servisu a výroby', 'Firemní DNA KASTT po spojení s INTECHNOLOGY', 'Čísla po divizích a zakázkách', 'Centrální AI mozek: výrobky, zakázky, servis, MaR', 'Pravidla bezpečnosti a IT skupiny VINCI Energies', 'Plán pilotu na 3 měsíce'] },
+      { area: 'Strategie a data', lanes: [1], agent: 'ceo', items: ['AI asistent vedení a ranní přehled zakázek, servisu a výroby', 'Firemní DNA KASTT po spojení s INTECHNOLOGY', 'Čísla po divizích a zakázkách', 'Centrální AI mozek: výrobky, zakázky, servis, MaR', 'Pravidla bezpečnosti a IT skupiny VINCI Energies', 'Plán pilotu na 3 měsíce'] },
       { area: 'Marketing', lanes: [2], agent: 'mkt', items: ['Obsah pro výrobce jednotek a projektanty v CZ, DE a EN', 'Případové studie z referencí', 'Příprava a follow-up veletrhu ISH 2027', 'Jeden příběh pro KASTT a INTECHNOLOGY'] },
       { area: 'Zakázky, nabídky a zákazníci', lanes: [3, 4], agent: 'sales', items: ['Radar zakázek TZB a poptávek', 'Rozpočet z projektové dokumentace a výkazu výměr', 'Poptávky subdodavatelům a porovnání nabídek', 'Technická nabídka rotoru pro výrobce jednotek', 'Mapa zákazníků po fúzi', 'Servisní smlouvy a periodické prohlídky', 'Cross-sell mezi divizemi', 'Hlas zákazníka a riziko odchodu'] },
       { area: 'Back-office a finance', lanes: [5], agent: 'ops', items: ['Fakturační protokoly a karty zakázek bez přepisování', 'Změny a vícepráce od nacenění po fakturu', 'Reklamace a záruční opravy', 'Pohledávky, pozastávky a předávací dokumentace', 'Měsíční report po zakázkách a divizích'] },
@@ -1309,7 +1271,6 @@ window.XD_CLIENT = {
     ]
   },
 
-  /* ---------------- D · Co potřebujete ---------------- */
   needs: {
     title: 'Jak bychom začali?',
     pills: ['Workshop', 'Pilot', 'Provoz'],
@@ -1319,21 +1280,19 @@ window.XD_CLIENT = {
     products: [
       { name: 'Úvodní workshop', term: '90 minut', sub: 'zdarma · s vedením a vedoucími oddělení', items: ['Projdeme mapu a doplníme skutečná čísla', 'Vybereme 3 agenty pro pilot', 'Ověříme data: SAP, tabulky, výkresy a servisní evidence', 'Domluvíme pravidla s IT skupiny VINCI Energies'] },
       { name: 'AI Transformační program', term: '{dur}', sub: '{weeks} · pilot s konzultanty', highlight: true, items: ['Nasazení agentů krok za krokem', 'Každý týden workshop s vaším týmem', 'Napojení na SAP, Microsoft 365 a firemní dokumenty', 'Ladění, měření přínosů a předání týmu', 'Konzultanti se zkušeností z KPMG, SAP, Oracle a IBM'] },
-      { name: 'Provoz, bezpečnost a rozvoj', term: '12 měsíců', sub: 'po pilotu · podpora a měření', items: ['Měsíční review výsledků s partnerem', 'Monitoring agentů a auditní log', 'Podklady pro IT a bezpečnost skupiny VINCI Energies', 'Nové boostery podle priorit'] }
+      { name: 'Provoz, bezpečnost a rozvoj', term: '12 měsíců', sub: 'po pilotu · podpora a měření', items: ['Měsíční review výsledků s partnerem', 'Monitoring agentů a auditní log', 'Podklady pro IT a bezpečnost skupiny VINCI Energies', 'Další změny procesů podle priorit, s dopadem na role'] }
     ],
     pickTitle: 'Váš výběr pro pilot',
     pickLead: 'V detailu každé karty označte Chceme, Možná nebo Nechceme a připište poznámku. Z výběru sestavíme pořadí nasazení a tři agenty pro pilot.',
     cta: { title: 'Projdeme mapu společně?', text: 'Workshop zabere 90 minut a je zdarma. Projdeme vaše čísla a výběr a domluvíme pilot.' }
   },
 
-  /* ---------------- Cena: jen rozdělení rizika, bez ceny programu ---------------- */
-  // Rozhodnutí 13. 10.: bez ceny. price null a bez sazby → konfigurátor ukazuje procenta z ceny, cenu doplníme po workshopu.
   pricing: {
     kicker: 'Cena podle vás',
     title: 'Kolik zaplatíte pevně a kolik podle výsledku?',
     lead: 'Cenu programu upřesníme po workshopu podle agentů, které vyberete. Už teď si ale můžete zvolit, jakou část zaplatíte pevně a jakou jen tehdy, když se čísla KASTT opravdu zlepší. Čím menší pevná část, tím víc rizika neseme my, a proto výkonová složka roste.',
     price: null,
-    settleMonths: 6,   // vyúčtování výkonové složky od startu programu
+    settleMonths: 6,
     minFixed: 0.3, maxPremium: 0.4, floor: 0.5, cap: 1.8, defaultFixed: 1,
     presets: [{ label: 'Jistota', fixed: 1 }, { label: 'Vyvážená', fixed: 0.7 }, { label: 'Partnerská', fixed: 0.4 }],
     kpis: ['čas na rozpočty a nabídky', 'tržby z nových zakázek a servisu', 'hodiny ušetřené v administrativě zakázek a servisu']
@@ -1350,9 +1309,7 @@ window.XD_CLIENT = {
     text: 'Vraťte se do kalkulačky, doplňte svá čísla a zapněte oblasti, kterým věříte. V sekci D najdete svůj výběr boosterů a zvolíte si, kolik z ceny zaplatíte podle výsledku.'
   },
 
-  /* ---------------- Fáze ---------------- */
   weeks: [
-    /* ===== FÁZE 1 · TÝDEN 1 ===== */
     {
       n: 1, short: 'Strategie', title: 'Strategie, data a AI mozek', agent: 'ceo', booster: 'Strategický booster',
       impact: '1', impactLabel: 'zdroj pravdy pro celou firmu po fúzi', arrows: ['↑ jeden příběh pro rotory i TZB', '↑ data ze SAP a tabulek na jednom místě', '↑ rozhodování nad čísly'],
@@ -1419,23 +1376,22 @@ window.XD_CLIENT = {
           ]
         },
         {
-          id: '1.4', title: 'AI CEO · ranní přehled zakázek, servisu a výroby',
+          id: '1.4', title: 'AI asistent vedení · ranní přehled zakázek, servisu a výroby',
           desc: 'Každé ráno v 7:00 jedna zpráva pro vedení: nové poptávky, rozpočty ke kontrole, výroba, servis, reklamace a co čeká na rozhodnutí.',
-          prompt: '(automaticky) AI CEO se ozve každé ráno v 7:00',
-          booster: { skill: 'ceo-orchestrator' },
+          prompt: '(automaticky) AI asistent vedení se ozve každé ráno v 7:00',
+          booster: { skill: 'leadership-brief' },
           output: [
-            { type: 'chat', channel: 'AI CEO · ranní přehled', sub: 'ukázka · fiktivní data', icon: 'ceo', compact: 2, messages: [
-              { name: 'AI CEO', t: '7:00', text: 'Dobré ráno. Čtyři věci na dnes:' },
-              { name: 'AI CEO', t: '7:00', text: '1) Tři nové poptávky TZB, z toho výrobní hala s VZT a MaR. Rozpočet z výkazu výměr je hotový ke kontrole.\n2) Výrobce jednotek z Německa chce 12 sorpčních rotorů, nabídka v němčině čeká na obchod.\n3) Reklamace na zakázce Administrativní budova je 9 dní bez odpovědi.\n4) Vícepráce za 380 tis. Kč jsou odsouhlasené, ale ještě nevyfakturované.' },
-              { side: 'r', t: '7:12', text: 'Rozpočet pošli vedoucímu cenotvorby. Reklamaci chci dnes vyřešit, vícepráce fakturujte.' },
-              { name: 'AI CEO', t: '7:12', text: 'Hotovo. Reklamace má termín ve 14:00 u vedoucího servisu, faktura za vícepráce čeká na schválení.' }
+            { type: 'chat', channel: 'AI asistent vedení · ranní přehled', sub: 'ukázka · fiktivní data', icon: 'ceo', compact: 2, messages: [
+              { name: 'AI asistent vedení', t: '7:00', text: 'Dobré ráno. Čtyři věci na dnes:' },
+              { name: 'AI asistent vedení', t: '7:00', text: '1) Tři nové poptávky TZB, z toho výrobní hala s VZT a MaR. Rozpočet z výkazu výměr je hotový ke kontrole.\n2) Výrobce jednotek z Německa chce 12 sorpčních rotorů, nabídka v němčině čeká na obchod.\n3) Reklamace na zakázce Administrativní budova je 9 dní bez odpovědi.\n4) Vícepráce za 380 tis. Kč jsou odsouhlasené, ale ještě nevyfakturované.' },
+              { side: 'r', t: '7:12', text: 'Rozpočet pošli vedoucímu cenotvorby. Reklamaci chci dnes vyřešit, fakturu za vícepráce schválím v ERP.' },
+              { name: 'AI asistent vedení', t: '7:12', text: 'Hotovo. Reklamace má termín ve 14:00 u vedoucího servisu, faktura za vícepráce čeká ve frontě ke schválení v ERP.' }
             ] }
           ]
         }
       ]
     },
 
-    /* ===== FÁZE 2 · TÝDEN 2 ===== */
     {
       n: 2, short: 'Marketing', title: 'Obsah, reference a veletrhy', agent: 'mkt', booster: 'Marketingový booster',
       impact: '3', impactLabel: 'jazyky, jeden příběh (CZ, DE, EN)', arrows: ['↑ víc poptávek od výrobců jednotek', '↑ reference, které prodávají', '↑ jedna značka po fúzi'],
@@ -1504,7 +1460,6 @@ window.XD_CLIENT = {
       ]
     },
 
-    /* ===== FÁZE 3 · TÝDNY 3–4 ===== */
     {
       n: 3, short: 'Obchod', len: 2, title: 'Zakázky, rozpočty a nabídky', agent: 'sales', booster: 'Prodejní booster',
       impact: '2 dny → 4 h', impactLabel: 'rozpočet z výkazu výměr (odhad)', arrows: ['↑ víc nabídek se stejným týmem', '↑ rychlejší technická nabídka', '↓ zapomenuté položky'],
@@ -1578,7 +1533,6 @@ window.XD_CLIENT = {
       ]
     },
 
-    /* ===== FÁZE 4 · TÝDEN 5 ===== */
     {
       n: 4, short: 'Servis', title: 'Zákazníci, servisní smlouvy a cross-sell', agent: 'serv', booster: 'Servisní booster',
       impact: '0', impactLabel: 'zapomenutých servisních prohlídek', arrows: ['↑ víc servisních smluv', '↑ zákazníci TZB i pro servis a MaR', '↓ méně odchodů'],
@@ -1642,7 +1596,6 @@ window.XD_CLIENT = {
       ]
     },
 
-    /* ===== FÁZE 5 · TÝDNY 6–8 ===== */
     {
       n: 5, short: 'Back-office', len: 3, title: 'Protokoly, vícepráce, reklamace a reporting', agent: 'ops', booster: 'Provozní booster',
       impact: '−25 %', impactLabel: 'času na administrativu zakázek a servisu', arrows: ['↓ žádné přepisování mezi tabulkami', '↑ vyfakturované vícepráce', '↓ rychlejší reklamace'],
@@ -1719,7 +1672,6 @@ window.XD_CLIENT = {
       ]
     },
 
-    /* ===== FÁZE 6 · VOLITELNÝ MODUL VÝROBA ROTORŮ (+2 TÝDNY) ===== */
     {
       n: 6, short: 'Výroba', len: 2, optional: true, on: false,
       optionalLabel: 'Modul Výroba rotorů: podklady, plán a kvalita', optionalText: 'Výrobní podklady z objednávky, plán výroby a termíny, kvalita a certifikáty a servis rotorů v terénu. Přidá do programu 2 týdny.',
@@ -1785,7 +1737,6 @@ window.XD_CLIENT = {
       ]
     },
 
-    /* ===== FÁZE 7 · TÝDNY 9–10 (s modulem 11–12) ===== */
     {
       n: 7, short: 'Aplikace', len: 2, title: 'Dashboardy, asistenti a portál na míru', agent: 'dev', booster: 'Programátorský booster',
       impact: '1', impactLabel: 'obrazovka pro zakázky, servis a výrobu', arrows: ['↓ méně Excelu', '↑ přehled v reálném čase', '↑ rychlejší odpovědi'],
@@ -1834,7 +1785,6 @@ window.XD_CLIENT = {
       ]
     },
 
-    /* ===== FÁZE 8 · LADĚNÍ A PŘEDÁNÍ (poslední 3 týdny) ===== */
     {
       n: 8, short: 'Ladění', len: 3, title: 'Ladění, měření a předání týmu', agent: 'ceo', booster: 'Strategický booster',
       impact: '100 %', impactLabel: 'předáno vašemu týmu', arrows: ['↑ změřené přínosy', '↑ doladění agenti', '↑ tým, který AI řídí sám'],
@@ -1883,11 +1833,11 @@ window.XD_CLIENT = {
         },
         {
           id: '8.4', title: 'Plán na další čtvrtletí',
-          desc: 'Další agenti seřazení podle přínosu a náročnosti. Vedení vybere, AI CEO rozplánuje.',
-          prompt: 'Navrhni plán dalších agentů podle přínosu a náročnosti.',
+          desc: 'Další změny procesů seřazené podle přínosu, náročnosti a dopadu na role. Vedení vybere a schválí pořadí, AI asistent vedení připraví podklad.',
+          prompt: 'Navrhni pořadí dalších změn procesů podle přínosu, náročnosti a dopadu na role.',
           booster: { skill: 'roadmap-planner' },
           output: [
-            { type: 'table', title: 'Návrh', cols: ['Agent', 'Přínos', 'Náročnost'], rows: [
+            { type: 'table', title: 'Návrh', cols: ['Změna v procesu', 'Přínos', 'Náročnost'], rows: [
               ['Modul Výroba rotorů: podklady, plán a kvalita', { t: 'vysoký', tone: 'ok' }, '2 týdny'],
               ['Měření a regulace: vzdálená diagnostika a reporting z řídicích systémů', { t: 'vysoký', tone: 'ok' }, '3 týdny'],
               ['Projekce: kontrola výkresů a výkazů výměr', { t: 'střední', tone: 'warn' }, '3 týdny']
@@ -1904,14 +1854,11 @@ window.XD_CLIENT = {
 'use strict';
 if (!document.documentElement.lang) document.documentElement.lang = 'cs';
 
-/* ============ Načtení dat klienta ============ */
 const params = new URLSearchParams(location.search);
 const clientId = (params.get('klient') || 'ocelis').toLowerCase().replace(/[^a-z0-9-]/g, '');
 if (window.XD_ENC) {
-  // zašifrovaná nabídka: data i adresa úložiště se odemknou heslem
   setTimeout(unlock, 0);
 } else if (window.XD_CLIENT) {
-  // data vložená přímo do stránky (publikovaná verze)
   setTimeout(() => boot(window.XD_CLIENT), 0);
 } else {
   const loader = document.createElement('script');
@@ -1921,7 +1868,6 @@ if (window.XD_ENC) {
   document.head.appendChild(loader);
 }
 
-/* ============ Šifrovaná nabídka: AES-GCM, klíč z hesla přes PBKDF2 ============ */
 function b64bytes(s) { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
 async function decryptOffer(pw) {
   const E = window.XD_ENC, enc = new TextEncoder();
@@ -1956,7 +1902,6 @@ function fail() {
   document.getElementById('world').innerHTML = '<div class="err"><b>Nepodařilo se načíst data klienta.</b><br>Hledaný soubor: <code>data/' + clientId + '.js</code>. Zkontrolujte název v parametru <code>?klient=</code>.</div>';
 }
 
-/* ============ Pomocné funkce ============ */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -2005,26 +1950,22 @@ const ICONS = {
 };
 const icon = (n, cls = '') => '<svg class="ic ' + cls + '" viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[n] || ICONS.info) + '</svg>';
 
-/* ============ Stav ============ */
 let C, cardIndex = new Map(), cardOrder = [];
 const vp = $('#viewport'), world = $('#world');
 const st = { x: 0, y: 0, s: 1 };
 let MIN = 0.08, MAX = 2.2, animId = 0, idleT = 0;
-// ?rezim=stranka vynutí čtení jako stránku, ?rezim=mapa vynutí mapu, jinak podle šířky okna
 const modeWanted = params.get('rezim') || location.hash.slice(1);
 const modeParam = modeWanted === 'stranka' ? true : modeWanted === 'mapa' ? false : null;
 let linearForced = modeParam;
-let interacted = false;  // uživatel už s mapou hýbal → po načtení fontů ho nepřeskakujeme
+let interacted = false;
 const mqNarrow = matchMedia('(max-width: 820px)');
 const isLinear = () => document.body.classList.contains('linear');
 
-/* ============ Start ============ */
 function boot(data) {
   C = data;
   document.title = C.meta.pageTitle || ('AI mapa ' + (C.meta.titleShort || C.meta.client));
   applyVendor();
   applyDesign();
-  // CTA
   $('#ctaTitle').textContent = C.vendor.cta.title;
   $('#ctaText').textContent = C.vendor.cta.text;
   $('#ctaBtnTxt').textContent = C.vendor.cta.button;
@@ -2056,17 +1997,13 @@ function boot(data) {
   if (personal()) loadInputs();
   mrInit();
   mrExtras();
-  // po načtení webfontu se změní rozměry → znovu zaměřit (jen když uživatel ještě nehýbal)
   document.fonts?.ready.then(() => { if (!isLinear() && !interacted) { computeMin(); go(startKey(), false); } });
-  // přímý odkaz na kartu: index.html#k-3.1
   const m = location.hash.match(/^#k-([\w.]+)$/);
   if (m && cardIndex.has(m[1])) openCard(m[1]);
   window.addEventListener('hashchange', () => { const h = location.hash.match(/^#k-([\w.]+)$/); if (h && cardIndex.has(h[1]) && curCard !== h[1]) openCard(h[1]); });
-  // malé API pro prezentujícího / ladění: XDMap.go('b'), XDMap.go('w3'), XDMap.open('3.1')
   window.XDMap = { go, open: openCard, close: closeCard, zoom: (f) => zoomAt(f, vp.clientWidth / 2, vp.clientHeight / 2), view: () => ({ ...st }),
     focus: (sel, s = 1, dx = 0, dy = 0) => { const el = $(sel); if (!el || isLinear()) return; const r = worldRect(el); Object.assign(st, { s, x: 24 - (r.x + dx) * s, y: topInset() - (r.y + dy) * s }); apply(); } };
 }
-// dodavatel nabídky: logo, barvy a ikona stránky (výchozí je XpertDigital v šabloně)
 function applyVendor() {
   const V = C.vendor, root = document.documentElement;
   if (V.theme) Object.keys(V.theme).forEach(k => root.style.setProperty('--' + k, V.theme[k]));
@@ -2077,17 +2014,15 @@ function applyVendor() {
     ic.href = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="' + col + '"/><text x="32" y="43" font-size="32" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial">' + esc((V.name || '?').charAt(0)) + '</text></svg>');
   }
 }
-// design klienta: barvy (vars → CSS proměnné), písmo, rovné nadpisy a hranaté rohy; logo a kontakt zůstávají dodavatele
 function applyDesign() {
   const D = C.design; if (!D) return;
   const root = document.documentElement;
   if (D.vars) Object.keys(D.vars).forEach(k => root.style.setProperty('--' + k, D.vars[k]));
   if (D.font) root.style.setProperty('--font', D.font);
-  if (D.headWeight) root.style.setProperty('--head-weight', D.headWeight);   // tučnost nadpisů v režimu plain (např. 500 u ČEZ)
-  if (D.displayFont) root.style.setProperty('--font-display', D.displayFont);   // jiné písmo nadpisů a velkých čísel než textu (TEDOM: Archivo + Public Sans)
+  if (D.headWeight) root.style.setProperty('--head-weight', D.headWeight);
+  if (D.displayFont) root.style.setProperty('--font-display', D.displayFont);
   if (D.fontCss && !document.querySelector('link[data-design-font]')) {
     document.head.appendChild(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: D.fontCss })).dataset.designFont = '1';
-    // po načtení písma znovu zaměřit mapu (jen když uživatel ještě nehýbal)
     const fam = D.font ? D.font.split(',')[0] : '';
     if (fam && document.fonts && document.fonts.load) document.fonts.load('700 24px ' + fam).then(() => { if (!isLinear() && !interacted) { computeMin(); go(startKey(), false); } }).catch(() => {});
   }
@@ -2097,20 +2032,15 @@ function applyDesign() {
 const vendorName = () => (C && C.vendor && C.vendor.name) || 'XpertDigital';
 const cssVar = (n, d) => (getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim() || d);
 
-// výchozí pohled: #a–#d nebo #w1–#w7 v adrese, jinak úvod
 function startKey() { const h = location.hash.slice(1); return /^(a|b|c|d|w\d+)$/.test(h) ? h : 'a'; }
 
-/* ============ Harmonogram: délky fází a volitelné moduly ============ */
-// fáze = pruh s kartami; len = počet týdnů; optional = modul, který si klient může přidat (posune další fáze)
 const modState = {};
 let sched = {}, totalWeeks = 0;
 const plural = (n, one, few, many) => n === 1 ? one : (n >= 2 && n <= 4) ? few : many;
-// jednotka harmonogramu: týdny (výchozí), nebo měsíce (C.schedule.unit = 'month')
 const byMonth = () => !!(C && C.schedule && C.schedule.unit === 'month');
 const unitN = n => byMonth() ? plural(n, 'měsíc', 'měsíce', 'měsíců') : plural(n, 'týden', 'týdny', 'týdnů');
 const rangeLabel = (a, b) => byMonth() ? (a === b ? 'Měsíc ' + a : 'Měsíce ' + a + '–' + b) : (a === b ? 'Týden ' + a : 'Týdny ' + a + '–' + b);
 const monthsOf = w => Math.round(w / 4.33 * 2) / 2;
-// doménový režim (C.schedule.mode = 'domains'): pruhy jsou domény, čas nesou vlny v C.schedule.phases, karta má c.wave
 const domainMode = () => !!(C && C.schedule && C.schedule.mode === 'domains');
 const phases = () => domainMode() ? (C.schedule.phases || []) : C.weeks;
 function computeSchedule() {
@@ -2128,18 +2058,19 @@ function wkLabel(n, f = 'long') {
   const r = s.from === s.to ? String(s.from) : s.from + '–' + s.to;
   return f === 'big' ? r : rangeLabel(s.from, s.to);
 }
-// popisky pruhu a karty; v doménovém režimu se nepřepisují harmonogramem (bez data-wk)
 const wkAttr = (n, f) => domainMode() ? '' : ' data-wk="' + n + '"' + (f ? ' data-wkf="' + f + '"' : '');
 const laneNum = w => domainMode() ? String(w.num ?? w.n) : wkLabel(w.n, 'big');
 const laneWhen = w => domainMode() ? (w.kick || '') : wkLabel(w.n);
 function waveLabel(v) {
   const ws = [].concat(v ?? []).map(Number).filter(isFinite); if (!ws.length) return '';
   const p = phases().find(x => x.n === ws[0]);
-  const tw = (C.terms && C.terms.wave) || ['Vlna', 'Vlny'];   // název vlny lze v datech změnit, např. ['Fáze', 'Fáze']
+  const tw = (C.terms && C.terms.wave) || ['Vlna', 'Vlny'];
   return ws.length === 1 ? tw[0] + ' ' + ws[0] + (p && p.when ? ' · ' + p.when : '') : tw[1] + ' ' + ws[0] + '–' + ws[ws.length - 1];
 }
 const cardWhen = (c, w) => domainMode() ? (c.when || waveLabel(c.wave ?? w.wave)) : wkLabel(w.n);
 const agentOf = (c, w) => C.agents[c.agent || w.agent];
+const isAiAgent = ag => !!ag && (!!ag.owner || /^AI\s/.test(ag.name || ''));
+const agentOwner = ag => !isAiAgent(ag) ? '' : ag.owner ? ag.owner : (C.terms && C.terms.ownerDefault === false) ? '' : ((C.terms && C.terms.ownerDefault) || 'jmenujete při startu');
 function durLabel(w) {
   if (byMonth()) return w + ' ' + unitN(w);
   const m = monthsOf(w);
@@ -2181,7 +2112,6 @@ function renderTimeline() {
   }).join('');
 }
 
-/* ============ A · Úvod ============ */
 function renderA() {
   const H = C.hero, P = H.profile;
   return '<section class="sec sec-a" id="sec-a" aria-labelledby="a-title">' +
@@ -2191,7 +2121,6 @@ function renderA() {
       '<h1 class="display hero-title" id="a-title">' + H.title.map(l => '<span>' + esc(l) + '</span>').join('') + '<span class="accent" data-dyn="' + esc(H.titleAccent) + '">' + esc(fillDyn(H.titleAccent)) + '</span></h1>' +
       '<p class="hero-lead">' + esc(H.lead) + ' <strong data-dyn="' + esc(H.leadStrong) + '">' + esc(fillDyn(H.leadStrong)) + '</strong></p>' +
       (H.claim ? '<div class="claim"><span class="claim-l">' + esc(H.claim.label) + '</span><p>' + esc(H.claim.text) + '</p>' + (H.claim.sub ? '<span class="claim-s">' + esc(H.claim.sub) + '</span>' : '') + '</div>' : '') +
-      // dlaždice otevře kartu (open), nebo přejde na pruh či sekci (go, např. w2)
       '<div class="pains">' + H.pains.map(p =>
         '<button class="pain" type="button" ' + (p.go ? 'data-go="' + esc(p.go) + '"' : 'data-open="' + esc(p.open) + '"') + '>' +
           '<span class="pain-top"><span class="pain-ic">' + icon(p.icon) + '</span><span class="pain-val">' + esc(p.value) + '</span></span>' +
@@ -2199,7 +2128,7 @@ function renderA() {
           '<span class="pain-agent">' + esc(p.agent) + icon('arrowR') + '</span>' +
         '</button>').join('') + '</div>' +
     '</div><aside class="hero-side">' +
-      '<div class="profile"><div class="profile-art">' + (P.art === 'steel' ? steelArt() : P.art === 'traffic' ? trafficArt() : P.art === 'energy' ? energyArt() : P.art === 'network' ? networkArt() : P.art === 'coffee' ? coffeeArt() : P.art === 'dental' ? dentalArt() : P.art === 'rack' ? rackArt() : P.art === 'medical' ? medicalArt() : P.art === 'chp' ? chpArt() : P.art === 'insurer' ? insurerArt() : P.art === 'defense' ? defenseArt() : P.art === 'hvac' ? hvacArt() : '') + '</div><div class="profile-body">' +
+      '<div class="profile"><div class="profile-art">' + (P.art === 'steel' ? steelArt() : P.art === 'traffic' ? trafficArt() : P.art === 'energy' ? energyArt() : P.art === 'network' ? networkArt() : P.art === 'coffee' ? coffeeArt() : P.art === 'dental' ? dentalArt() : P.art === 'rack' ? rackArt() : P.art === 'medical' ? medicalArt() : P.art === 'chp' ? chpArt() : P.art === 'insurer' ? insurerArt() : P.art === 'defense' ? defenseArt() : P.art === 'hvac' ? hvacArt() : P.art === 'mobility' ? mobilityArt() : '') + '</div><div class="profile-body">' +
         '<span class="tag">' + esc(P.tag) + '</span>' +
         (C.meta.logo ? '<img class="profile-logo" src="' + esc(C.meta.logo) + '" alt="' + esc(C.meta.client) + '">' : '') +
         '<div class="profile-name">' + esc(P.name) + '</div>' +
@@ -2211,7 +2140,6 @@ function renderA() {
         '<div class="story-val">' + esc(H.story.value) + '</div><p>' + esc(H.story.text) + '</p>' + (H.story.photo ? '</div></div>' : '') + '<div class="story-tag">' + esc(H.story.tag) + '</div></div>' +
       '<div class="feed"><div class="feed-head"><span class="live-dot"></span>' + esc(H.feedTitle) + '</div><ol class="feed-list" id="feedList" aria-live="off"></ol></div>' +
     '</aside></div>' +
-    // další části úvodu (např. Proč s námi, výchozí situace): H.after = [{ kicker, title, lead, blocks, cols }]
     (H.after || []).map(s => '<div class="a-part">' + (s.kicker ? '<div class="kicker">' + esc(s.kicker) + '</div>' : '') +
       '<h2 class="display h2">' + esc(s.title) + '</h2>' + (s.lead ? '<p class="lead">' + rich(s.lead) + '</p>' : '') +
       '<div class="a-blocks' + (s.cols ? ' cols' : '') + '">' + blocks(s.blocks || []) + '</div></div>').join('') +
@@ -2219,7 +2147,6 @@ function renderA() {
 }
 
 function steelArt() {
-  // průřezy: I-profil, jekl, trubka, úhelník, plech
   const s = 'fill="none" stroke="#FA2B2B" stroke-width="3" stroke-linejoin="round"';
   const g = 'fill="none" stroke="#484848" stroke-width="1.5" stroke-dasharray="4 5"';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
@@ -2238,7 +2165,6 @@ function steelArt() {
 }
 
 function networkArt() {
-  // struktura poradců, klient, centrála s dokumenty, AI asistent
   const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
   const node = (x, y, r) => '<circle class="art-s" cx="' + x + '" cy="' + y + '" r="' + r + '"/>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
@@ -2252,7 +2178,6 @@ function networkArt() {
     '</svg>';
 }
 function coffeeArt() {
-  // šálek kávy, nápojový automat, dodávka na trase doplňování, kávovar v kanceláři, kávová zrna
   const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
     '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
@@ -2265,7 +2190,6 @@ function coffeeArt() {
     '</svg>';
 }
 function dentalArt() {
-  // zub, zubařské křeslo, rozpis ordinace, telefon, zubní kartáček
   const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
     '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
@@ -2278,7 +2202,6 @@ function dentalArt() {
     '</svg>';
 }
 function rackArt() {
-  // rack, chladicí jednotka, rozvaděč, trafostanice, kontejnerové datové centrum
   const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
     '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
@@ -2291,7 +2214,6 @@ function rackArt() {
     '</svg>';
 }
 function medicalArt() {
-  // víceoborová klinika: zub, dermatoskop nad kůží, ucho (ORL), pyl (alergie), hlava se srdcem (psychika)
   const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
     '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
@@ -2304,7 +2226,6 @@ function medicalArt() {
     '</svg>';
 }
 function chpArt() {
-  // kogenerace: palivo (plyn, bioplyn, vodík), motor, kogenerační jednotka v kontejneru, elektřina a teplo, online monitoring
   const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
     '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
@@ -2319,7 +2240,6 @@ function chpArt() {
     '</svg>';
 }
 function insurerArt() {
-  // veřejné pojištění: plátce s předpisem, pojištěnec, klientský portál v telefonu, revizní lékař, rozhodnutí s podpisem a pečetí
   const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
     '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
@@ -2331,8 +2251,19 @@ function insurerArt() {
     t(58, 24, 'PLÁTCE') + t(164, 30, 'POJIŠTĚNEC') + t(272, 24, 'PORTÁL') + t(388, 24, 'REVIZNÍ LÉKAŘ') + t(500, 24, 'ROZHODNUTÍ') +
     '</svg>';
 }
+function mobilityArt() {
+  const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
+  return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
+    '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
+    '<path class="art-s" d="M60 90v22"/><rect class="art-s" x="48" y="40" width="24" height="50" rx="4"/><circle class="art-s" cx="60" cy="51" r="5"/><circle class="art-s" cx="60" cy="65" r="5"/><circle class="art-s" cx="60" cy="79" r="5"/>' +
+    '<path class="art-s" d="M126 112V84a44 30 0 0 1 88 0v28M140 112V90a30 22 0 0 1 60 0v22"/><path class="art-g" d="M170 112V94"/><circle class="art-s" cx="150" cy="80" r="2"/><circle class="art-s" cx="170" cy="73" r="2"/><circle class="art-s" cx="190" cy="80" r="2"/>' +
+    '<path class="art-s" d="M270 112l20-80 20 80M276 88h28M282 64h16M266 50h48M270 50v8M310 50v8M290 32v18"/>' +
+    '<path class="art-s" d="M396 112V46c0-9 6-14 14-14h16M414 30h22l-4 8h-14z"/><path class="art-g" d="M418 44l-8 22M432 44l8 22M425 44v24"/>' +
+    '<rect class="art-s" x="470" y="48" width="70" height="44" rx="3"/><path class="art-s" d="M505 92v12M490 104h30M478 80l10-10 10 6 12-14 10 8 12-6"/><circle class="art-s" cx="530" cy="58" r="3"/>' +
+    t(60, 30, 'SEMAFORY') + t(170, 44, 'TUNELY') + t(290, 22, 'ENERGETIKA') + t(414, 22, 'OSVĚTLENÍ') + t(505, 38, 'DISPEČINK 24/7') +
+    '</svg>';
+}
 function hvacArt() {
-  // vzduchotechnika: rotační výměník ve skříni, VZT jednotka (filtr, ventilátor, rotor), rozvaděč MaR s grafem, servis (ozubené kolo a klíč), export
   const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
     '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
@@ -2345,7 +2276,6 @@ function hvacArt() {
     '</svg>';
 }
 function defenseArt() {
-  // obranný průmysl (provoz, ne výzbroj): vozidlo, dílna s jeřábem (opravy a modernizace), sklad dílů, licence a shoda, export
   const t = (x, y, s) => '<text class="art-t" x="' + x + '" y="' + y + '" text-anchor="middle">' + s + '</text>';
   return '<svg viewBox="0 0 560 120" aria-hidden="true">' +
     '<line x1="0" y1="112" x2="560" y2="112" class="art-g"/>' +
@@ -2358,7 +2288,6 @@ function defenseArt() {
     '</svg>';
 }
 function energyArt() {
-  // plyn, stožár elektřiny, dům s fotovoltaikou, tepelné čerpadlo, stojan CNG (barva z design.vars přes třídy art-s, art-g)
   const s = 'class="art-s"';
   const g = 'class="art-g"';
   const t = (x, y, txt) => '<text x="' + x + '" y="' + y + '" font-size="11" font-weight="700" fill="#6B6B6B" text-anchor="middle" style="font-family:var(--font)">' + txt + '</text>';
@@ -2374,7 +2303,6 @@ function energyArt() {
 }
 
 function trafficArt() {
-  // portál s proměnnou značkou, silnice, měřicí vůz s laserem, most
   const s = 'fill="none" stroke="#FA2B2B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
   const g = 'fill="none" stroke="#484848" stroke-width="1.5" stroke-dasharray="4 5"';
   const t = (x, y, txt, a) => '<text x="' + x + '" y="' + y + '" font-size="11" font-weight="700" fill="#6B6B6B" text-anchor="' + (a || 'middle') + '" style="font-family:var(--font)">' + txt + '</text>';
@@ -2407,7 +2335,6 @@ function initFeed() {
   if (!reduced) setInterval(() => { if (!document.hidden) add(true); }, 3400);
 }
 
-/* ============ B · Kalkulačka ============ */
 function renderB() {
   const K = C.calc;
   return '<section class="sec sec-b" id="sec-b" aria-labelledby="b-title">' +
@@ -2419,7 +2346,7 @@ function renderB() {
       '<div class="result" aria-live="polite">' +
         '<div class="lbl">' + esc(K.resultLabel || 'Nárůst zisku ročně') + '</div>' +
         '<div class="res-val" id="resVal">+0</div>' +
-        '<div class="res-sub" id="resSub"></div><div class="res-units" id="resUnits" hidden></div>' +
+        '<div class="res-sub" id="resSub"></div><div class="res-units" id="resUnits" hidden></div><div class="res-acc" id="resAcc" hidden></div>' +
         '<div class="target"><div class="target-top"><span class="lbl" id="tgtLbl">' + esc(K.targetLabel || 'Váš cíl z roadmapy') + '</span><span class="target-v" id="tgtV"></span></div>' +
           '<div class="track" id="track"><div class="fill"></div><div class="over"></div><div class="mark" data-m="base"></div><div class="mark" data-m="tgt"></div></div>' +
           '<div class="track-lbls"><span id="trkL"></span><span id="trkR"></span></div>' +
@@ -2437,24 +2364,29 @@ function renderB() {
           '<div class="area-ctl"><div class="area-row"><span>' + esc(a.sliderLabel) + '</span><span class="lift" data-lift="' + i + '">0 %</span></div>' +
           '<input type="range" min="0" max="100" step="1" value="0" id="calc-' + esc(a.lever) + '" data-rng="' + i + '" aria-label="' + esc(a.sliderLabel) + '" disabled>' +
           '<div class="area-row"><span data-mk="' + i + '"></span><b data-mv="' + i + '"></b></div>' +
-          '<div class="area-sub" data-ms="' + i + '"></div><div class="area-meas" data-meas="' + i + '"></div></div>' +
+          '<div class="area-sub" data-ms="' + i + '"></div><div class="area-meas" data-meas="' + i + '"></div>' +
+          (acct(a) === 'capacity' ? '<div class="area-acc">' + (a.cashPool ? 'Účet: čas jako uvolněná kapacita · do výsledku jde jen přímá úspora' : 'Účet: uvolněná kapacita · do výsledku se nepočítá') + '</div>' : acct(a) === 'wages' ? '<div class="area-acc">Účet: úspora mezd · podle rozhodnutí vedení</div>' : '') + '</div>' +
         '</div>').join('') + '</div>' +
     '</div></section>';
 }
 
 const calcState = { cur: 'czk', on: [], x: [] };
+const accountsOn = () => C.calc.accounts !== false && C.calc.mode !== 'capacity';
+function acct(a) {
+  if (!accountsOn()) return 'cash';
+  return a.account || ((a.hoursPool != null || typeof a.hours === 'function' || a.lever === 'overhead') ? 'capacity' : 'cash');
+}
 function model(xs) {
   const b = C.calc.base; let gm = b.grossMargin, rev = b.revenue, fixed = b.fixedCosts, save = 0;
   C.calc.areas.forEach((a, i) => {
     const x = xs[i] || 0;
+    if (acct(a) !== 'cash') { save += (a.cashPool || 0) * x; return; }
     if (a.lever === 'margin') gm *= (1 + x);
     else if (a.lever === 'demand' || a.lever === 'conversion') rev *= (1 + x);
     else if (a.lever === 'waste') save += b.wastePct * x * b.processedTons * 10 * (b.pricePerKg - b.scrapPerKg);
     else if (a.lever === 'overhead') fixed -= b.adminCosts * x;
     else if (a.lever === 'revenue') rev *= (1 + x);
-    // 'cost' s a.value(x, vstupy) = přínos v Kč mimo přímku pool × x (např. varianty konzervativně / střední)
     else if (a.lever === 'cost') save += typeof a.value === 'function' ? (+a.value(x, ui.values) || 0) : (a.pool || 0) * x;
-    // 'units': výsledek v kusech (a.metric), do Kč se nepočítá
   });
   return rev * (gm - b.variableCosts) - fixed + save;
 }
@@ -2462,6 +2394,29 @@ function money(v, d = 2) {
   const eur = calcState.cur === 'eur'; const r = eur ? v / C.calc.eurRate : v;
   return fmt(r / 1e6, d) + ' mil. ' + (eur ? '€' : 'Kč');
 }
+function accountsHTML(xs, cash) {
+  if (!accountsOn()) return '';
+  const K = C.calc, b = K.base, v = ui.values;
+  let hw = 0, kc = 0, cap = 0, wages = 0, wn = 0;
+  K.areas.forEach((a, i) => {
+    const t = acct(a); if (t === 'cash') return;
+    const x = xs[i] || 0;
+    const czk = a.lever === 'overhead' ? (b.adminCosts || 0) * x : typeof a.value === 'function' ? (+a.value(x, v) || 0) : ((a.pool || 0) - (a.cashPool || 0)) * x;
+    if (t === 'wages') { wages += czk; wn++; return; }
+    cap++; kc += czk;
+    hw += a.lever === 'overhead' ? (b.adminHoursWeek || 0) * x : typeof a.hours === 'function' ? (+a.hours(x, v) || 0) / 52 : (a.hoursPool || 0) * x;
+  });
+  if (!cap && !wn) return '';
+  const fte = hw / (K.fteHours || 40);
+  const row = (l, val, note) => '<div class="acc-row"><span class="acc-l">' + l + '</span><b>' + val + '</b><span class="acc-n">' + note + '</span></div>';
+  return '<div class="acc-h">Přínos vedeme ve 3 oddělených účtech</div>' +
+    row('Přímý finanční efekt', (cash >= 0 ? '+' : '−') + money(Math.abs(cash)) + ' ročně', 'výsledek výše') +
+    (cap ? row('Uvolněná kapacita', hw > 0 ? fmt(hw, 0) + ' h týdně' + (fte >= 0.1 ? ' · cca ' + fmt(fte, 1) + ' FTE' : '') : '0 h',
+      'v ceně práce cca ' + money(kc) + ' ročně · předpoklad, do výsledku se nepočítá')
+      : row('Uvolněná kapacita', '—', 'tady ji vyjadřuje úspora mezd níže')) +
+    row('Úspora mezd', wn ? money(wages) + ' ročně' : 'jen s daty a rozhodnutím vedení', wn ? 'podle rozhodnutí vedení' : 'kam se uvolněná kapacita přesune, rozhodujete vy');
+}
+function setAccounts(xs, cash) { const el = $('#resAcc'); if (!el) return; const h = accountsHTML(xs, cash); el.innerHTML = h; el.hidden = !h; }
 function initCalc() {
   const K = C.calc; K.areas.forEach((a, i) => { calcState.on[i] = a.module ? !!modState[a.module] : !!a.on; calcState.x[i] = a.default; });
   renderHow();
@@ -2488,9 +2443,9 @@ function updateCalc() {
   $('#resVal').textContent = (delta >= 0 ? '+' : '−') + money(Math.abs(delta));
   $('#resVal').classList.toggle('pos', delta > 0);
   $('#resSub').innerHTML = 'z <b>' + money(base) + '</b> na <b>' + money(now) + '</b> ročně · ' + fmt(now / base, 2) + '× (' + (delta >= 0 ? '+' : '') + fmt(delta / base * 100, 0) + ' %)';
+  setAccounts(xs, delta);
   $('#tgtV').textContent = fmt(tgt / base, 2) + '× · ' + money(base, 1) + ' → ' + money(tgt, 1);
   $('#tgtLbl').textContent = targetLabel();
-  // track
   const maxV = Math.max(tgt, now) * 1.04;
   const pct = v => clamp(v / maxV * 100, 0, 100) + '%';
   const tr = $('#track');
@@ -2501,23 +2456,20 @@ function updateCalc() {
   tr.querySelector('[data-m="tgt"]').style.left = pct(tgt);
   $('#trkL').textContent = 'Dnes ' + money(base, 1);
   $('#trkR').textContent = 'Cíl ' + money(tgt, 1);
-  // uniformní zlepšení potřebné na cíl
   let lo = 0, hi = 1; for (let k = 0; k < 40; k++) { const m = (lo + hi) / 2; model(K.areas.map(() => m)) < tgt ? lo = m : hi = m; }
   const u = Math.max(1, Math.round(hi * 100));
+  const reach = model(K.areas.map(() => 1)) >= tgt;
   $('#tgtMsg').innerHTML = now >= tgt
     ? '<b>Cíl splněn.</b> S tímto nastavením jste ' + money(now - tgt) + ' nad cílem.'
-    : 'Na cíl potřebujete <b>' + fmt(tgt / base, 2) + '×</b>. Zapněte oblasti, kterým věříte. Na cíl stačí zhruba <b>' + u + ' % v každé</b>.';
+    : 'Na cíl potřebujete <b>' + fmt(tgt / base, 2) + '×</b>. Zapněte oblasti, kterým věříte. ' + (reach ? 'Na cíl stačí zhruba <b>' + u + ' % v každé</b>.' : 'Z přímého finančního efektu ho tyto oblasti samy nedosáhnou. Další přínos dá až rozhodnutí, kam uvolněnou kapacitu přesunout.');
   updateAreas(K, xs);
-  // vodopád
   const steps = []; let prev = base; const acc = K.areas.map(() => 0);
-  K.areas.forEach((a, i) => { acc[i] = xs[i]; const p = model(acc); steps.push({ l: a.short, v: p - prev }); prev = p; });
+  K.areas.forEach((a, i) => { if (acct(a) !== 'cash' && !a.cashPool) return; acc[i] = xs[i]; const p = model(acc); steps.push({ l: a.short, v: p - prev }); prev = p; });
   $('#wf').innerHTML = waterfall(base, steps, now, tgt);
 }
-// Režim přínosů (calc.mode = 'benefit'): výsledek je součet přínosů domén, cílem je rozpětí calc.range(v) = [od, do] v Kč
 function updateBenefit(K, xs, base, now) {
   const delta = now - base, rng = typeof K.range === 'function' ? K.range(ui.values, K) : null;
   const lo = rng ? rng[0] : 0, hi = rng ? rng[1] : 0, on = K.areas.filter((a, i) => calcState.on[i]).length;
-  // od 100 mil. stačí 1 desetinné místo, aby se výsledek vešel do rámečku
   $('#resVal').textContent = (delta >= 0 ? '+' : '−') + money(Math.abs(delta), Math.abs(delta) >= 1e8 ? 1 : 2);
   $('#resVal').classList.toggle('pos', delta > 0);
   $('#resSub').innerHTML = esc(K.resultNote || 'přínos ročně') + ' · zapnuté domény: <b>' + on + ' / ' + K.areas.length + '</b>';
@@ -2532,14 +2484,13 @@ function updateBenefit(K, xs, base, now) {
   $('#trkL').textContent = '0';
   $('#trkR').textContent = money(maxV, 0);
   let best = -1, bestV = 0; const acc = K.areas.map(() => 0), steps = []; let prev = base;
-  K.areas.forEach((a, i) => { if (a.lever === 'units') return; acc[i] = xs[i]; const p = model(acc); steps.push({ l: a.short, v: p - prev }); if (p - prev > bestV) { bestV = p - prev; best = i; } prev = p; });
-  // domény v kusech (povýšení, registrace…) mají vlastní řádek pod výsledkem v Kč
+  K.areas.forEach((a, i) => { if (a.lever === 'units' || (acct(a) !== 'cash' && !a.cashPool)) return; acc[i] = xs[i]; const p = model(acc); steps.push({ l: a.short, v: p - prev }); if (p - prev > bestV) { bestV = p - prev; best = i; } prev = p; });
   const U = K.areas.map((a, i) => a.lever === 'units' && calcState.on[i] ? metric(a, calcState.x[i], xs)[3] : '').filter(Boolean);
-  // calc.summary(xs, vstupy, h) → další řádek pod výsledkem, např. uvolněná kapacita v FTE vedle přínosu v Kč
   let S = ''; if (typeof K.summary === 'function') { try { S = K.summary(xs, ui.values, { fmt, n: fmtAuto }) || ''; } catch (e) { S = ''; } }
   $('#resUnits').innerHTML = [U.length ? esc(K.unitsLabel || 'Navíc v kusech') + ': ' + U.map(t => '<b>' + esc(t) + '</b>').join(' · ') : '', S ? rich(S) : ''].filter(Boolean).join('<br>');
   $('#resUnits').hidden = !U.length && !S;
-  const top = best >= 0 ? ' Nejvíc přináší <b>' + esc(K.areas[best].title) + '</b>.' : '';
+  setAccounts(xs, delta);
+  const top =best >= 0 ? ' Nejvíc přináší <b>' + esc(K.areas[best].title) + '</b>.' : '';
   $('#tgtMsg').innerHTML = !rng ? top
     : delta < lo ? 'Pod rozpětím o <b>' + money(lo - delta, 1) + '</b>. Zapněte další domény nebo upravte předpoklady.' + top
     : delta > hi ? '<b>Nad horní hranicí</b> o ' + money(delta - hi, 1) + '. Vaše předpoklady jsou odvážnější než podklad.' + top
@@ -2547,8 +2498,6 @@ function updateBenefit(K, xs, base, now) {
   updateAreas(K, xs);
   $('#wf').innerHTML = waterfallBenefit(steps, delta, rng);
 }
-// Režim kapacity (calc.mode = 'capacity'): oblasti jsou týmy, a.amount(x, vstupy) = { people, roles }.
-// Výsledek je součet rolí zapnutých týmů proti poptávané kapacitě (K.result), graf ukazuje náběh po měsících.
 function updateCapacity(K) {
   const v = ui.values, h = { fmt, n: fmtAuto };
   const per = K.areas.map((a, i) => calcState.on[i] ? a.amount(calcState.x[i], v) : { people: 0, roles: 0 });
@@ -2572,7 +2521,6 @@ function updateCapacity(K) {
   updateAreas(K, K.areas.map((a, i) => calcState.on[i] ? calcState.x[i] : 0));
   $('#wf').innerHTML = rampChart(K, per, R.need);
 }
-// náběh kapacity po měsících: tým naběhne od měsíce a.start za K.ramp měsíců; pozadí jsou fáze zavedení
 function rampChart(K, per, need) {
   const M = K.months || 12, ramp = K.ramp || 2, W = 620, H = 250, pl = 6, pr = 6, pt = 42, pb = 34;
   const vals = Array.from({ length: M }, (_, m) => K.areas.reduce((s, a, i) => s + per[i].roles * clamp((m + 2 - (a.start || 1)) / ramp, 0, 1), 0));
@@ -2618,10 +2566,8 @@ function updateAreas(K, xs) {
 }
 function metric(a, x, xs) {
   const b = C.calc.base;
-  // vlastní výpočet z dat: a.metric(x, vstupy, h) → [popisek, hodnota, věta, krátce do výsledku]
   if (typeof a.metric === 'function') { try { return a.metric(x, ui.values, { fmt, n: fmtAuto }); } catch (e) { return ['', '', '', '']; } }
   if (a.display) {
-    // obecné zobrazení z dat: { label, base, unit, dec, dir } + volitelná věta sub s {money} {hours} {rev}
     const d = a.display, f = v => fmt(v, d.dec ?? 0) + (d.unit ? ' ' + d.unit : '');
     const sub = (a.sub || '').replace('{money}', money((a.pool || 0) * x)).replace('{hours}', fmt((a.hoursPool || 0) * x, 0)).replace('{rev}', money(b.revenue * x));
     return [d.label, f(d.base) + ' → ' + f(d.base * (1 + (d.dir ?? 1) * x)), sub];
@@ -2635,11 +2581,12 @@ function metric(a, x, xs) {
       return ['Úspěšnost nabídek', fmt(b.winRate * 100, 0) + ' % → ' + fmt(b.winRate * (1 + x) * 100, 1) + ' %', 'Zakázek měsíčně ' + fmt(b.inquiries * b.winRate) + ' → ' + fmt(inq * b.winRate * (1 + x))];
     }
     case 'waste': return ['Prořez materiálu', fmt(b.wastePct, 1) + ' % → ' + fmt(b.wastePct * (1 - x), 1) + ' %', 'O ' + fmt(b.processedTons * b.wastePct / 100 * x, 0) + ' t méně odpadu ročně'];
-    case 'overhead': return ['Úspora administrativy', '−' + money(b.adminCosts * x) + ' ročně', 'Rutiny zpět až ' + fmt(b.adminHoursWeek * x, 0) + ' h týdně'];
+    case 'overhead': return acct(a) === 'capacity'
+      ? ['Čas v administrativě', 'až ' + fmt(b.adminHoursWeek * x, 0) + ' h týdně zpět', 'V ceně práce cca ' + money(b.adminCosts * x) + ' ročně']
+      : ['Úspora administrativy', '−' + money(b.adminCosts * x) + ' ročně', 'Rutiny zpět až ' + fmt(b.adminHoursWeek * x, 0) + ' h týdně'];
   }
   return ['', '', ''];
 }
-// přínosy po doménách od nuly, celkem a pásmo podkladu [od, do]
 function waterfallBenefit(steps, total, rng) {
   const W = 620, H = 250, pl = 6, pr = 6, pt = 26, pb = 40;
   const n = steps.length + 1, slot = (W - pl - pr) / n, bw = slot * .6;
@@ -2689,16 +2636,11 @@ function waterfall(base, steps, total, tgt) {
   return out + '</svg>';
 }
 
-/* ============ Vstupy klienta · výběr boosterů · cena · uložení ============ */
-// Klient může nahradit naše odhady svými čísly, přidat vlastní ukazatele, označit boostery, které chce,
-// a zvolit, kolik z ceny zaplatí pevně a kolik podle výsledku. Stav se drží v prohlížeči. Když stránka
-// zná adresu úložiště (window.XD_INPUTS vloží sestavení pro web), pošle ho klient tlačítkem XpertDigital.
 const ui = { values: {}, edited: {}, kpis: [], prio: {}, wish: '', fixed: 1, dirty: false, rev: 0, saving: false, status: '', statusAt: 0 };
 const PRIO = [['yes', 'Chceme', 'ok'], ['maybe', 'Možná', 'warn'], ['no', 'Nechceme', 'info']];
 const STATUS = { agreed: ['Dohodnuto', 'info'], deploying: ['V nasazení', 'warn'], live: ['Běží', 'ok'] };
 const MAX_KPIS = 6;
 const isDev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
-// ?nahled = zkoušení pro XpertDigital: nic se neposílá ani nenačítá z úložiště, stav se drží zvlášť
 const preview = params.has('nahled');
 const personal = () => !!(C && (C.calc.inputs || C.pricing));
 const endpoint = () => (isDev && params.get('vstupy')) || (window.XD_INPUTS || {}).endpoint || '';
@@ -2716,7 +2658,6 @@ function inputsInit() {
   (C.calc.inputs || []).forEach(i => { ui.values[i.id] = i.value; });
   if (C.pricing) ui.fixed = clamp(C.pricing.defaultFixed ?? 1, C.pricing.minFixed, 1);
 }
-// Čísla klienta → model kalkulačky: tržby, příspěvek, výsledek, výchozí stav oblastí, hodiny × cena hodiny, cíl.
 function applyInputs() {
   const K = C.calc, v = ui.values; if (!K.inputs) return;
   const num = id => (id in v && isFinite(v[id])) ? +v[id] : null;
@@ -2729,7 +2670,7 @@ function applyInputs() {
     const rate = num(a.rateInput || 'rate');
     if (a.lever === 'cost' && rate != null) { a.pool = val * rate; a.hoursPool = val / 52; }
   });
-  if (typeof K.bind === 'function') { try { K.bind(v, K); } catch (e) {} }   // vlastní strom hodnoty klienta
+  if (typeof K.bind === 'function') { try { K.bind(v, K); } catch (e) {} }
   if (num('goal') != null) K.target = model([]) * (1 + num('goal') / 100);
 }
 function targetLabel() {
@@ -2738,7 +2679,6 @@ function targetLabel() {
   return K.targetLabel || 'Váš cíl z roadmapy';
 }
 
-/* --- B · Vaše čísla a vlastní ukazatele --- */
 function srcChip(i) {
   const own = !!ui.edited[i.id], est = /odhad|návrh/i.test(i.src || 'odhad');
   return '<span class="inp-src' + (own ? ' own' : est ? ' est' : '') + '" data-src="' + esc(i.id) + '">' + esc(own ? 'vaše číslo' : (i.src || 'odhad')) + '</span>';
@@ -2809,7 +2749,6 @@ function resetInputs() {
 }
 function openInputs() { const t = $('#inputsToggle'); if (!t) return; t.setAttribute('aria-expanded', 'true'); $('#inputsBody').hidden = false; }
 
-/* --- Stav karet a naměřené hodnoty (po startu programu) --- */
 function statusChip(c) { const s = STATUS[c.status]; return s ? '<span class="pill ' + s[1] + '">' + s[0] + (c.since ? ' od ' + esc(fmtDate(c.since)) : '') + '</span>' : ''; }
 function measHTML(a) {
   if (!C.calc.inputs || !a.display || !a.input) return '';
@@ -2820,8 +2759,6 @@ function measHTML(a) {
   return 'Naměřeno k ' + esc(fmtDate(M.date)) + ': <b>' + f(m) + '</b>' + (x != null ? ' (' + (x >= 0 ? '+' : '−') + fmt(Math.abs(x) * 100, 0) + ' %)' : '');
 }
 
-/* --- Výběr boosterů --- */
-// názvosloví karet: C.terms.item = [1, 2 – 4, 5 a víc], výchozí booster / boostery / boosterů
 const termN = n => plural(n, ...((C.terms && C.terms.item) || ['booster', 'boostery', 'boosterů']));
 function prioChip(id) { const d = PRIO.find(x => x[0] === (ui.prio[id] || {}).p); return d ? '<span class="pill ' + d[2] + '">' + d[1] + '</span>' : ''; }
 function cardFlags(c) { return (personal() || c.status) ? '<span class="card-flags">' + statusChip(c) + '<span data-cprio="' + esc(c.id) + '">' + prioChip(c.id) + '</span></span>' : ''; }
@@ -2829,9 +2766,9 @@ function refreshPrioChips() { $$('[data-cprio]').forEach(el => { el.innerHTML = 
 function prioHTML(id) {
   if (!personal()) return '';
   const cur = ui.prio[id] || {};
-  return '<div class="prio"><div class="prio-top"><span class="prio-l">Chcete to u vás?</span><div class="prio-btns" role="group" aria-label="Váš zájem o tuto kartu">' +
+  return '<div class="prio"><div class="prio-top"><span class="prio-l">Chcete tuto změnu u vás?</span><div class="prio-btns" role="group" aria-label="Váš zájem o tuto kartu">' +
     PRIO.map(p => '<button type="button" data-prio="' + p[0] + '" data-prio-id="' + esc(id) + '" aria-pressed="' + (cur.p === p[0]) + '">' + p[1] + '</button>').join('') + '</div></div>' +
-    '<textarea data-prio-note="' + esc(id) + '" rows="2" maxlength="600" aria-label="Vaše poznámka k této kartě" placeholder="Poznámka pro nás (nepovinné): co upravit, kdo by to u vás používal">' + esc(cur.note || '') + '</textarea></div>';
+    '<textarea data-prio-note="' + esc(id) + '" rows="2" maxlength="600" aria-label="Vaše poznámka k této kartě" placeholder="Poznámka pro nás (nepovinné): koho se změna dotkne, co kdo přestane nebo začne dělat, co upravit">' + esc(cur.note || '') + '</textarea></div>';
 }
 function setPrio(id, p) {
   if (!cardIndex.has(id)) return;
@@ -2850,10 +2787,10 @@ function setNote(id, text) {
 }
 function pickHTML() {
   if (!personal()) return '';
-  return '<div class="pick" id="pick"><div class="pick-head"><h3>' + esc(C.needs.pickTitle || 'Váš výběr boosterů') + '</h3><span class="pick-count" id="pickCount"></span></div>' +
-    '<p class="pick-lead">' + esc(C.needs.pickLead || 'V detailu každé karty označte Chceme, Možná nebo Nechceme a připište poznámku. Z vašeho výběru sestavíme pořadí nasazení.') + '</p>' +
+  return '<div class="pick" id="pick"><div class="pick-head"><h3>' + esc(C.needs.pickTitle || 'Váš výběr změn') + '</h3><span class="pick-count" id="pickCount"></span></div>' +
+    '<p class="pick-lead">' + esc(C.needs.pickLead || 'Každá karta je změna v procesu. V detailu karty označte Chceme, Možná nebo Nechceme a připište, koho se změna dotkne. Pořadí sestavíme podle cíle a dopadu na role.') + '</p>' +
     '<div id="pickBody"></div>' +
-    '<label class="pick-wish" for="wish"><span>Chybí vám tu něco? Napište, co dalšího byste svěřili AI týmu.</span><textarea id="wish" data-wish rows="3" maxlength="1200"></textarea></label>' +
+    '<label class="pick-wish" for="wish"><span>Chybí vám tu něco? Napište, jakou další změnu procesu byste chtěli.</span><textarea id="wish" data-wish rows="3" maxlength="1200"></textarea></label>' +
     saveUI('Uložit výběr a poslat ' + vendorName()) + '<p class="inp-note">' + esc(noteText()) + '</p></div>';
 }
 function renderPick() {
@@ -2865,13 +2802,9 @@ function renderPick() {
   const grp = (label, ids) => ids.length ? '<div class="pick-grp"><h4>' + label + ' · ' + ids.length + '</h4><div class="pick-items">' + ids.map(item).join('') + '</div></div>' : '';
   body.innerHTML = (n || no.length)
     ? grp('Chceme', yes) + grp('Možná', maybe) + (no.length ? '<p class="pick-no">Nechcete: ' + no.map(id => esc(id + ' ' + cardIndex.get(id).card.title)).join(' · ') + '</p>' : '')
-    : '<div class="pick-empty"><p>Zatím jste nic neoznačili. Otevřete kteroukoli kartu v programu a klikněte na <b>Chceme</b>, <b>Možná</b> nebo <b>Nechceme</b>.</p><button class="btn btn-ghost" type="button" data-go="w' + C.weeks[0].n + '">' + esc((C.terms && C.terms.browse) || 'Projít boostery') + icon('arrowR') + '</button></div>';
+    : '<div class="pick-empty"><p>Zatím jste nic neoznačili. Otevřete kteroukoli kartu v programu a klikněte na <b>Chceme</b>, <b>Možná</b> nebo <b>Nechceme</b>.</p><button class="btn btn-ghost" type="button" data-go="w' + C.weeks[0].n + '">' + esc((C.terms && C.terms.browse) || 'Projít změny') + icon('arrowR') + '</button></div>';
 }
 
-/* --- Cena: pevná a výkonová složka podle volby klienta --- */
-// Kotvou je pevná cena programu P. Klient zvolí pevnou část f (min. minFixed). Zbytek (1 − f)·P se mění na výkonovou
-// složku V = (1 − f)·P·(1 + přirážka); přirážka roste lineárně až do maxPremium při nejnižší pevné části.
-// Výplata podle splnění cíle a: pod prahem floor nic, jinak V·min(a, cap).
 function pricingHTML() {
   const P = C.pricing; if (!P) return '';
   const maxPerf = Math.round((1 - P.minFixed) * 100);
@@ -2885,7 +2818,6 @@ function pricingHTML() {
     '</div><div class="pr-out"><div class="tbl-wrap"><table class="tbl" id="prTbl"></table></div><ul class="pr-rules" id="prRules"></ul></div></div>' +
     saveUI('Uložit volbu a poslat ' + vendorName()) + '</div>';
 }
-// Cena programu: pevně daná (price), nebo z týmu: MD × sazba; položky perWeek se násobí délkou programu (zapnutý modul ji prodlouží)
 function teamMD() { const P = C.pricing; return (P.team || []).map(t => [t.label, t.md != null ? t.md : t.perWeek * totalWeeks]); }
 function progPrice() { const P = C.pricing; return P.rate && P.team ? teamMD().reduce((a, t) => a + t[1], 0) * P.rate : P.price || 0; }
 function priceCalc(f) {
@@ -2896,7 +2828,6 @@ function priceCalc(f) {
 function priceFmt(v, signed) {
   const s = signed ? (v > 0 ? '+' : v < 0 ? '−' : '') : '', a = signed ? Math.abs(v) : v;
   if (!progPrice()) return s + fmt(a, 0) + ' % ceny';
-  // přesná částka (dělitelná deseti, např. MD × sazba = 1 181 250) se nezaokrouhluje, odvozené částky s přirážkou na stovky
   return s + fmt(Math.abs(a % 10) < 1e-6 ? a : Math.round(a / 100) * 100) +' Kč';
 }
 function updatePricing() {
@@ -2913,13 +2844,13 @@ function updatePricing() {
   ].map(t => '<div><b>' + t[0] + '</b><span>' + t[1] + '</span></div>').join('');
   const rows = [[0, 'pod ' + fmt(P.floor * 100) + ' % (práh)'], [P.floor, fmt(P.floor * 100) + ' %'], [0.8, '80 %'], [1, '100 % (cíl)'], [1.2, '120 %'], [1.5, '150 %']]
     .filter(([a], i) => i === 0 || (a >= P.floor && a < P.cap)).concat([[P.cap, fmt(P.cap * 100) + ' % a víc (strop)']]);
-  // na telefonu se třetí sloupec skryje a rozdíl se ukáže pod částkou (.pr-dm)
   $('#prTbl').innerHTML = '<thead><tr><th>Splnění cíle</th><th class="num">Zaplatíte celkem<span class="pr-dm">rozdíl proti pevné ceně</span></th><th class="num">Proti pevné ceně</th></tr></thead><tbody>' +
     rows.map(([a, l]) => { const t = q.total(a), d = t - q.base, same = Math.abs(d) < 1e-6 * q.base, pill = '<span class="pill ' + (same ? 'info' : d < 0 ? 'ok' : 'warn') + '">' + (same ? 'stejně' : priceFmt(d, true)) + '</span>'; return '<tr><td>' + l + '</td><td class="num">' + priceFmt(t) + '<span class="pr-dm">' + pill + '</span></td><td class="num">' + pill + '</td></tr>'; }).join('') + '</tbody>';
   const own = ui.kpis.filter(k => k.name.trim());
   $('#prRules').innerHTML = [
     P.rate && P.team ? 'Cena ' + (P.programLabel || 'programu na ' + totalWeeks + ' ' + unitN(totalWeeks)) + ': ' + teamMD().map(t => t[0] + ' ' + fmtAuto(t[1]) + ' MD').join(', ') + ' = ' + fmtAuto(teamMD().reduce((a, t) => a + t[1], 0)) + ' MD × ' + fmt(P.rate) + ' Kč = ' + fmt(progPrice()) + ' Kč.' : '',
     'Výkonovou složku počítáme podle splnění cílů, které společně nastavíme na začátku: ' + P.kpis.join(', ') + '.',
+    P.signals && P.signals.length ? 'Jako signál provozu sledujeme i ' + P.signals.join(', ') + '. Do výkonové složky ' + (P.signals.length > 1 ? 'nevstupují.' : 'nevstupuje.') : '',
     own.length ? 'Navázat ji můžeme i na vaše ukazatele: ' + own.map(k => k.name.trim() + (k.now || k.goal ? ' (' + (k.now || '?') + ' → ' + (k.goal || '?') + (k.unit ? ' ' + k.unit : '') + ')' : '')).join(', ') + '.' : '',
     'Pod ' + fmt(P.floor * 100) + ' % splnění se výkonová složka neplatí. Nad cílem platíte poměrně, nejvýš ' + fmt(P.cap * 100) + ' %.',
     'Výsledky měříme každý měsíc a uvidíte je přímo v této mapě.',
@@ -2928,7 +2859,6 @@ function updatePricing() {
   ].filter(Boolean).map(t => '<li>' + esc(t) + '</li>').join('');
 }
 
-/* --- Uložení: vždy v prohlížeči, XpertDigital po kliknutí --- */
 function snapshot() {
   return { v: 1, client: C.meta.client, slug: C.meta.slug || clientId, values: Object.assign({}, ui.values), edited: Object.assign({}, ui.edited),
     kpis: ui.kpis.map(k => Object.assign({}, k)), prio: JSON.parse(JSON.stringify(ui.prio)), wish: ui.wish,
@@ -2936,7 +2866,6 @@ function snapshot() {
     calc: { on: calcState.on.slice(), x: calcState.x.map(x => Math.round(x * 1000) / 1000) },
     sent: !ui.dirty, savedAt: new Date().toISOString() };
 }
-// čitelný souhrn pro tabulku a e-mail XpertDigital
 function summaryText(s) {
   const K = C.calc, L = [];
   const own = (K.inputs || []).filter(i => s.edited[i.id]);
@@ -3000,7 +2929,7 @@ async function loadInputs() {
   let local = null;
   try { local = JSON.parse(store.get(lsKey()) || 'null'); } catch (e) { local = null; }
   if (local) applySnapshot(local);
-  if (!canSend() || (local && local.sent === false)) return;   // neodeslané změny z tohoto prohlížeče mají přednost
+  if (!canSend() || (local && local.sent === false)) return;
   try {
     const j = await post({ action: 'load' });
     if (j && j.ok && j.data && ui.rev === 0) { applySnapshot(Object.assign(j.data, { sent: true })); saveLocal(); }
@@ -3051,11 +2980,9 @@ function bindInputs() {
     else if (t.matches('[data-wish]')) { ui.wish = t.value.slice(0, 1200); markDirty(); }
     else if (t.matches('[data-prperf]')) { ui.fixed = 1 - (+t.value) / 100; updatePricing(); markDirty(); }
   });
-  // po opuštění pole číslo hezky naformátovat
   document.addEventListener('change', e => { const t = e.target; if (t.matches('[data-in]') && !t.classList.contains('bad')) { const v = parseNum(t.value); if (v != null) t.value = fmtIn(v); } });
 }
 
-/* ============ C · Co bude hotové ============ */
 function renderC() {
   const D = C.deliver;
   return '<section class="sec sec-c" id="sec-c" aria-labelledby="c-title">' +
@@ -3065,11 +2992,11 @@ function renderC() {
       '<div class="dcol"><div class="dcol-num" data-colwk="' + esc((c.lanes || []).join(',')) + '">' + esc(c.when || '') + '</div>' +
       '<div class="dcol-title">' + esc(c.area) + '</div>' +
       '<div class="dcol-agent">' + icon(C.agents[c.agent].icon) + esc(C.agents[c.agent].name) + '</div>' +
+      (agentOwner(C.agents[c.agent]) ? '<div class="dcol-own">vlastník: ' + esc(agentOwner(C.agents[c.agent])) + '</div>' : '') +
       '<ul>' + c.items.map(t => '<li>' + icon('check') + '<span>' + esc(t) + '</span></li>').join('') + '</ul></div>').join('') +
     '</div>' + (D.blocks ? '<div class="d-blocks">' + blocks(D.blocks) + '</div>' : '') + '</section>';
 }
 
-/* ============ D · Co potřebujete ============ */
 function renderD() {
   const D = C.needs;
   return '<section class="sec sec-d" id="sec-d" aria-labelledby="d-title">' +
@@ -3077,7 +3004,6 @@ function renderD() {
     '<h2 class="display h2" id="d-title">' + esc(D.title) + '</h2>' +
     '<div class="pills">' + D.pills.map((p, i) => (i ? '<i>+</i>' : '') + '<span>' + esc(p) + '</span>').join('') + '</div>' +
     '<p class="lead" data-dyn="' + esc(D.lead) + '">' + esc(fillDyn(D.lead)) + '</p>' +
-    // needs.timeline: false = bez časové osy po měsících (nabídka bez harmonogramu)
     (D.timeline === false ? '' : '<div class="tl" id="tl"></div><div class="tl-after" id="tlAfter"></div><div class="mods" id="tlMods"></div>') +
     '<div class="products">' + D.products.map((p, i) =>
       '<div class="prod' + (p.highlight ? ' hl' : '') + '"><div class="prod-num" data-dyn="' + esc(p.term || '') + '">' + esc(fillDyn(p.term || '')) + '</div>' +
@@ -3092,7 +3018,6 @@ function conn(a, b) {
   return '<div class="conn" aria-hidden="true"><div class="conn-in"><span class="conn-dot">' + a + '</span><span class="conn-line"></span><span class="conn-dot on">' + b + '</span></div></div>';
 }
 
-/* ============ Týdny ============ */
 function renderWeeksHead() {
   const W = C.weeksIntro;
   const agentsUsed = [...new Set(C.weeks.map(w => w.agent))];
@@ -3110,14 +3035,13 @@ function renderLane(w) {
       '<div class="lane-kick"><span' + wkAttr(w.n) + '>' + esc(laneWhen(w)) + '</span>' + (w.short && !domainMode() ? ' · ' + esc(w.short) : '') + '</div>' +
       '<h3 class="lane-title" id="w' + w.n + '-t">' + esc(w.title) + '</h3>' +
       '<span class="agent-chip"><i>' + icon(ag.icon) + '</i><b>' + esc(ag.name) + '</b><span>' + esc(ag.role) + '</span></span>' +
+      (agentOwner(ag) ? '<div class="agent-own">' + icon('users') + '<span>Vlastník AI agenta: <b>' + esc(agentOwner(ag)) + '</b></span></div>' : '') +
       '<div class="lane-arrows">' + w.arrows.map(t => '<span>' + icon(t[0] === '↓' ? 'down' : 'up') + esc(t.replace(/^[↑↓]\s*/, '')) + '</span>').join('') + '</div>' +
-      // ukazatele domény: [název, dnes, cíl]
-      (w.kpis ? '<div class="lane-kpis">' + w.kpis.map(k => '<div><span>' + esc(k[0]) + '</span><b>' + esc(k[1]) + (k[2] ? ' → ' + esc(k[2]) : '') + '</b></div>').join('') + '</div>' : '') +
+      (w.kpis ? '<div class="lane-kpis">' + w.kpis.map(k => '<div' + (k[3] ? ' class="kpi-sig"' : '') + '><span>' + esc(k[0]) + (k[3] ? '<i>' + esc(k[3]) + '</i>' : '') + '</span><b>' + esc(k[1]) + (k[2] ? ' → ' + esc(k[2]) : '') + '</b></div>').join('') + '</div>' : '') +
       (w.optional ? '<div class="lane-mod"><button class="switch" type="button" role="switch" aria-checked="' + !!modState[w.n] + '" data-mod="' + w.n + '" aria-label="' + esc('Zahrnout do programu: ' + w.short) + '"><span class="sw-t">' + (modState[w.n] ? 'V PROGRAMU' : 'PŘIDAT') + '</span><span class="knob"></span></button><span>' + esc(w.optionalText || 'Volitelný modul programu') + '</span></div>' : '') +
     '</div>' +
     '<div class="cards">' + (w.overview ? laneOverview(w) : '') + w.cards.map(c => renderCard(c, w)).join('') + '</div></section>';
 }
-// přehled domény: světlá karta bez výstupu agenta na začátku pruhu (w.overview = { title, text, blocks })
 function laneOverview(w) {
   const O = w.overview;
   return '<div class="card lane-ov"><div class="card-meta"><span class="card-id">' + esc(laneNum(w)) + '</span>' + esc(O.kicker || 'Přehled domény') + '</div>' +
@@ -3142,7 +3066,6 @@ function renderWeeksEnd() {
     '<div class="btns"><button class="btn btn-ghost" type="button" data-go="b">' + icon('up') + 'Zpět na kalkulačku</button><button class="btn btn-red" type="button" data-cta>' + esc(C.vendor.cta.button) + icon('arrowR') + '</button></div></div>';
 }
 
-/* ============ Bloky výstupů ============ */
 function blocks(list, c) { return (list || []).map(b => '<div class="blk">' + (b.title ? '<h5 class="blk-title">' + esc(b.title) + '</h5>' : '') + (R[b.type] ? R[b.type](b, c) : '') + '</div>').join(''); }
 function cell(v) {
   if (v && typeof v === 'object') return '<span class="pill ' + esc(v.tone || 'info') + '">' + esc(v.t) + '</span>';
@@ -3226,7 +3149,6 @@ const R = {
   gantt(b, c) {
     const [h0, h1] = b.hours, span = h1 - h0, tp = v => { const [h, m] = String(v).split(':').map(Number); return ((h + (m || 0) / 60) - h0) / span * 100; };
     const ticks = []; for (let h = h0; h <= h1; h += (b.step || 2)) ticks.push(h);
-    // b.months: osa v měsících (M1, M2…), from/to jsou čísla měsíců (konec = začátek dalšího měsíce)
     return '<div class="gantt' + (b.months ? ' g-months' : '') + '"><div class="g-hours"><div></div><div>' + ticks.map(h => '<span style="left:' + ((h - h0) / span * 100) + '%">' + (b.months ? (h < h1 ? 'M' + h : '') : h + ':00') + '</span>').join('') + '</div></div>' +
       b.rows.map(r => '<div class="g-row"><div class="g-l">' + esc(r.l) + (r.s ? '<small>' + esc(r.s) + '</small>' : '') + '</div><div class="g-track" style="--tick:' + (100 / span * (b.step || 2)) + '%">' +
         r.blocks.map(k => { const l = tp(k.from), w = tp(k.to) - l; return '<div class="g-blk ' + (k.tone || '') + (k.pin ? ' pin' : '') + '" style="left:calc(' + l + '% + 2px);width:calc(' + w + '% - 4px)" title="' + esc(k.from + '–' + k.to + ' · ' + k.label) + '">' + esc(k.label) + '</div>'; }).join('') +
@@ -3289,15 +3211,12 @@ function initWidgets(root, card) {
   });
 }
 
-/* ============ Modal karty ============ */
 let curCard = null, lastFocus = null;
-// telefon: tabulka, která se nevejde na šířku, se složí do řádků pod sebe (popisky sloupců z data-l)
 function fitTables(root) {
   if (!root) return;
   root.querySelectorAll('.tbl-wrap > table.tbl').forEach(t => {
     if (!t.querySelector('td[data-l]')) return;
     t.classList.remove('stack');
-    // na telefonu každá tabulka, jinak jen náhled v úzké kartě (tablet, stránka na desktopu)
     if ((innerWidth <= 560 || t.closest('.c')) && t.parentNode.scrollWidth > t.parentNode.clientWidth + 4) t.classList.add('stack');
   });
 }
@@ -3306,11 +3225,11 @@ function openCard(id) {
   const { card: c, week: w } = hit, ag = agentOf(c, w);
   curCard = id;
   if ($('#modal').hidden) lastFocus = document.activeElement;
-  $('#mHead').innerHTML = '<div class="card-meta"><span class="card-id">' + esc(c.id) + '</span>' + esc(cardWhen(c, w)) + ' · ' + esc(w.short) + ' · ' + esc(ag.name) + cardFlags(c) + '</div>' +
+  $('#mHead').innerHTML = '<div class="card-meta"><span class="card-id">' + esc(c.id) + '</span>' + esc(cardWhen(c, w)) + ' · ' + esc(w.short) + ' · ' + esc(ag.name) + (agentOwner(ag) ? ' · vlastník: ' + esc(agentOwner(ag)) : '') + cardFlags(c) + '</div>' +
     '<h2 class="m-title" id="mTitle">' + esc(c.title) + '</h2><p class="m-desc">' + rich(c.desc) + '</p>' +
     '<div class="prompt" style="max-width:820px;background:#fff"><span class="prompt-lbl">' + esc(c.promptLabel || 'PROMPT') + '</span><span>' + esc(c.prompt) + '</span></div>' +
     '<div class="booster">' + esc(c.booster?.type || w.booster) + ' · ' + (c.booster?.skill || '').split('+').map(s => '<code>' + esc(s.trim()) + '</code>').join(' + ') + '</div>' +
-    prioHTML(c.id);
+    rolesHTML(c) + prioHTML(c.id);
   $('#mBody').innerHTML = blocks(c.output, false);
   initWidgets($('#mBody'), c);
   const i = cardOrder.indexOf(id), p = cardOrder[i - 1], n = cardOrder[i + 1];
@@ -3324,6 +3243,12 @@ function openCard(id) {
   try { history.replaceState(null, '', '#k-' + id); } catch (e) {}
   $('.m-close', $('#modal')).focus({ preventScroll: true });
 }
+function rolesHTML(c) {
+  if (Array.isArray(c.roles) && c.roles.length) return '<div class="m-roles"><span class="prompt-lbl">DOPAD NA ROLE</span><ul>' + c.roles.map(r => '<li><b>' + esc(r[0]) + '</b> ' + rich(r[1]) + '</li>').join('') + '</ul></div>';
+  const T = C.terms || {};
+  if (!personal() || T.rolesDefault === false) return '';
+  return '<div class="m-roles"><span class="prompt-lbl">DOPAD NA ROLE</span><span>' + esc(T.rolesDefault || 'Posoudíme s vámi před nasazením: kdo co přestane a začne dělat, kdo za krok odpovídá a co se naučí.') + '</span></div>';
+}
 function closeCard() {
   if ($('#modal').hidden) return;
   $('#modal').hidden = true;
@@ -3333,7 +3258,6 @@ function closeCard() {
   curCard = null;
 }
 
-/* ============ Nápověda (plovoucí karta, nic nezakrývá) ============ */
 function openGuide() {
   $('#guideIn').innerHTML = '<div class="kicker">' + esc(C.vendor.name) + ' AI tým · demo</div>' +
     '<h2 id="gTitle">Jak se pohybovat po mapě</h2><p>' + esc(C.guideText) + '</p>' +
@@ -3345,7 +3269,6 @@ function openGuide() {
   $('#guide').hidden = false;
 }
 function closeGuide() { $('#guide').hidden = true; store.set('guide', '1'); }
-// první návštěva: zvýrazněný řádek s ovládáním dole, dokud uživatel poprvé nezasáhne
 function hintIntro() {
   const h = $('#hint');
   if (store.get('guide') || h.dataset.done) return;
@@ -3355,15 +3278,12 @@ function hintIntro() {
   setTimeout(off, 12000);
 }
 
-/* ============ Kontakt ============ */
 let lastFocusCt = null;
 function openContact() {
   const V = C.vendor, K = V.contact || {};
   lastFocusCt = document.activeElement;
   const row = (k, v, id, copy) => '<div class="ct-row"><span class="ct-k">' + esc(k) + '</span><span class="ct-v" id="' + id + '">' + v + '</span>' +
     (copy ? '<button class="ct-copy" type="button" data-copy="' + id + '">Kopírovat</button>' : '<span></span>') + '</div>';
-  // contact.people = [{ name, role, email, phone }]: víc kontaktních osob; id podle pořadí typu pole (ct-email, ct-email-2…),
-  // takže měření kopírování ve Velínu dál ukazuje „e-mail“ a „telefon“ u 1. výskytu
   const n = { name: 0, email: 0, phone: 0 }, fid = t => 'ct-' + t + (n[t]++ ? '-' + n[t] : '');
   const person = P => (P.name ? row('Kontakt', esc(P.name) + (P.role ? '<br><span style="font-weight:500;font-size:14px;color:var(--muted)">' + esc(P.role) + '</span>' : ''), fid('name'), false) : '') +
     (P.email ? row('E-mail', esc(P.email), fid('email'), true) : '') +
@@ -3381,9 +3301,6 @@ function openContact() {
   $('#contact').hidden = false;
   $('.m-close', $('#contact')).focus({ preventScroll: true });
 }
-/* ---------- Poptávka z veřejné stránky (Velín: list Poptávky, firma, kontakt a úkol Ozvat se) ---------- */
-// Jen na veřejných stránkách (bez osobních vstupů), které znají úložiště: krátký formulář v kontaktním okně.
-// Proti robotům skryté pole a čas vyplnění, odeslaná poptávka se pamatuje v prohlížeči (ať ji nikdo nepošle omylem dvakrát).
 let leadT0 = 0;
 const leadOn = () => !!(C && !personal() && !preview && C.meta.slug && endpoint() && inputKey());
 function leadForm() {
@@ -3446,7 +3363,6 @@ function copyText(btn) {
   try { navigator.clipboard.writeText(el.textContent.trim()).then(done, select); } catch (e) { select(); }
 }
 
-/* ============ Menu ============ */
 function renderMenu() {
   const secs = [['a', 'A', 'Úvod', 'Kde firma dnes ztrácí'], ['b', 'B', 'Kalkulačka', 'Dopad na zisk'], ['c', 'C', 'Co bude hotové', 'Výstupy po oblastech'], ['d', 'D', 'Co potřebujete', 'Program, nástroje, podpora']];
   $('#drBody').innerHTML = '<div class="dr-sec">Mapa</div>' +
@@ -3460,7 +3376,6 @@ function openMenu(open) {
   if (open) $('#drClose').focus(); else $('#menuBtn').focus({ preventScroll: true });
 }
 
-/* ============ Režim mapa / stránka ============ */
 function setMode() {
   const lin = linearForced === null ? mqNarrow.matches : linearForced;
   document.body.classList.toggle('linear', lin);
@@ -3474,7 +3389,6 @@ function setMode() {
   fitTables(world);
 }
 
-/* ============ Pan & zoom ============ */
 function apply() {
   world.style.transform = 'translate(' + st.x + 'px,' + st.y + 'px) scale(' + st.s + ')';
   const g = 28 * st.s; vp.style.backgroundSize = g + 'px ' + g + 'px'; vp.style.backgroundPosition = st.x + 'px ' + st.y + 'px';
@@ -3521,7 +3435,6 @@ function go(key, animate = true) {
   else if (key === 'all') el = world;
   else el = $('#sec-' + key);
   if (!el) return;
-  // úvod s dalšími částmi (hero.after): mapa zaměří jen hlavní část úvodu, části pod ní jsou o kousek níž
   if (key === 'a' && !isLinear() && C.hero.after && C.hero.after.length) { const hg = $('#sec-a .hero-grid'); if (hg) { const r0 = worldRect(el), r1 = worldRect(hg); animate ? animateTo(fitView({ x: r0.x, y: r0.y, w: r0.w, h: r1.y + r1.h - r0.y }, 36)) : (Object.assign(st, fitView({ x: r0.x, y: r0.y, w: r0.w, h: r1.y + r1.h - r0.y }, 36)), apply()); return; } }
   if (isLinear()) { el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); return; }
   const r = key === 'all' ? { x: 0, y: 0, w: world.offsetWidth, h: world.offsetHeight } : worldRect(el);
@@ -3534,7 +3447,6 @@ function zoomAt(f, cx, cy) {
 }
 
 function bindGlobal() {
-  // Klik: karty, odkazy na sekce
   document.addEventListener('click', e => {
     const md = e.target.closest('[data-mod]');
     if (md) { const n = +md.dataset.mod; setModule(n, !modState[n]); return; }
@@ -3570,12 +3482,10 @@ function bindGlobal() {
     else if (z === 'help') { $('#guide').hidden ? openGuide() : closeGuide(); }
   });
   mqNarrow.addEventListener('change', () => { linearForced = modeParam; setMode(); });
-  // fokus do pole mimo obraz nesmí posunout skrytý posuvník mapy (mapu posouvá jen transformace)
   vp.addEventListener('scroll', () => { if (!isLinear() && (vp.scrollTop || vp.scrollLeft)) { vp.scrollTop = 0; vp.scrollLeft = 0; } });
   let fitT = 0;
   window.addEventListener('resize', () => { if (!isLinear()) computeMin(); clearTimeout(fitT); fitT = setTimeout(() => fitTables(document), 150); });
 
-  // Klávesnice
   document.addEventListener('keydown', e => {
     const tag = (e.target.tagName || '').toLowerCase();
     interacted = true;
@@ -3611,7 +3521,6 @@ function bindGlobal() {
     }
   });
 
-  // Myš, dotyk, touchpad
   const pts = new Map(); let drag = null, pinch = null, suppress = false;
   vp.addEventListener('pointerdown', e => {
     if (isLinear()) return;
@@ -3652,7 +3561,6 @@ function bindGlobal() {
     let dx = e.deltaX, dy = e.deltaY;
     if (e.deltaMode === 1) { dx *= 16; dy *= 16; } else if (e.deltaMode === 2) { dx *= 400; dy *= 400; }
     interacted = true;
-    // touchpad (malé plynulé delty nebo vodorovný pohyb) = posun, kolečko myši = zoom, Shift+kolečko = vodorovný posun
     if (e.shiftKey && !e.ctrlKey) { st.x -= (dx || dy); apply(); touch(); return; }
     const isPan = !e.ctrlKey && (Math.abs(dx) > 0 || (e.deltaMode === 0 && Math.abs(dy) < 40));
     if (isPan) { st.x -= dx; st.y -= dy; apply(); touch(); return; }
@@ -3664,10 +3572,6 @@ function bindGlobal() {
     const r = vp.getBoundingClientRect(); zoomAt(1.6, e.clientX - r.left, e.clientY - r.top);
   });
 }
-/* ============ Měření pro Velín ============ */
-// Co klient v nabídce otevírá, posíláme po dávkách do úložiště (list „Události“), jen když stránka zná XD_INPUTS.
-// Bez souhlasu jen anonymní zobrazení. Hodnoty formulářů nikdy: ty přijdou až tlačítkem Uložit a poslat.
-// ?nahled a zařízení označená ?interni se neměří vůbec (?interni=0 označení zruší).
 const MR = { on: false, full: false, viewed: false, meta: false, sid: '', did: '', p: '', t0: 0, q: [], dw: {}, act: 0,
   lastAct: 0, tickAt: 0, flushAt: 0, soon: 0, sec: '', secLog: '', card: '', lin: null, thr: {}, vt: 0, vsent: false, reader: null, shText: '', shFocus: null };
 const mrSlug = () => (C && C.meta.slug) || '';
@@ -3718,14 +3622,13 @@ function mrFull(fromClick) {
   MR.did = store.get('zarizeni') || '';
   if (!/^[a-z0-9]{8,24}$/.test(MR.did)) { MR.did = mrRand(16); store.set('zarizeni', MR.did); }
   if (MR.p) store.set('ctenar:' + slug, MR.p); else { const sp = store.get('ctenar:' + slug) || ''; if (mrOk(sp)) MR.p = sp; }
-  clearTimeout(MR.vt); MR.vt = 0;   // souhlas přišel dřív, než odešlo anonymní zobrazení: počítá se jen návštěva se souhlasem
+  clearTimeout(MR.vt); MR.vt = 0;
   if (fromClick) { MR.q.push([Date.now() - MR.t0, 'consent', 1]); if (MR.viewed) mrSoon(); else mrSeen(); }
 }
 function mrSeen() {
   if (!MR.on || MR.viewed) return;
   MR.viewed = true; MR.lastAct = MR.tickAt = Date.now();
   if (MR.full) mrFlush();
-  // čtenář se ještě rozhoduje o souhlasu: anonymní zobrazení počká 20 s (a při odchodu), ať nechodí dvě upozornění
   else if (personal() && !store.get('souhlas:' + mrSlug())) MR.vt = setTimeout(mrView, 20000);
   else mrView();
 }
@@ -3769,7 +3672,6 @@ function mrEv(type, target, thr) {
   MR.q.push(target == null ? [now - MR.t0, type] : [now - MR.t0, type, String(target).slice(0, 40)]);
   if (MR.q.length > 250) mrFlush();
 }
-// kterou část mapy má čtenář na obrazovce (mapa i stránka): největší viditelná plocha
 function mrSection() {
   const W = innerWidth, H = innerHeight;
   const area = el => { if (!el) return 0; const r = el.getBoundingClientRect(); return Math.max(0, Math.min(r.right, W) - Math.max(r.left, 0)) * Math.max(0, Math.min(r.bottom, H) - Math.max(r.top, 0)); };
@@ -3784,7 +3686,7 @@ function mrTick() {
   if (!MR.on) return;
   mrAccrue();
   const card = !$('#modal').hidden && curCard ? curCard : '';
-  if (card !== MR.card) { MR.card = card; if (card) mrEv('card', card); else MR.secLog = ''; }   // po zavření karty znovu zapsat sekci
+  if (card !== MR.card) { MR.card = card; if (card) mrEv('card', card); else MR.secLog = ''; }
   if (!card) { const sec = mrSection(); if (sec) MR.sec = sec; }
   if (MR.full && MR.viewed && !card && MR.sec && MR.sec !== MR.secLog) { MR.secLog = MR.sec; mrEv('sec', MR.sec); }
   const lin = isLinear();
@@ -3836,8 +3738,6 @@ function mrPrivacyBtn() {
   b.innerHTML = 'Měření návštěvy: <b>' + (MR.full ? 'zapnuto' : 'vypnuto') + '</b> · změnit';
 }
 
-/* --- Velín: platnost nabídky, Poslat kolegovi, kdo odesílá --- */
-// Platnost se ověřuje i bez souhlasu s měřením (nic se při tom neukládá), ?nahled ji přeskočí.
 function mrExtras() {
   const b = $('#shareBtn'); if (b) b.hidden = !canSend();
   document.addEventListener('click', mrExtrasClick);
@@ -3846,7 +3746,6 @@ function mrExtras() {
     e.preventDefault();
     if (f.dataset.shform === 'who') mrWhoSave(); else mrShareSend(f);
   });
-  // dialog Poslat kolegovi: Esc zavře, Tab zůstane uvnitř, mapa pod ním na klávesy nereaguje
   window.addEventListener('keydown', e => {
     if ($('#share').hidden) return;
     e.stopImmediatePropagation();
@@ -3864,7 +3763,6 @@ async function mrStatus() {
   if (j.reader && j.reader.name) { MR.reader = { name: String(j.reader.name).slice(0, 80), role: String(j.reader.role || '').slice(0, 80) }; mrWhoUI(); }
   if (j.revoked || j.valid === false) mrGone(j);
 }
-// po skončení platnosti nebo zneplatnění odkazu ukáže místo mapy kontakt
 function mrGone(j) {
   const client = C.meta.client || '', u = j.until ? new Date(j.until) : null;
   const d = u && !isNaN(u) ? u.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' }) : '';
@@ -3881,7 +3779,6 @@ function mrGone(j) {
   $('#gone').hidden = false;
   $('#goBtn').focus({ preventScroll: true });
 }
-// kdo odesílá: jméno z osobního odkazu, nebo co čtenář sám vyplnil (jen v tomto prohlížeči)
 function mrSender() {
   try {
     const s = JSON.parse(store.get('odesilatel:' + mrSlug()) || 'null');
